@@ -1,84 +1,120 @@
-<p align="center">
-  <img src="public/icon-512x512.png" alt="FinderGit" width="160" height="160" />
-</p>
-
-<h1 align="center">FinderGit</h1>
+<h1 align="center">Vicenda</h1>
 
 <p align="center">
-  <strong>A Git-aware file browser for macOS.</strong><br/>
-  Finder-style list view, real-time Git status, inline diffs, full git actions — all in one window.
+  <strong>Your mail is not a list.</strong><br/>
+  A native macOS mail client shaped like a conversation. The machines that write to you
+  get channels, the people get threads, and nothing ever leaves your Mac.
 </p>
 
 <p align="center">
-  <a href="https://github.com/gfazioli/findergit-website/releases/latest"><img src="https://img.shields.io/github/v/release/gfazioli/findergit-website?label=Download&color=blue" alt="Latest Release" /></a>
-  <a href="https://www.apple.com/macos/"><img src="https://img.shields.io/badge/macOS-15%2B-blue" alt="macOS 15+" /></a>
+  <a href="https://www.apple.com/macos/"><img src="https://img.shields.io/badge/macOS-15%2B-1A181E" alt="macOS 15+" /></a>
+  <img src="https://img.shields.io/badge/beta-closed-E05252" alt="Closed beta" />
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License" /></a>
 </p>
 
-<p align="center">
-  <a href="https://findergit.app">Website</a>
-  ·
-  <a href="https://findergit.app/docs/getting-started">Documentation</a>
-  ·
-  <a href="https://github.com/gfazioli/findergit-website/releases/latest">Download</a>
-</p>
+---
 
-<p align="center">
-  <img src="public/screenshot-hero.png" alt="FinderGit window showing the Finder-style tree view with Branch, Status and Changes columns" width="820" />
-</p>
+## What this repository is
 
-## What is FinderGit?
+The **marketing and docs site** for Vicenda, at `vicenda.app`. The app itself
+lives elsewhere and is private.
 
-FinderGit is a native macOS app that combines file browsing with Git intelligence. Instead of switching between Finder and a Git client, you get everything in one window:
+Unlike its two sibling sites, **this one hosts no downloads**. Vicenda is in a
+closed beta: the disk image is sent by hand to people who ask, so `/download`
+redirects to `/beta` for as long as `config.beta.closed` is true. Flipping that
+one flag is what opens the door, and it is the only place to flip it.
 
-- **Tree view with columns** — browse files like Finder's list view, with sortable columns for Branch, Status, Changes, Size, and Date Modified
-- **Live Git status** — every repository shows its branch, clean/dirty/unpushed state, and number of changed files, updated in real time via FSEvents
-- **Ahead/behind counter** — the status badge shows `↑N`, `↓N`, or `↑N ↓M` so you can spot repos that need a push, a pull, or both at a glance
-- **Auto-fetch** — optional background `git fetch` at a user-chosen interval to keep the ahead/behind counter fresh
-- **Diff viewer** — click any modified file to see a colored inline diff
-- **Git actions** — stage, unstage, commit, push, pull, fetch, branch switch, all from the UI
-- **Repo Trust — supply-chain safety** — surface a repo's *auto-run surface* (editor tasks, AI-agent configs, dev-container and npm hooks) and get alerted when it changes after a pull. FinderGit also detects the committed **dropper** behind supply-chain worms like **Shai-Hulud / Miasma** — the obfuscated `.github/setup.js`-style payload — across *every* branch, not just the checkout, and never runs anything it finds. When a repo looks compromised it shows an incident runbook: revoke the OAuth authorization, then reset (not revert) the infected branches
-- **Repo Maintenance** — a per-repo disk-usage breakdown and one-click cleanup (Optimize / Deep Clean) to reclaim Git space, with a sortable Size column in the browser
-- **Native Markdown preview** — press Space on any `.md` file for a rendered preview
-- **Smart context menus** — adapts to whether you're on a regular file, a tracked file, or a repository
-- **Multiple root folders** — add as many as you want; drop folders from the macOS Finder into the sidebar to add them as roots
-- **Universal binary** — one DMG runs on Apple Silicon and Intel Macs
-- **Auto-updates** — built in via Sparkle
+## What Vicenda is
 
-## Download
+A reading and triage tool first; composing is secondary and sending is not
+built yet. It exists because seven mailboxes across Gmail, a PEC and a work
+account had no client that could answer four questions at a glance:
 
-[**→ Download the latest version**](https://github.com/gfazioli/findergit-website/releases/latest)
+1. which of the accounts did this land in
+2. what needs a reply, as against what is bulk
+3. how to stay fast across all of them
+4. how to keep one taxonomy across providers
 
-After downloading, open the DMG and drag FinderGit into your Applications folder. Launch it normally — the app is signed with Apple Developer ID and notarized by Apple, so Gatekeeper accepts it on first open.
+**What is built today** — the site may describe these, and nothing else:
 
-## Requirements
+- **A stream, not an inbox.** Machine senders become channels; people become
+  conversations. An account rail filters rather than navigates.
+- **Recognised machine mail becomes a card.** Twelve rules across five provider
+  packs bind named fields — an amount, a card, an item, an order — and draw
+  them. If a mandatory field cannot be bound the rule declines and the message
+  stays mail: a half-filled card looks authoritative, which is worse than none.
+- **The identity gate.** A card is allowed to look authoritative only when the
+  receiving server vouched for the sender. Otherwise it renders dashed, prints
+  the raw `From` in full and carries **no buttons at all**.
+- **Gmail, read and write.** History sync, arrival ingestion, read-state
+  alignment, archive and trash through a queue that survives a silent revert.
+- **IMAP**, per-folder cursors and arrival ingestion, with writes limited to
+  `UID STORE ±FLAGS.SILENT (\Seen)` and an intention log so a local read is not
+  reverted by a server that was never told.
+- **The reader blocks everything remote** before the first pixel, so opening a
+  message does not tell the sender you opened it. If the blocker cannot arm,
+  the HTML is withheld rather than shown — it fails closed.
+- **Colour means one thing.** Eight account hues at a single lightness and
+  chroma; nothing else in the app may spend hue.
 
-- macOS 15 Sequoia or later
-- Xcode Command Line Tools (FinderGit uses the system `git` binary). On a fresh Mac, run once:
-  ```bash
-  xcode-select --install
-  sudo xcodebuild -license
-  ```
-- Repositories that use [Git LFS](https://git-lfs.com) need `git-lfs` installed (`brew install git-lfs && git lfs install`). FinderGit detects when it's missing and tells you exactly how to fix it instead of failing silently.
+**Not built** — do not put these on the site: in-app OAuth consent, sending,
+archive and delete over IMAP, the notch, the menu bar.
 
-## Documentation
+## The beta
 
-Full documentation, screenshots and FAQ at **[findergit.app](https://findergit.app)**.
+There is no public download and no App Store listing. `/beta` asks people to
+write; the disk image goes out by hand.
 
-## About this repository
+> **Sparkle would make this leaky, and the decision has to come before the
+> first DMG goes out.** An appcast is a public XML file and the asset it points
+> at is a public URL, so a beta build updating from the usual feed puts the
+> "closed" download one `curl` away from anyone who finds the feed. Either the
+> beta ships without an updater, or the appcast lives at an unguessable path
+> and the DMGs stay off the public releases repo. A URL cannot be recalled.
 
-This repo hosts the **marketing site** and **release downloads** for FinderGit. The app source lives in a separate repository.
+## Design decisions worth not re-deriving
 
-The site is built with [Next.js 16](https://nextjs.org/), [Mantine 9](https://mantine.dev/) and [Nextra 4](https://nextra.site/).
+**The face is EB Garamond, and that is a substitution.** The reference is
+Apple's *Think Different*, which was set in **Apple Garamond** — Apple's own cut
+of ITC Garamond, condensed to about 80%, used from 1984 to 2002 and never
+licensed to anybody else. The copies that circulate share its provenance. EB
+Garamond is the same Garamond lineage under the SIL Open Font License. The
+condensed proportion lives in `.display-hero`, which applies `scaleX(0.92)` to
+the one line that carries the reference and drops the squeeze below `48em`,
+where the line wraps and a scaled wrap would read as a rendering fault.
 
-### Local development
+**The colours are the app's, computed rather than picked.** The eight account
+hues in `theme.ts` come from `Palette.swift` — OKLCH `L=0.72, C=0.13`, 45° apart
+— and the chrome ramp from `Tokens.swift`. That is deliberate: a palette
+invented here would disagree with every screenshot placed on top of it.
+
+**A server component may not hand a function to a Mantine client component.**
+`component={Link}` fails at *prerender*, not at typecheck, with an unhelpful
+"element type is invalid". The template's precedent is a thin server page
+exporting `metadata` and delegating to a `'use client'` component — see
+`app/beta/page.tsx` and `components/Beta/Beta.tsx`.
+
+## Still inherited from FinderGit
+
+This site was bootstrapped verbatim from `findergit-website` so the re-skin
+would read as a diff. These have not been dealt with yet:
+
+- every page under `app/docs/` still documents FinderGit
+- `app/api/ai-commit/` is FinderGit's proxy and has no business here
+- `public/` still carries FinderGit's icons, screenshots and OG images
+
+## Local development
 
 ```bash
 yarn install
-yarn dev
+yarn dev            # http://localhost:3000
 ```
 
-Then visit [http://localhost:3000](http://localhost:3000).
+Package manager is **Yarn 4**. If `yarn <cmd>` reports `command not found`, run
+the binary directly: `./node_modules/.bin/next`, `./node_modules/.bin/tsc`.
+
+Built with [Next.js](https://nextjs.org/), [Mantine](https://mantine.dev/) and
+[Nextra](https://nextra.site/).
 
 ## License
 

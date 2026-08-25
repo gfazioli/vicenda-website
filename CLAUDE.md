@@ -4,19 +4,33 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is the **marketing, presentation, and download website** for **FinderGit**, a native macOS app that combines file browsing with Git intelligence.
+This is the **marketing and documentation website** for **Vicenda**, a native
+macOS mail client. Bootstrapped verbatim from `findergit-website`, which is why
+anything not yet re-skinned still says FinderGit — see the README for the list.
 
 **This is NOT a macOS application.** This is a Next.js web project deployed on Vercel.
 
-- **Live URL**: https://findergit-website.vercel.app/
-- **App repository** (private, Swift/SwiftUI): https://github.com/gfazioli/FinderGit
-- **Website repository** (this): https://github.com/gfazioli/findergit-website
+- **Domain**: `vicenda.app`
+- **Website repository** (this): https://github.com/gfazioli/vicenda-website — PRIVATE
+- The app repository is private; do not link it from anything user-facing.
 
 The website serves as:
-1. **Landing page** — hero section, feature showcase, download CTA
-2. **Documentation** — user guides, keyboard shortcuts, getting started
-3. **Release notes** — pulled automatically from GitHub Releases API
-4. **Download hub** — links to GitHub Releases for the macOS binary
+1. **Landing page** — the thesis, the four claims, the invite CTA
+2. **Documentation** — user guides, getting started
+3. **Release notes**
+4. **The beta gate** — and NOT a download hub, which is the difference from the
+   two sibling sites
+
+**THERE IS NO PUBLIC DOWNLOAD.** Vicenda is in a closed beta: the disk image is
+sent by hand. `/download` redirects to `/beta` while `config.beta.closed` is
+true, so no affordance anywhere becomes a 404 or an empty releases list. That
+flag is the only switch; do not add a second path to a binary.
+
+**Sparkle would make the beta leaky.** An appcast is public XML pointing at a
+public URL, so a beta build updating from the usual feed puts the closed
+download one `curl` away. Either no updater during the beta, or an unguessable
+appcast path with the DMGs off the public releases repo. Decide before the
+first DMG goes out — a URL cannot be recalled.
 
 ## Tech Stack
 
@@ -59,21 +73,35 @@ The website serves as:
 - Dark mode sync between Mantine and Nextra is handled by `MantineNextraThemeObserver`
 - Mantine theme overrides go in `theme.ts` (client-side `createTheme`)
 - Global site configuration (metadata, GitHub API, search, Nextra layout) lives in `config/index.ts`
-- Primary color: blue (matching FinderGit app icon)
-- Custom color palette: `findergit` (blue shades)
+- Primary colour: `vicenda`, a neutral ramp with the app's own aubergine cast
+- **The colours are the APP's, computed rather than picked.** `ACCOUNT_RING` in
+  `theme.ts` is the real eight-hue ring from `Palette.swift` — OKLCH `L=0.72,
+  C=0.13`, 45° apart — and `CHROME` comes from `Tokens.swift`. A palette
+  invented here would disagree with every screenshot placed on top of it.
+- **The display face is EB Garamond**, wired in `app/layout.tsx` via
+  `next/font`. It is a SUBSTITUTION: the *Think Different* campaign was set in
+  Apple Garamond, Apple's own cut of ITC Garamond condensed to ~80%, never
+  licensed to anyone else, and the copies circulating share its provenance. The
+  condensed proportion lives in `.display-hero` (`scaleX(0.92)`), applied to the
+  one line that carries the reference and dropped below `48em`.
 
 ### Key Components (`components/`)
 
-- `MantineNavBar` — top navigation with FinderGit logo + GitHub link
+- `MantineNavBar` — top navigation
 - `MantineFooter` — 4-column footer with highlights, resources, ecosystem links
-- `Welcome` — hero section with animated title, features grid, download CTA
+- `Welcome` — the home page: hero, the problem, four claims, the honest
+  paragraph, the closing line
+- `Beta` — the invite page. A `'use client'` component because the route above
+  it exports `metadata`, and **a server component may not hand a function —
+  `component={Link}` — to a Mantine client component**: it fails at *prerender*
+  with "element type is invalid", not at typecheck.
 - `ColorSchemeControl` / `ColorSchemeToggle` — dark mode toggle
 - `ReleaseNotes` — fetches GitHub releases via `/api/github-releases`
 
 ### API Routes (`app/api/`)
 
 - `version/` — returns current package version
-- `github-releases/` — proxies GitHub Releases API for FinderGit (configured in `config/index.ts`). Uses `GITHUB_TOKEN` env var when set to raise the rate limit from 60/hr to 5000/hr.
+- `github-releases/` — proxies the GitHub Releases API (configured in `config/index.ts`). Points at this repo, which has no releases while the beta is closed. Uses `GITHUB_TOKEN` env var when set to raise the rate limit from 60/hr to 5000/hr.
 - `search/` — pagefind-based full-text search endpoint
 
 ### Environment variables
@@ -93,17 +121,25 @@ In `app/layout.tsx`, CSS imports must follow this order:
 ## Content Guidelines
 
 - All website content is in **English**
-- The app is described as: "A Git-aware file browser for macOS"
-- Key selling points: sortable columns, live git status, inline diff viewer, git actions, search & filter, native macOS app
-- Target audience: developers who use Git and want a better file browsing experience on macOS
-- Download links point to GitHub Releases on the **website** repo (the FinderGit app repo is private, so releases are published here): `https://github.com/gfazioli/findergit-website/releases/latest` — matches `config.app.downloadUrl`.
+- The app is described as: "A native macOS mail client shaped like a conversation"
+- **The thesis is about SHAPE, not about sorting.** Every mail client claims it
+  sorts better; Vicenda's difference sits upstream of that — it stops treating
+  mail as a list. Machines become channels, people become threads, and a
+  recognised machine message is drawn as a card instead of rendered as
+  somebody's HTML. That is checkable in one screenshot, which is why it is the
+  pitch.
+- **Only describe what the app ships.** Built: the stream, the embed cards and
+  their identity gate, Gmail read+write, the IMAP tier, the block-everything
+  reader, one-hue-per-account. NOT built, and not to appear anywhere: in-app
+  OAuth consent, sending, archive and delete over IMAP, the notch, the menu bar.
+- **No download links.** Every download affordance goes to `/beta`.
 
 ### No infrastructure leaks in user-facing copy
 
 User-facing pages (`content/*.mdx` aimed at end users, the homepage, release notes hosted at `public/release-notes/<version>.html`, FAQ entries, marketing CTAs) **never name the underlying provider, model, or infrastructure**:
 
 - ❌ "Groq", "Llama", "OpenAI", "Anthropic" — say "the AI" or "the AI provider"
-- ❌ "Vercel proxy", "Next.js API route", "Cloudflare Worker" — say "FinderGit handles the request on your behalf"
+- ❌ "Vercel proxy", "Next.js API route", "Cloudflare Worker" — say "Vicenda handles the request on your behalf"
 - ❌ "Sparkle", "AppKit's NSEvent monitor", framework names — say "the auto-update framework" / "macOS keyboard handling"
 - ✅ User-relevant facts ARE allowed: "free", "no API key required", "diffs are not stored", "macOS 15+ required", "100 KB diff cap"
 
