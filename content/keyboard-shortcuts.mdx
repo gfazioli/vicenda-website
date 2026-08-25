@@ -1,0 +1,65 @@
+---
+description: "Every FinderGit keyboard shortcut — file operations, navigation, view, repository Git actions and settings — for fast, mouse-free work on macOS."
+---
+
+# Keyboard Shortcuts
+
+FinderGit supports many keyboard shortcuts for fast navigation and Git operations.
+
+## File operations
+
+<ShortcutsTable shortcuts={[
+  { keys: ['Space'], action: 'Quick Look the selected file inside the window — syntax-highlighted code, rendered Markdown, or a native preview for images/PDF/media (Space or Escape to close)' },
+  { keys: ['⌘', 'Y'], action: 'Quick Look the selected file (same in-window preview as Space)' },
+  { keys: ['⌘', '↩'], action: 'Open the selected file' },
+  { keys: ['↩'], action: 'Activate the selection — open a file, or drill into a folder' },
+  { keys: ['⌫'], action: 'Move the whole selection to the Trash (undo-able with ⌘Z)' },
+  { keys: ['⌘', 'Z'], action: 'Restore the last trashed batch to its original location' },
+  { keys: ['⌘', '⇧', 'R'], action: 'Reveal in Finder' },
+  { keys: ['⌘', '⇧', 'C'], action: 'Copy file path' },
+  { keys: ['⌘', '⇧', 'O'], action: 'Add a root folder' },
+]} />
+
+## Navigation
+
+<ShortcutsTable shortcuts={[
+  { keys: ['⌘', 'T'], action: 'Open a new tab — each tab gets its own sidebar selection and drill-down history' },
+  { keys: ['⌘', 'F'], action: 'Focus the filter field — start typing to narrow the current tree by name' },
+  { keys: ['⌘', '['], action: 'Back — pop the drill-down history' },
+  { keys: ['⌘', ']'], action: 'Forward — replay the most recent back' },
+]} />
+
+## View
+
+<ShortcutsTable shortcuts={[
+  { keys: ['⌘', '⇧', '.'], action: 'Show hidden files — toggle dotfiles in the tree (Finder-style)' },
+  { keys: ['⌥', '⌘', 'D'], action: 'Detail at Bottom — move the detail panel below the tree instead of beside it' },
+  { keys: ['⌘', '+'], action: 'Zoom in (increase tree font size)' },
+  { keys: ['⌘', '−'], action: 'Zoom out (decrease tree font size)' },
+  { keys: ['⌘', '0'], action: 'Reset to actual size (13pt)' },
+  { keys: ['⌥', '⌘', 'R'], action: 'Rescan all root folders' },
+]} />
+
+## Repository
+
+<ShortcutsTable shortcuts={[
+  { keys: ['⌘', '⇧', 'F'], action: 'Fetch' },
+  { keys: ['⌘', '⇧', 'L'], action: 'Pull' },
+  { keys: ['⌘', '⇧', 'P'], action: 'Push' },
+  { keys: ['⌘', '⇧', 'A'], action: 'Stage All' },
+  { keys: ['⌘', '⇧', 'S'], action: 'Stage selected file' },
+  { keys: ['⌃', '⌘', 'T'], action: 'Open in Terminal' },
+  { keys: ['⌘', 'R'], action: 'Refresh repository status' },
+]} />
+
+## Settings
+
+<ShortcutsTable shortcuts={[
+  { keys: ['⌘', ','], action: 'Open Settings' },
+]} />
+
+## Help
+
+<ShortcutsTable shortcuts={[
+  { keys: ['⌘', '?'], action: 'Open the live online docs in your default browser (replaces the macOS default Help menu, which has no docs to surface)' },
+]} />

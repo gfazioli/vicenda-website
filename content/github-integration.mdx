@@ -1,0 +1,165 @@
+---
+description: "Connect FinderGit to GitHub with the GitHub CLI or a personal access token to enable the Issues, Pull Requests and Stars columns, the Account dashboard, and fork awareness."
+---
+
+import { Kbd } from '@/components/Kbd';
+
+# GitHub Integration
+
+FinderGit reads GitHub data — open issues, pull requests, repository metadata, stargazer counts — directly from your repositories' configured remotes. Nothing leaves your Mac except the requests to `api.github.com`; no FinderGit-side proxy or telemetry sits in the middle.
+
+The integration powers:
+
+- The **Overview**, **Issues**, and **Pull Requests** tabs in the [Detail Panel](/docs/detail-panel)
+- Three columns in the [File Browser](/docs/file-browser): **Issues**, **PRs**, and **Stars**
+- **Fork awareness** — a badge on forks, how far they trail their upstream, and one-click sync
+
+## How FinderGit talks to GitHub
+
+There are two ways to authenticate, and FinderGit picks the right one automatically per call:
+
+1. **GitHub CLI (`gh`)** — preferred. If you already use `gh` and have run `gh auth login`, FinderGit inherits that authentication and you don't need to manage a token.
+2. **Personal Access Token (PAT)** — fallback. If `gh` isn't installed or isn't authenticated, FinderGit reads a token you've pasted into Settings (stored in the macOS Keychain, never on disk in FinderGit's own files).
+
+If neither is configured, the GitHub-driven tabs and columns degrade gracefully: a short hint replaces the empty list, and the rest of FinderGit keeps working.
+
+### Option 1: `gh` CLI (recommended)
+
+If you don't have it yet:
+
+```sh
+brew install gh
+gh auth login
+```
+
+That's the whole setup. The first time you open a GitHub repo in FinderGit, the Issues / PRs / Overview tabs and the file-browser counts columns will populate.
+
+### Option 2: Personal Access Token
+
+If you can't or don't want to install `gh`:
+
+1. Create a token at <a href="https://github.com/settings/tokens" target="_blank" rel="noreferrer">github.com/settings/tokens</a> with read access to issues and pull requests on the repos you care about. A fine-grained token scoped to **Issues: Read** and **Pull requests: Read** is enough for the default views.
+2. Open **Settings → Git → GitHub Token**.
+3. Paste the token into the field and click **Save & Validate**.
+
+FinderGit round-trips a single call to GitHub before saving. If the token is rejected (401/403), the error is surfaced and the token never lands in your Keychain. If the call fails for a network reason (offline, transient outage), you'll see a "Couldn't reach GitHub" message — try again, no need to assume the token is bad.
+
+Once stored, the token lives in the Keychain under the entry for `github.com`. Use the **Remove** button to delete it.
+
+![Settings → Git → GitHub Token with a saved token and the paste-to-replace field](/screenshot-settings-git.png)
+
+## What populates from GitHub
+
+### Overview tab
+
+- Description, stars, forks
+- For a fork: a **Forked from owner/parent** line (clickable → the upstream on GitHub.com), how many commits it's behind upstream, and a **Sync** button (see [Fork awareness](#fork-awareness))
+- Latest release tag (clickable → opens the release on GitHub.com)
+- Homepage URL (clickable)
+- Repository topics
+- Top contributors (up to eight avatars, clickable → their GitHub profile)
+
+### Issues tab
+
+Open issues for the repo, with state icon, number, title, labels, and author avatar. Click any row to open the issue on GitHub.com. The **New Issue** button opens the new-issue form, and **Open on GitHub** opens the full Issues page in your browser (the label follows the remote's host — GitHub, GitLab, Bitbucket, or Codeberg).
+
+![Issues tab populated on a Mantine extension repo](/screenshot-detail-issues.png)
+
+### Pull Requests tab
+
+Same shape as Issues, with three state colours (green for open, purple for merged, red for closed-not-merged) plus a grey **Draft** pill for draft PRs. The **New Pull Request** button opens the compare page on GitHub.com, and **Open on GitHub** opens the full Pull Requests page in your browser.
+
+![Pull Requests tab — Renovate-style dependency-update PRs visible in the list](/screenshot-detail-prs.png)
+
+### File-browser columns
+
+In the table, three columns appear next to **Changes**:
+
+- **Issues** — number of open issues
+- **PRs** — number of open pull requests
+- **Stars** — stargazer count, with a small ⭐ icon
+
+Numbers use the compact format (`1.2K` instead of `1234`). Click any column header to sort by it — popular repos to the top, or busiest repos by open issues.
+
+Codeberg repos fill these in too — see [Codeberg](#codeberg) below. For repos that are local-only or point at GitLab / Bitbucket, the cells stay empty; integration for those two is a planned follow-up.
+
+## Fork awareness
+
+Many of the repos you keep locally are GitHub **forks**, and it's easy to lose track of which ones have fallen behind their upstream. FinderGit surfaces that without a trip to GitHub.com.
+
+### Fork badge
+
+A small branch glyph sits next to a fork's name in the file browser. When the fork is up to date with its upstream it stays muted; when it's behind, it turns orange and shows **↓N** — the number of commits the fork trails its upstream's default branch. Hover for the upstream's name and the exact count.
+
+Git itself has no concept of a "fork", so this comes from GitHub: FinderGit reads whether the repo is a fork, what it was forked from, and how far its default branch is ahead of / behind the parent's.
+
+![Fork badge in the file browser and the fork's Overview banner showing where it was forked from](/screenshot-fork-badge.png)
+
+### Sync a fork
+
+When a fork is behind, **Sync** brings it up to date in one step — from the **Overview** tab, or by right-clicking the repo → **Sync Fork**. FinderGit:
+
+1. Fast-forwards the fork's default branch from its upstream **on GitHub**, then
+2. **pulls** your local clone so the working copy matches.
+
+One click and the fork is current both on GitHub and on disk — no opening the repo in a browser to hit "Sync fork".
+
+### Update from upstream
+
+A fast-forward isn't always available. A fork whose history has **diverged** — it has its own commits *and* is missing upstream commits — can't be synced that way, on GitHub or anywhere else. And even a fork that is merely behind can't use the one-click Sync if your token can't push to it, or if you never set one up.
+
+Both cases have the same way out, and FinderGit does it for you. The **Update** menu on the fork's Overview banner offers:
+
+- **Merge** — brings the upstream commits in and creates a merge commit, keeping your own commits where they are.
+- **Rebase** — replays your commits on top of the upstream's, giving a linear history.
+
+FinderGit adds the `upstream` remote if your clone doesn't have one — a clone of a fork never does, which is why `git fetch` alone never had anything to fetch — then fetches it and integrates the parent's default branch.
+
+Two things it deliberately does *not* do:
+
+- **It never pushes.** After a rebase your history has been rewritten, so the next push needs a force — that's your call to make, not a decision to take on your behalf. FinderGit tells you which case you're in when it finishes.
+- **It never repoints an `upstream` you already configured.** If one exists and points somewhere other than the fork's parent, FinderGit stops and names both, rather than quietly fetching from a repository you didn't mean.
+
+If the merge or rebase stops on a conflict, it's left in place and the usual [conflict strip](/docs/git-actions#when-a-merge-or-rebase-stops-on-a-conflict) picks it up with **Finish** and **Abort** — the same path a conflicted pull already takes.
+
+![A fork's Overview showing its upstream-sync state, with the rest of the repos in the list](/screenshot-fork-sync.png)
+
+## Caching and freshness
+
+To respect GitHub's rate limits and keep the UI snappy:
+
+- **Issues** and **Pull Requests** lists cache for **60 seconds** — fast enough that the tab strip can be flipped without re-fetching, slow enough to suppress redundant calls in the same browsing session.
+- **File-browser counts** cache for **5 minutes** — these numbers change slowly and the file browser may show dozens of repos at once, so a 60-second TTL would churn the network on every scroll.
+- **Fork status** caches for **5 minutes** too — fork drift moves slowly. The toolbar **Refresh** re-checks every loaded repo, and syncing a fork re-checks that one immediately.
+
+Each tab has a **Refresh** button that bypasses the cache when you want immediate fresh data.
+
+## Privacy and rate limits
+
+- All requests go directly to `api.github.com` from your Mac. FinderGit runs no proxy and stores no telemetry about the repos you open.
+- With `gh` CLI auth or a PAT, you get GitHub's authenticated rate limit (5000 requests/hour) — comfortably above what FinderGit consumes.
+- Unauthenticated traffic is *not* attempted; if neither `gh` nor a PAT is set up, FinderGit shows an empty state instead of hitting the 60-request/hour anonymous limit.
+
+## Codeberg
+
+Codeberg repos are enriched too, and unlike GitHub they need **no setup at all** — no account to connect, no token to paste. Codeberg runs [Forgejo](https://forgejo.org), whose API answers anonymous requests, so the moment FinderGit recognises a `codeberg.org` remote it can fill in the numbers.
+
+What works on a Codeberg repo:
+
+- The **Issues** and **Pull Requests** tabs, with labels, authors and state.
+- The **file-browser columns** — stars, open issues, open pull requests.
+- **Overview** metadata: description, stars, forks, topics, website, and the latest release.
+- The **fork badge** and its parent repository.
+- The sidebar **Codeberg** filter, and **Open on Codeberg** in the context menu.
+
+What does not, and why:
+
+| Not available | Reason |
+|---|---|
+| Contributor list in Overview | Forgejo has no public contributors endpoint |
+| "N behind" and **Sync Fork** | Both need an account. Forgejo *can* sync a fork and *can* report how far behind one is — it just won't tell an anonymous caller, and FinderGit has nowhere to sign in to Codeberg yet. A count we can't trust would badge a stale fork as up to date, so it shows nothing instead |
+| Forge status panel | Codeberg publishes its status through Uptime Kuma rather than the platform the panel reads; a link with no numbers behind it would be worse than none |
+| Account dashboard, Clone window | Both describe *your* account, which needs credentials Codeberg is not being asked for |
+
+GitLab and Bitbucket remain browse-only: FinderGit recognises their remotes, filters by them and opens them in a browser, but does not read their APIs. Their repos show empty columns rather than borrowed numbers.
+

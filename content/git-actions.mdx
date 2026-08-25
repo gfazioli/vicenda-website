@@ -1,0 +1,180 @@
+---
+description: "Stage, commit, push, pull, fetch, switch branches and discard changes from FinderGit — via the docked action bar, the Unstage tab and context menus — reconcile a diverged branch with merge or rebase, resolve a stopped merge, and run Fetch, Pull or Push across many selected repositories at once."
+---
+
+# Git Actions
+
+FinderGit lets you perform common Git operations directly from the app, without opening a terminal.
+
+## Where the actions live
+
+Git operations are spread across three surfaces of the [Detail Panel](/docs/detail-panel):
+
+- **Docked action bar** (bottom edge of the panel, visible from every tab) — Fetch · Pull · Push · Refresh, plus a compact branch · upstream · ahead/behind summary.
+- **Unstage tab** — the changes list, per-file Stage / Unstage, and the commit form.
+- **Context menus** in the file browser — right-click any repo for quick Fetch / Pull / Push / Stage All / Open in Terminal; right-click a file for Stage / Unstage.
+
+The repository-level commands (Fetch / Pull / Push) all run against the upstream of the currently checked-out branch. The first push sets it with `--set-upstream origin <branch>` automatically.
+
+![Unstage tab — changes list with inline diff and the commit form, docked action bar at the bottom](/screenshot-detail-unstage.png)
+
+## Available actions
+
+### Docked action bar
+
+The bar sits at the bottom of the [Detail Panel](/docs/detail-panel) and stays reachable from every tab — you never leave Commits to push or leave Issues to pull.
+
+- **Fetch** — fetches from all remotes (`git fetch --all`)
+- **Pull** — pulls from the upstream using your [pull strategy](/docs/settings#pull-strategy), always passed explicitly (`--ff-only`, `--no-rebase` or `--rebase`), so pulling behaves the same on every machine. Turns into a menu when the branch has [diverged](#when-your-branch-has-diverged)
+- **Push** — pushes to the upstream. If no upstream is configured, automatically sets it with `--set-upstream origin <branch>`
+- **Refresh** — re-reads the repository status (local only, no network)
+
+### Button feedback
+
+Every action button adapts its appearance to show you what's happening:
+
+- **Idle** — default icon and label
+- **In progress** — a spinner replaces the icon, the label becomes *"Fetching…"* / *"Pulling…"* / *"Pushing…"* / *"Refreshing…"*, and the other action buttons disable so you can't fire a second command while one is in flight
+- **Taking a while** — past three seconds the button also shows how long it has been running, because a spinner tells you something is happening but not whether it's working or stuck
+- **Success** — a green checkmark briefly flashes on the button that just finished (~1.5s), then fades back to the idle icon
+- **Failure** — a red x stays on the button; hover the button to see the underlying error message
+- **Stopped** — a neutral grey stop icon, not a red x. You asked for it, so it isn't reported as something going wrong
+
+A brief confirmation banner (green) or error banner (red) also appears just under the action bar for a few seconds.
+
+### Stopping something that's taking too long
+
+Once **Fetch**, **Pull** or **Push** has been running for three seconds, its button becomes a stop control — the label gains a stop icon next to the elapsed time, and clicking it ends the operation. The delay is deliberate: without it, a double-click on Fetch would cancel the fetch you just started.
+
+Stopping is a real interruption, not just the app looking away — the underlying Git process is ended. What that leaves behind depends on the action:
+
+- A stopped **Fetch** is harmless. Nothing in your working tree changes and you can simply run it again.
+- A stopped **Push** leaves the remote either updated or untouched, never half-way: Git updates each branch atomically.
+- A stopped **Pull** is the one to know about. If it was still downloading, nothing has changed. If it had started merging, you may be left mid-merge — and FinderGit notices that and offers **Finish** and **Abort** in the strip above the action bar, the same way it does for a merge that stopped on a conflict.
+
+**Refresh** has no stop control, because it's a local re-read that finishes before you could click it.
+
+### Responsive compact mode
+
+When the detail panel is narrower than about 500px (common on 13" laptops or split-screen windows), the layout automatically adapts:
+
+- Action buttons collapse to **icon-only** — the title still shows as a tooltip on hover
+- Section spacing and typography tighten
+- Long strings (repo path, last-commit subject) truncate more aggressively
+- Branch/Upstream/Ahead-Behind info switches from a single row to a compact two-column stack
+
+No setting to manage — widen the panel and the full layout returns automatically.
+
+### Staging and unstaging
+
+Stage / Unstage and the commit form live in the [Unstage tab](/docs/detail-panel#unstage). The changes list is grouped into two clearly labelled sections:
+
+- **Staged Changes (N)** — files already in the index, ready to be committed
+- **Unstaged Changes (N)** — files modified or untracked in the working tree, not yet staged (not in the index)
+
+Each file in either section has a **Stage** or **Unstage** button:
+- **Stage** — runs `git add <file>`
+- **Unstage** — runs `git restore --staged <file>`
+- **Stage All** ↔ **Unstage All** — the header button toggles based on state: stages everything when there are unstaged changes, switches to **Unstage All** (orange tint) when the index is fully caught up so you can reset it in one click
+
+The per-file buttons appear intelligently: "Stage" only shows for files with unstaged changes, "Unstage" only for staged files.
+
+Unstaged rows additionally carry a red **Discard** (and the section header a **Discard All**): modified files are reverted to the last staged/committed version, untracked files are moved to the **Trash** (recoverable from Finder) — always behind a confirmation. See [Discard changes](/docs/detail-panel#discard-changes).
+
+### Committing
+
+Below the changes list, a commit section appears when there are changes:
+1. Type your commit message in the text field — or click **✨ AI** to generate one from your staged diff (see [AI Commit Messages](/docs/ai-commit-messages))
+2. Click **Commit Staged** to commit only staged files
+3. Or click **Commit All & Push** to stage everything, commit, and push in one action
+
+### Context menu actions
+
+Right-click on a repository directory for quick access to:
+- Fetch, Pull, Push, Stage All
+- **Switch Branch** — a submenu of the repo's local branches (see [Branches](/docs/detail-panel#branches))
+- **Sync Fork** — shown when the repo is a GitHub fork that's behind its upstream (see [Fork awareness](/docs/github-integration#fork-awareness))
+- Open in Terminal (uses your preferred terminal app from Settings)
+
+Right-click on a file inside a repo for:
+- Stage / Unstage (only when applicable)
+
+## When your branch has diverged
+
+Sooner or later a branch ends up with commits on **both** sides — you committed locally while the remote moved on (a teammate pushed, you synced a fork on the web, a bot bumped dependencies). The status pill shows it as **↑N ↓M** in red.
+
+This is the one state where a plain pull can't help: with no reconcile strategy configured, Git refuses outright —
+
+```
+fatal: Need to specify how to reconcile divergent branches.
+```
+
+— and exits without touching anything, which in most GUIs looks like a Pull button that does nothing.
+
+FinderGit says so instead. A **strip appears above the action bar** naming the upstream and both counts, and the **Pull button becomes a menu**. Both offer the same three ways out:
+
+- **Merge** (`git pull --no-rebase`) — brings the remote in and writes a merge commit. Keeps both histories, including any local merge commits.
+- **Rebase** (`git pull --rebase --autostash`) — replays your commits on top of the remote for a linear history. Auto-stashes uncommitted work first and restores it afterwards. Note it flattens local merge commits.
+- **Discard my commits and reset to `origin/<branch>`** — behind the menu's **⋯** and a confirmation that names how many commits you'd lose. Destructive: your branch becomes an exact copy of the remote, dropping local-only commits and uncommitted changes to tracked files. Git's reflog keeps them recoverable from a terminal for a while.
+
+The same choice appears **inside the error popover** if a Pull or Push already failed, so the fix is one click from the message that explains it.
+
+Repositories in this state also get their own **Diverged** smart view in the sidebar and a count in the status bar, so you can find every one of them at a glance.
+
+![A diverged repository: the strip above the action bar reads "Diverged from origin/main ↑2 ↓3" with Merge, Rebase and an overflow menu, the Pull button has become a split-menu, and the sidebar's Diverged smart view holds the count](/screenshot-diverged-branch.png)
+
+### When ↑N ↓N isn't what it looks like
+
+An ahead/behind count can't tell you whether those are really two sets of commits. `↑78 ↓78` looks like 78 commits of work on each side, but it's just as often **one history rewritten and force-pushed** — the same 78 changes carrying new IDs because something early in the history changed (a re-dated first commit, an amended old commit, a `filter-repo` run). Merging that duplicates every commit; git may refuse it outright.
+
+So FinderGit compares the actual changes, not the commit IDs, and says which case you're in:
+
+- **"All N of your local commits already exist on the remote as rewritten copies"** — nothing here is unpublished. Resetting onto the remote is the clean way out, and the reset button moves out of the overflow menu because it *is* the fix.
+- **"These two histories share no common ancestor"** — one side was rebuilt from its very first commit. **Merge is disabled**, because git refuses that (`refusing to merge unrelated histories`); keep the side that holds the work you want.
+- **"N of your M local commits carries work the remote doesn't already have"** — partly rewritten. Merge and rebase both apply; now you know how much is actually at stake.
+
+This is a common shape when you work from two machines: one of them rewrites and force-pushes, the other keeps the pre-rewrite copy and shows a scary symmetric count that no amount of pulling will fix.
+
+## When a merge or rebase stops on a conflict
+
+Git integrates what it can on its own and stops on the first real conflict, leaving the repository *mid-operation*. FinderGit detects that state — whether it started the operation or you did in a terminal — and the strip above the action bar switches to it:
+
+- The headline names what's open (**Merge in progress**, **Rebase in progress**, also cherry-pick, revert and bisect) and how many files still conflict.
+- **Abort** throws the whole operation away and puts you back where you started.
+- **Finish Merge** / **Continue Rebase** concludes it — enabled only once every conflicting file is staged.
+- **Pull and Push are disabled** while it's open, with a tooltip saying why. Git would refuse them anyway; this says it before the click.
+
+In the [Unstage tab](/docs/detail-panel#unstage) each unmerged file is tagged **CONFLICT** and sits in *Unstaged Changes* until you settle it. Edit it to keep the version you want, then **Mark Resolved** (that's `git add` — how you tell Git the conflict is settled). Per-file *Discard* is deliberately hidden for conflicted files: use Abort if you want out of the whole operation.
+
+## Bulk actions across repositories
+
+Select **more than one repository** in the file browser — ⌘-click or ⇧-click to build a selection, even across different root folders — and FinderGit can Fetch, Pull, or Push all of them in one go.
+
+- **Right-click** the selection → **Fetch N Repos** / **Pull N Repos** / **Push N Repos**
+- Or the **Repository menu** → **Fetch / Pull / Push Selected Repos**
+
+A small progress card appears while the batch runs, with one row per repository — a spinner while it works, then a green check, a red ✗ (hover for the error), or a *skipped* note. It tidies itself away after a fully clean run and stays put if anything failed, so you can read what happened.
+
+- **Fetch** runs on every selected repo.
+- **Pull** and **Push** skip repos with no upstream branch (marked *skipped*, not failed).
+- **Push** asks for confirmation first, listing how many repos it will push — it writes to remotes, so it's the one bulk action behind a prompt.
+
+Repositories are processed a few at a time, so a large selection doesn't flood the network.
+
+![Fetch, Pull and Push across a multi-repo selection, with per-repo progress](/screenshot-bulk-fetch.png)
+
+## From the menu bar
+
+The **Repository** menu provides the same actions with keyboard shortcuts:
+
+<ShortcutsTable shortcuts={[
+  { keys: ['⌘', '⇧', 'F'], action: 'Fetch' },
+  { keys: ['⌘', '⇧', 'L'], action: 'Pull' },
+  { keys: ['⌘', '⇧', 'P'], action: 'Push' },
+  { keys: ['⌘', '⇧', 'A'], action: 'Stage All' },
+  { keys: ['⌘', '⇧', 'S'], action: 'Stage Selected File' },
+  { keys: ['⌃', '⌘', 'T'], action: 'Open in Terminal' },
+  { keys: ['⌘', 'R'], action: 'Refresh' },
+]} />
+
+Menu items are enabled/disabled based on what's selected and whether the file actually has changes.
