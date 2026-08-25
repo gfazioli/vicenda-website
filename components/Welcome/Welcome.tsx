@@ -1,6 +1,10 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
+import { Reflection } from '@gfazioli/mantine-reflection';
+import { Scene } from '@gfazioli/mantine-scene';
+import { TextAnimate } from '@gfazioli/mantine-text-animate';
 import {
   IconArrowRight,
   IconCards,
@@ -8,7 +12,19 @@ import {
   IconMessages,
   IconPalette,
 } from '@tabler/icons-react';
-import { Badge, Box, Button, Container, Group, SimpleGrid, Stack, Text, Title } from '@mantine/core';
+import {
+  Badge,
+  Box,
+  Button,
+  Container,
+  Grid,
+  Group,
+  SimpleGrid,
+  Stack,
+  Text,
+  ThemeIcon,
+  Title,
+} from '@mantine/core';
 import config from '@/config';
 import { ACCOUNT_RING } from '@/theme';
 
@@ -17,32 +33,31 @@ import { ACCOUNT_RING } from '@/theme';
  *
  * ## The thesis, and why it is this one
  *
- * Every mail client's pitch is that it sorts better. Vicenda's difference is
- * upstream of sorting: **it stops treating mail as a list**. The machines that
- * write to you become channels, the people become threads, and a recognised
- * machine message is drawn as a card rather than rendered as somebody's HTML.
- * That is a claim about SHAPE, which is the only kind a reader can check in one
- * screenshot — and it is true of the app rather than aspirational, which is the
- * rule this workspace has for marketing copy.
+ * Every mail client's pitch is that it sorts better. Vicenda's difference sits
+ * upstream of sorting: **it stops treating mail as a list**. Machines become
+ * channels, people become threads, and a recognised machine message is drawn as
+ * a card instead of rendered as somebody's HTML. That is a claim about SHAPE,
+ * which is the only kind a reader can check in one screenshot — and it is true
+ * of the app today rather than aspirational.
  *
- * ## The one borrowing
+ * ## Why nothing here loops
  *
- * The closing line echoes *Think Different*. The homage stops at the words: the
- * campaign's face is Apple Garamond, which is Apple's own and not licensable,
- * so this is EB Garamond — the same lineage, legitimately. See `app/layout.tsx`.
+ * Every `Scene` layer is mounted with `animate={false}` and the headline is
+ * `trigger="mount"`, which runs once. The app's brief forbids perpetual
+ * animation because it pins a core keeping the compositor committing every
+ * frame; a marketing page is not an app, but it is somebody's battery, and the
+ * brand is restraint. `Scene` also honours `reducedMotion`.
  *
- * ## What is deliberately not here
- *
- * No feature grid, no counters, no "trusted by". The app has one user and the
- * beta is closed; a page dressed as a launch would be the first thing on it
- * that is not true.
+ * The one layer with a technical rather than aesthetic reason is `SceneNoise`:
+ * a wide dark radial gradient **bands** on an 8-bit display, and grain is the
+ * standard fix. It is at 3% and doing real work.
  */
 
 const PILLARS = [
   {
     icon: IconMessages,
     title: 'Machines get channels. People get threads.',
-    body: 'They are not the same kind of mail and they never were. A sender that writes to you every day about deployments is a place you visit; a person waiting on an answer is a debt you owe. One belongs in a stream you scan, the other in a list that empties.',
+    body: 'They are not the same kind of mail and never were. A sender that writes to you every day about deployments is a place you visit; a person waiting on an answer is a debt you owe. One belongs in a stream you scan, the other in a list that empties.',
   },
   {
     icon: IconCards,
@@ -52,7 +67,7 @@ const PILLARS = [
   {
     icon: IconPalette,
     title: 'Colour means one thing: which mailbox.',
-    body: 'Eight hues at a single lightness and chroma, so none of them shouts louder than another. Nothing else in the app is allowed to spend colour — not priority, not category. That is what turns “which account is this?” into a glance.',
+    body: 'Eight hues at a single lightness and chroma, so none shouts louder than another. Nothing else in the app is allowed to spend colour — not priority, not category. That is what turns “which account is this?” into a glance.',
   },
   {
     icon: IconEyeOff,
@@ -63,59 +78,154 @@ const PILLARS = [
 
 export function Welcome() {
   return (
-    <Box>
-      {/* ---- Hero ---------------------------------------------------- */}
-      <Container size="lg" py={{ base: 60, sm: 110 }}>
-        <Stack gap="xl" maw={860}>
-          <Group gap="xs">
-            <Badge variant="light" radius="sm" size="sm">
-              Closed beta
-            </Badge>
-            <Text size="sm" c="dimmed">
-              macOS {config.app.minMacOS} or later
-            </Text>
-          </Group>
+    <Box style={{ position: 'relative' }}>
+      {/*
+        THE GROUND, scoped to the hero rather than fullscreen.
 
-          <Title order={1} fz={{ base: 46, sm: 82 }} fw={400} lh={1.02}>
-            <span className="display-hero">Your mail is not a list.</span>
-          </Title>
+        `fullscreen` would put the scene at `z-index: -1` under a body that
+        `theme/global.css` paints opaque in dark mode, and under whatever
+        backgrounds Nextra's layout wrappers carry — a stack this file does not
+        own and cannot check from here. Mounted inside a `position: relative`
+        section it fills that section and nothing else, which is the same
+        picture with none of the argument.
 
-          <Text fz={{ base: 18, sm: 21 }} c="dimmed" maw={640} lh={1.55}>
-            Vicenda is a Mac mail client shaped like a conversation. The machines that write to you
-            get channels. The people get threads. Nothing ever leaves your Mac.
-          </Text>
-
-          <Group gap="sm" mt="xs">
-            <Button component={Link} href="/beta" size="md" radius="xl" rightSection={<IconArrowRight size={16} />}>
-              Ask for an invite
-            </Button>
-            <Button component={Link} href="/docs" size="md" radius="xl" variant="default">
-              See how it works
-            </Button>
-          </Group>
-
+        Three static layers: a radial wash in the icon's own blue, a soft glow
+        behind the mark, and grain over both. The gradient is anchored where
+        the icon sits so the light appears to come off it.
+      */}
+      <Box style={{ position: 'relative', overflow: 'hidden' }}>
+        <Scene reducedMotion="auto">
+          <Scene.Gradient
+            type="radial"
+            position="72% 12%"
+            from="vicenda.6"
+            to="dark.9"
+            fromOpacity={0.38}
+            toOpacity={0}
+            animate={false}
+          />
+          <Scene.Glow
+            color="vicenda"
+            shade={5}
+            top="4%"
+            left="64%"
+            size={640}
+            blur={180}
+            opacity={0.22}
+            animate={false}
+          />
           {/*
-            THE ACCOUNT RING, which is the app's own and nobody else's: eight
-            hues at one lightness, 45° apart on an OKLCH circle. It is the
-            product's single graphic device, so the site opens with it rather
-            than with a logo.
+            NOT decoration. A wide dark radial gradient BANDS on an 8-bit
+            display; grain is the standard fix, and 3% is enough to break the
+            steps without reading as texture.
           */}
-          <Group gap={6} mt="lg" aria-hidden>
-            {ACCOUNT_RING.map((hue) => (
-              <Box key={hue} w={26} h={4} style={{ background: hue, borderRadius: 2 }} />
-            ))}
-          </Group>
-          <Text size="xs" c="dimmed" mt={-8}>
-            One hue per mailbox. Seven accounts, one glance.
-          </Text>
-        </Stack>
-      </Container>
+          <Scene.Noise opacity={0.03} grain={0.8} octaves={2} />
+        </Scene>
+
+      {/* ---- Hero ---------------------------------------------------- */}
+        <Container size="lg" py={{ base: 56, sm: 104 }} style={{ position: 'relative' }}>
+        <Grid gap={{ base: 40, md: 64 }} align="center">
+          <Grid.Col span={{ base: 12, md: 7 }}>
+            <Stack gap="xl">
+              <Group gap="xs">
+                <Badge variant="light" radius="sm" size="sm">
+                  Closed beta
+                </Badge>
+                <Text size="sm" c="dimmed">
+                  macOS {config.app.minMacOS} or later
+                </Text>
+              </Group>
+
+              <Title order={1} fz={{ base: 44, sm: 76 }} fw={400} lh={1.02}>
+                <span className="display-hero">
+                  {/*
+                    One pass on mount, by word. `loop` exists and is not used:
+                    a headline that keeps re-animating is a headline you cannot
+                    finish reading.
+                  */}
+                  <TextAnimate animation="blurUp" by="word" trigger="mount" duration={0.7}>
+                    Your mail is not a list.
+                  </TextAnimate>
+                </span>
+              </Title>
+
+              <Text fz={{ base: 18, sm: 21 }} c="dimmed" maw={560} lh={1.55}>
+                Vicenda is a Mac mail client shaped like a conversation. The machines that write to
+                you get channels. The people get threads. Nothing ever leaves your Mac.
+              </Text>
+
+              <Group gap="sm" mt="xs">
+                <Button
+                  component={Link}
+                  href="/beta"
+                  size="md"
+                  radius="xl"
+                  rightSection={<IconArrowRight size={16} />}
+                >
+                  Ask for an invite
+                </Button>
+                <Button component={Link} href="/docs" size="md" radius="xl" variant="default">
+                  See how it works
+                </Button>
+              </Group>
+
+              {/*
+                THE ACCOUNT RING, the app's own and nobody else's: eight hues at
+                one lightness, 45° apart on an OKLCH circle. The site opens with
+                it rather than with a logo, because it is the single graphic
+                device the product already has.
+              */}
+              <Stack gap={6} mt="md">
+                <Group gap={6} aria-hidden>
+                  {ACCOUNT_RING.map((hue) => (
+                    <Box key={hue} w={26} h={4} style={{ background: hue, borderRadius: 2 }} />
+                  ))}
+                </Group>
+                <Text size="xs" c="dimmed">
+                  One hue per mailbox. Seven accounts, one glance.
+                </Text>
+              </Stack>
+            </Stack>
+          </Grid.Col>
+
+          <Grid.Col span={{ base: 12, md: 5 }}>
+            {/*
+              The mark at its full 512, with a reflection under it. An app icon
+              standing on a dark plane is the most honest hero image a Mac app
+              has: it is the thing you will actually see in the Dock.
+            */}
+            <Box style={{ display: 'flex', justifyContent: 'center' }}>
+              <Reflection
+                reflectionDistance={6}
+                reflectionOpacity={0.28}
+                reflectionStretch={0.45}
+                reflectionBlur={2}
+                shadow={false}
+                disableChildren
+              >
+                <Image
+                  src="/icon-512x512.png"
+                  alt="The Vicenda app icon"
+                  width={512}
+                  height={512}
+                  priority
+                  sizes="(max-width: 62em) 60vw, 380px"
+                  style={{ width: '100%', maxWidth: 380, height: 'auto' }}
+                />
+              </Reflection>
+            </Box>
+          </Grid.Col>
+        </Grid>
+        </Container>
+      </Box>
 
       {/* ---- The problem --------------------------------------------- */}
       <Container size="lg" py={{ base: 40, sm: 70 }}>
         <Stack gap="md" maw={720}>
           <Title order={2} fz={{ base: 28, sm: 38 }} fw={500}>
-            <span className="display">Seven mailboxes. One column. Every message the same size.</span>
+            <span className="display">
+              Seven mailboxes. One column. Every message the same size.
+            </span>
           </Title>
           <Text c="dimmed" fz={{ base: 16, sm: 18 }} lh={1.6}>
             A receipt, a security advisory and a colleague waiting on an answer arrive in the same
@@ -133,9 +243,22 @@ export function Welcome() {
       {/* ---- The four claims ----------------------------------------- */}
       <Container size="lg" py={{ base: 40, sm: 60 }}>
         <SimpleGrid cols={{ base: 1, sm: 2 }} spacing={{ base: 32, sm: 48 }}>
-          {PILLARS.map(({ icon: Icon, title, body }) => (
+          {PILLARS.map(({ icon: Icon, title, body }, i) => (
             <Stack key={title} gap="sm">
-              <Icon size={22} stroke={1.6} />
+              {/*
+                The icon takes the account hue at its own index — the ring
+                doing a second job rather than a new palette appearing. It is
+                decoration here and says so: the tiles carry no meaning the
+                text does not already carry.
+              */}
+              <ThemeIcon
+                size={40}
+                radius="md"
+                variant="light"
+                style={{ background: `${ACCOUNT_RING[i * 2]}1F`, color: ACCOUNT_RING[i * 2] }}
+              >
+                <Icon size={22} stroke={1.6} />
+              </ThemeIcon>
               <Title order={3} fz={{ base: 19, sm: 22 }} fw={600} lh={1.3}>
                 {title}
               </Title>
@@ -164,7 +287,13 @@ export function Welcome() {
             No list, no drip, no launch — an email when there is a build worth your time.
           </Text>
           <Group mt="sm">
-            <Button component={Link} href="/beta" size="md" radius="xl" rightSection={<IconArrowRight size={16} />}>
+            <Button
+              component={Link}
+              href="/beta"
+              size="md"
+              radius="xl"
+              rightSection={<IconArrowRight size={16} />}
+            >
               Ask for an invite
             </Button>
           </Group>
@@ -175,7 +304,9 @@ export function Welcome() {
       <Container size="lg" py={{ base: 70, sm: 120 }}>
         <Title order={2} fz={{ base: 34, sm: 56 }} fw={400} ta="center" lh={1.1}>
           <span className="display" style={{ fontStyle: 'italic' }}>
-            See your mail different.
+            <TextAnimate animation="fade" by="word" trigger="inView" duration={0.8}>
+              See your mail different.
+            </TextAnimate>
           </span>
         </Title>
       </Container>
