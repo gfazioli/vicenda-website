@@ -5,36 +5,41 @@ export default {
       // "Native macOS" + "Git Intelligence" both pull weight in
       // the click decision: the first frames the platform, the
       // second the differentiator over a plain file browser.
-      default: 'FinderGit — Native macOS File Browser with Git Intelligence',
-      template: '%s | FinderGit',
+      // 56 characters. "Mail client" says the category in two words and
+      // "not a list" is the whole differentiator — the two things that decide
+      // a click, in the order they decide it.
+      default: 'Vicenda — A Mac mail client that is not a list',
+      template: '%s | Vicenda',
     },
     description:
-      'A native macOS app that combines file browsing with Git intelligence. See branch, status, changes, and diffs for all your repositories at a glance.',
-    metadataBase: new URL('https://findergit.app/'),
+      'A native macOS mail client shaped like a conversation. The machines that write to you get channels, the people get threads, and nothing ever leaves your Mac.',
+    metadataBase: new URL('https://vicenda.app/'),
     keywords: [
-      'FinderGit',
+      'Vicenda',
       'macOS',
-      'Git',
-      'file browser',
-      'repository manager',
+      'mail client',
+      'email',
+      'Gmail',
+      'IMAP',
       'SwiftUI',
-      'developer tools',
-      'git client',
-      'Finder alternative',
+      'privacy',
+      'native Mac app',
+      'inbox triage',
     ],
     generator: 'Next.js',
-    applicationName: 'FinderGit',
+    applicationName: 'Vicenda',
     appleWebApp: {
-      title: 'FinderGit',
+      title: 'Vicenda',
     },
     openGraph: {
       url: './',
-      siteName: 'FinderGit',
+      siteName: 'Vicenda',
       locale: 'en_US',
       type: 'website',
     },
     other: {
-      'msapplication-TileColor': '#228be6',
+      // The app's own chrome, not a brand blue it does not have.
+      'msapplication-TileColor': '#1A181E',
     },
     twitter: {
       card: 'summary_large_image',
@@ -46,7 +51,7 @@ export default {
     },
   },
   nextraLayout: {
-    docsRepositoryBase: 'https://github.com/gfazioli/findergit-website/tree/main/app/docs/',
+    docsRepositoryBase: 'https://github.com/gfazioli/vicenda-website/tree/main/app/docs/',
     sidebar: {
       defaultMenuCollapseLevel: 1,
     },
@@ -60,9 +65,9 @@ export default {
   gitHub: {
     // Note: the app repo is PRIVATE. Releases API will be configured
     // when a public releases repo is created.
-    repo: 'gfazioli/findergit-website',
+    repo: 'gfazioli/vicenda-website',
     apiUrl: 'https://api.github.com',
-    releasesUrl: 'https://api.github.com/repos/gfazioli/findergit-website/releases',
+    releasesUrl: 'https://api.github.com/repos/gfazioli/vicenda-website/releases',
   },
   releaseNotes: {
     // External link to the GitHub Releases page — used by the
@@ -92,8 +97,25 @@ export default {
     defaultLanguage: 'en',
   },
   app: {
-    version: '0.26.0',
+    version: '0.1.0',
     minMacOS: '15.0',
-    downloadUrl: 'https://github.com/gfazioli/findergit-website/releases/latest',
+    // NO PUBLIC DOWNLOAD. Vicenda is in closed beta: the disk image is sent by
+    // hand to people who ask, so every "download" affordance on this site goes
+    // to the invite page instead of to a file. When that changes, this is the
+    // one place to change it.
+    downloadUrl: '/beta',
+  },
+
+  beta: {
+    /** Whether the download is gated. Flip this and the CTAs follow. */
+    closed: true,
+    /** Where an address goes. Decided with the owner — see the site README. */
+    inviteUrl: '/beta',
+    /**
+     * PROVISIONAL. A `mailto:` needs no infrastructure and works today, and it
+     * relies on the catch-all this domain already has for the other two sites.
+     * Confirm the address resolves before this page ships.
+     */
+    inviteEmail: 'beta@vicenda.app',
   },
 } as const;

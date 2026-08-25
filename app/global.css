@@ -61,3 +61,37 @@
 }
 
 @layer components, mantine, nextra, overwrite;
+
+
+/* ---- The display face -------------------------------------------------- */
+
+.display {
+  font-family: var(--font-display), Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/*
+ * The hero line only. `scaleX(0.92)` is where Apple Garamond's condensed
+ * proportion actually lives — the face itself is a normal-width Garamond, and
+ * squeezing the one line that carries the reference gets the silhouette
+ * without pretending to be a typeface we do not have. Anything longer than a
+ * headline would read as distorted, so this class is deliberately not general.
+ */
+.display-hero {
+  font-family: var(--font-display), Georgia, 'Times New Roman', serif;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  line-height: 1.02;
+  display: inline-block;
+  transform: scaleX(0.92);
+  transform-origin: left center;
+}
+
+@media (max-width: 48em) {
+  /* No squeeze on a narrow screen: the line already wraps, and a scaled wrap
+     reads as a rendering fault rather than as a typographic choice. */
+  .display-hero {
+    transform: none;
+  }
+}

@@ -17,6 +17,17 @@ const FETCH_TIMEOUT_MS = 10_000;
  * the Releases page so the button is never a dead end.
  */
 export async function GET() {
+  // CLOSED BETA: there is no public asset to resolve, so the route sends
+  // people to the invite page instead of to a 404 or an empty releases list.
+  // Deleting this block is what opens the download, and it is the only change
+  // needed here.
+  if (config.beta.closed) {
+    return new Response(null, {
+      status: 302,
+      headers: { Location: config.beta.inviteUrl, 'Cache-Control': 'no-store' },
+    });
+  }
+
   const fallback = config.app.downloadUrl; // GitHub Releases page
 
   const redirect = (location: string) =>

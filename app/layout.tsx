@@ -6,6 +6,7 @@ import '@gfazioli/mantine-scene/styles.css';
 // Mantine theme overrides (body background, marquee fade edges, etc.)
 import '@/theme/global.css';
 
+import { EB_Garamond } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import { Layout } from 'nextra-theme-docs';
 import { Banner, Head } from 'nextra/components';
@@ -23,12 +24,32 @@ import './global.css';
 
 export const metadata = config.metadata;
 
+/**
+ * The display face, and the one deliberate borrowing on this site.
+ *
+ * The reference is Apple's *Think Different* campaign, which was set in **Apple
+ * Garamond** — Apple's own cut of ITC Garamond, condensed to about 80%, used
+ * from 1984 to 2002 and never licensed to anybody else. It is not available to
+ * us and the copies that circulate share its provenance, so this is EB Garamond
+ * (SIL Open Font License): the same Garamond lineage, legitimately.
+ *
+ * The hero line takes a slight horizontal scale in CSS, which is where Apple
+ * Garamond's condensed proportion actually lives — see `.display-hero`.
+ */
+const display = EB_Garamond({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  style: ['normal', 'italic'],
+  variable: '--font-display',
+  display: 'swap',
+});
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const pageMap = await getPageMap();
   const { nextraLayout, head } = config;
 
   return (
-    <html lang="en" dir="ltr" {...mantineHtmlProps}>
+    <html lang="en" dir="ltr" className={display.variable} {...mantineHtmlProps}>
       <Head>
         <ColorSchemeScript
           nonce={head.mantine.nonce}
@@ -50,7 +71,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <MantineProvider theme={theme} defaultColorScheme={head.mantine.defaultColorScheme}>
           <Layout
             banner={
-              <Banner storageKey={`findergit-release-${config.app.version}`}>
+              <Banner storageKey={`vicenda-beta-${config.app.version}`}>
                 {/*
                   Wrap the banner body in a single span. Nextra's Banner
                   internally maps over its children; passing two siblings
@@ -59,8 +80,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                   the ConfigProvider.
                 */}
                 <span>
-                  FinderGit v{config.app.version} is here — a Git-aware file browser for macOS.{' '}
-                  <a href="/docs/release-notes">See what&apos;s new</a>
+                  Vicenda is in closed beta. <a href="/beta">Ask for an invite</a>
                 </span>
               </Banner>
             }
