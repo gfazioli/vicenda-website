@@ -1,10 +1,10 @@
 export const highlights = [
   {
-    key: 'download',
-    title: 'Download FinderGit',
-    // `/download` redirects straight to the latest macOS .dmg (same route the
-    // hero + CTA Download buttons use), instead of the GitHub Releases page.
-    href: '/download',
+    key: 'beta',
+    title: 'Ask for an invite',
+    // CLOSED BETA: there is no asset to link. `/download` also lands here, so
+    // an old bookmark is not a dead end either.
+    href: '/beta',
   },
   {
     key: 'release-notes',

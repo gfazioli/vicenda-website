@@ -5,7 +5,7 @@ import { NewsletterCallToAction } from './NewsletterCallToAction';
 
 /**
  * Newsletter signup band shown at the top of the footer (every page).
- * Renders the shared CTA, which links to the FinderGit Substack publication.
+ * Renders the shared CTA, which asks for a closed-beta invite.
  */
 export function NewsletterSignup() {
   return (

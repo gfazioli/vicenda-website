@@ -9,22 +9,24 @@ export default {
     type: 'page',
     title: 'Documentation',
   },
-  download: {
+  beta: {
     type: 'page',
-    title: 'Download',
-    href: 'https://github.com/gfazioli/findergit-website/releases/latest',
+    title: 'Beta',
   },
   community: {
     title: 'Community',
     type: 'menu',
     items: {
-      newsletter: {
-        title: 'Newsletter',
-        href: 'https://findergit.substack.com',
+      // No newsletter. Vicenda's only list is the beta invite, and a
+      // "Newsletter" entry pointing at another product's Substack was worse
+      // than none.
+      beta: {
+        title: 'Ask for an invite',
+        href: '/beta',
       },
       issues: {
         title: 'Report an Issue',
-        href: 'mailto:feedback@findergit.app?subject=FinderGit%20feedback',
+        href: 'mailto:feedback@vicenda.app?subject=Vicenda%20feedback',
       },
     },
   },

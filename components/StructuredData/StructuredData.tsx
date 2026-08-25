@@ -37,7 +37,7 @@ export function WebsiteJsonLd() {
             '@type': 'WebSite',
             '@id': `${SITE}/#website`,
             url: `${SITE}/`,
-            name: 'FinderGit',
+            name: 'Vicenda',
             description: config.metadata.description,
             publisher: { '@id': `${SITE}/#organization` },
             inLanguage: 'en',
@@ -45,7 +45,7 @@ export function WebsiteJsonLd() {
           {
             '@type': 'Organization',
             '@id': `${SITE}/#organization`,
-            name: 'FinderGit',
+            name: 'Vicenda',
             url: `${SITE}/`,
             logo: { '@type': 'ImageObject', url: `${SITE}/icon-512x512.png` },
           },
@@ -61,15 +61,16 @@ export function SoftwareApplicationJsonLd() {
       data={{
         '@context': 'https://schema.org',
         '@type': 'SoftwareApplication',
-        name: 'FinderGit',
+        name: 'Vicenda',
         description: config.metadata.description,
-        applicationCategory: 'DeveloperApplication',
+        applicationCategory: 'CommunicationApplication',
         operatingSystem: `macOS ${config.app.minMacOS}+`,
         url: `${SITE}/`,
-        downloadUrl: config.app.downloadUrl,
+        // The invite page while the beta is closed — `config.app.downloadUrl`
+        // is `/beta`. Never point this at an asset that does not exist.
+        downloadUrl: `${SITE}${config.app.downloadUrl}`,
         softwareVersion: config.app.version,
         image: `${SITE}/opengraph-image.jpeg`,
-        screenshot: `${SITE}/screenshot-hero-overview.png`,
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
         publisher: { '@id': `${SITE}/#organization` },
       }}

@@ -10,14 +10,9 @@ export const resources = [
     href: '/docs/getting-started',
   },
   {
-    key: 'keyboard-shortcuts',
-    title: 'Keyboard Shortcuts',
-    href: '/docs/keyboard-shortcuts',
-  },
-  {
     key: 'issues',
     title: 'Report an Issue',
-    href: 'mailto:feedback@findergit.app?subject=FinderGit%20feedback',
+    href: 'mailto:feedback@vicenda.app?subject=Vicenda%20feedback',
   },
   {
     key: 'undolog',

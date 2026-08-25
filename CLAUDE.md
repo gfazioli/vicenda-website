@@ -73,7 +73,8 @@ first DMG goes out — a URL cannot be recalled.
 - Dark mode sync between Mantine and Nextra is handled by `MantineNextraThemeObserver`
 - Mantine theme overrides go in `theme.ts` (client-side `createTheme`)
 - Global site configuration (metadata, GitHub API, search, Nextra layout) lives in `config/index.ts`
-- Primary colour: `vicenda`, a neutral ramp with the app's own aubergine cast
+- Primary colour: `vicenda`, laddered from the APP ICON's own blue (`#0056C7`,
+  sampled off the 1024px master, then stepped in OKLCH) — see `theme.ts`
 - **The colours are the APP's, computed rather than picked.** `ACCOUNT_RING` in
   `theme.ts` is the real eight-hue ring from `Palette.swift` — OKLCH `L=0.72,
   C=0.13`, 45° apart — and `CHROME` comes from `Tokens.swift`. A palette

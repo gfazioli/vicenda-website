@@ -188,7 +188,7 @@ export function SolutionSection() {
                     style={{
                       borderRadius: 6,
                       backgroundColor: item.active
-                        ? 'var(--mantine-color-findergit-light)'
+                        ? 'var(--mantine-color-vicenda-light)'
                         : undefined,
                     }}
                   >
@@ -204,7 +204,7 @@ export function SolutionSection() {
                           }}
                         />
                       ) : item.label === 'All Repositories' ? (
-                        <IconLayoutList size={14} color="var(--mantine-color-findergit-4)" />
+                        <IconLayoutList size={14} color="var(--mantine-color-vicenda-4)" />
                       ) : item.label === 'Favorites' ? (
                         <IconStar size={14} color="var(--mantine-color-dark-2)" />
                       ) : (

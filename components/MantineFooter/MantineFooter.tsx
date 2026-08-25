@@ -69,8 +69,8 @@ export const MantineFooter = () => {
             <Stack gap="xs">
               <Logo size={48} />
               <Text fz={13} mr={64}>
-                FinderGit is a native macOS app that combines file browsing with Git intelligence.
-                Built with SwiftUI by{' '}
+                Vicenda is a native macOS mail client shaped like a conversation — machines get
+                channels, people get threads, and nothing leaves your Mac. Built with SwiftUI by{' '}
                 <Anchor fz={13} href="https://gfazioli.github.io/">
                   Undolog
                 </Anchor>
@@ -91,7 +91,7 @@ export const MantineFooter = () => {
                 <ActionIcon variant="subtle" component="a" href="https://twitter.com/gfazioli">
                   <IconBrandX size={24} />
                 </ActionIcon>
-                <ActionIcon variant="subtle" component="a" href="https://findergit.substack.com">
+                <ActionIcon variant="subtle" component="a" href="/beta" aria-label="Ask for an invite">
                   <IconMailHeart size={24} />
                 </ActionIcon>
               </Group>

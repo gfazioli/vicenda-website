@@ -19,7 +19,7 @@ export function NewsletterModal() {
   const [scroll] = useWindowScroll();
   const [opened, { open, close }] = useDisclosure(false);
   const [dismissed, setDismissed] = useLocalStorage({
-    key: 'findergit-newsletter-prompt-dismissed',
+    key: 'vicenda-beta-prompt-dismissed',
     defaultValue: false,
     // Read localStorage only after mount, so SSR and first client render agree.
     getInitialValueInEffect: true,
@@ -48,7 +48,7 @@ export function NewsletterModal() {
       radius="lg"
       overlayProps={{ blur: 2 }}
       transitionProps={{ transition: 'pop' }}
-      aria-label="Subscribe to the FinderGit newsletter"
+      aria-label="Ask for a Vicenda beta invite"
     >
       <NewsletterCallToAction />
     </Modal>

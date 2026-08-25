@@ -13,12 +13,11 @@ export const MantineNavBar = () => {
       <MantineNextraThemeObserver />
       <Navbar
         logo={
-          <Group align="center" gap={8}>
-            <Logo />
-            <Text size="lg" fw={600} visibleFrom="lg">
-              FinderGit
-            </Text>
-          </Group>
+          /*
+            The wordmark carries the name now, so the navbar does not repeat
+            it — `Logo` is icon + "Vicenda" set in the display face.
+          */
+          <Logo />
         }
         // No project link — repo is private
       >
