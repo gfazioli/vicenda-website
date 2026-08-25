@@ -42,8 +42,16 @@ import { ACCOUNT_RING } from '@/theme';
  *
  * ## Why nothing here loops
  *
- * Every `Scene` layer is mounted with `animate={false}` and the headline is
- * `trigger="mount"`, which runs once. The app's brief forbids perpetual
+ * Every `Scene` layer is mounted with `animate={false}` and both `TextAnimate`
+ * calls are single-pass.
+ *
+ * **`trigger="mount"` does not fire** — measured, not assumed: the headline
+ * rendered its words at opacity zero and stayed there, so the most important
+ * line on the page was invisible while `curl` happily showed it in the markup.
+ * `inView` fires immediately for anything above the fold and works. (The
+ * second bug hiding behind the first: `TextAnimate` is a Mantine `Text`
+ * underneath, so without `inherit` it applies Text's own default size and
+ * silently overrides the `Title` around it — a 76px headline drawn at 14px.) The app's brief forbids perpetual
  * animation because it pins a core keeping the compositor committing every
  * frame; a marketing page is not an app, but it is somebody's battery, and the
  * brand is restraint. `Scene` also honours `reducedMotion`.
@@ -143,7 +151,20 @@ export function Welcome() {
                     a headline that keeps re-animating is a headline you cannot
                     finish reading.
                   */}
-                  <TextAnimate animation="blurUp" by="word" trigger="mount" duration={0.7}>
+                  {/*
+                    `inherit` is load-bearing. TextAnimate is a Mantine `Text`
+                    underneath, so without it the component applies Text's own
+                    default size and SILENTLY overrides the Title around it —
+                    a 76px headline rendered at 14px, which on a dark ground
+                    read as no headline at all.
+                  */}
+                  <TextAnimate
+                    inherit
+                    animation="blurUp"
+                    by="word"
+                    trigger="inView"
+                    duration={0.7}
+                  >
                     Your mail is not a list.
                   </TextAnimate>
                 </span>
@@ -194,12 +215,51 @@ export function Welcome() {
               standing on a dark plane is the most honest hero image a Mac app
               has: it is the thing you will actually see in the Dock.
             */}
-            <Box style={{ display: 'flex', justifyContent: 'center' }}>
+            {/*
+              `isolation: isolate` is load-bearing, not tidiness. The reflected
+              copy is painted at `z-index: -2`, so without a stacking context
+              of its own here it goes BEHIND the Scene layers underneath and
+              disappears — the icon simply floats. Isolating clamps that -2 to
+              this box, which puts it above the ground and below the icon.
+            */}
+            <Box
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                // The root only ever needs to be as tall as the icon.
+                // (This was tried as the fix for the detached reflection and
+                // was NOT it — measurement showed the root already hugging the
+                // image at 235px. Kept because it is correct, not because it
+                // solved anything.)
+                alignItems: 'flex-start',
+                position: 'relative',
+                isolation: 'isolate',
+              }}
+            >
+              {/*
+                MEASURED, after three wrong answers — the baseline gap, the
+                flex stretch, and the transform origin.
+                
+                The copy sits at `top: 100%` and is transformed
+                `scaleY(-1) scaleY(stretch)`. Flipping about the DEFAULT centre
+                origin maps the box onto itself, so any stretch below 1 shrinks
+                it toward its middle and the mirror detaches by half the height
+                it lost — 48 points on a 235px icon at 0.55. Moving the origin
+                to the top does not fix it: the flip then goes UPWARD over the
+                icon (measured: 146 points of overlap). No origin gives
+                "flush below and squashed", because the squash is the gap.
+                
+                So it does not squash. A full-height mirror, faded by the mask
+                and held down by opacity, which is what a reflection on a dark
+                plane looks like anyway.
+              */}
               <Reflection
-                reflectionDistance={6}
-                reflectionOpacity={0.28}
-                reflectionStretch={0.45}
-                reflectionBlur={2}
+                reflectionDistance={0}
+                reflectionStretch={1}
+                reflectionOpacity={0.10}
+                reflectionBlur={9}
+                reflectionStart={0}
+                reflectionEnd={45}
                 shadow={false}
                 disableChildren
               >
@@ -210,7 +270,9 @@ export function Welcome() {
                   height={512}
                   priority
                   sizes="(max-width: 62em) 60vw, 380px"
-                  style={{ width: '100%', maxWidth: 380, height: 'auto' }}
+                  // `block`, so the inline baseline adds no descender gap
+                  // of its own under the image.
+                  style={{ display: 'block', width: '100%', maxWidth: 380, height: 'auto' }}
                 />
               </Reflection>
             </Box>
@@ -304,7 +366,7 @@ export function Welcome() {
       <Container size="lg" py={{ base: 70, sm: 120 }}>
         <Title order={2} fz={{ base: 34, sm: 56 }} fw={400} ta="center" lh={1.1}>
           <span className="display" style={{ fontStyle: 'italic' }}>
-            <TextAnimate animation="fade" by="word" trigger="inView" duration={0.8}>
+            <TextAnimate inherit animation="fade" by="word" trigger="inView" duration={0.8}>
               See your mail different.
             </TextAnimate>
           </span>
