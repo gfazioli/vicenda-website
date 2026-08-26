@@ -10,7 +10,7 @@ import '@/theme/global.css';
 import { EB_Garamond } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/react';
 import { Layout } from 'nextra-theme-docs';
-import { Banner, Head } from 'nextra/components';
+import { Head } from 'nextra/components';
 import { getPageMap } from 'nextra/page-map';
 import { ColorSchemeScript, mantineHtmlProps, MantineProvider } from '@mantine/core';
 // !! End of important imports !!
@@ -71,20 +71,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       <body>
         <MantineProvider theme={theme} defaultColorScheme={head.mantine.defaultColorScheme}>
           <Layout
-            banner={
-              <Banner storageKey={`vicenda-beta-${config.app.version}`}>
-                {/*
-                  Wrap the banner body in a single span. Nextra's Banner
-                  internally maps over its children; passing two siblings
-                  (the text node + the <a>) triggers React 19's "Each
-                  child should have a unique key" warning surfaced through
-                  the ConfigProvider.
-                */}
-                <span>
-                  Vicenda is in closed beta. <a href="/beta">Ask for an invite</a>
-                </span>
-              </Banner>
-            }
             navbar={<MantineNavBar />}
             pageMap={pageMap}
             docsRepositoryBase={nextraLayout.docsRepositoryBase}

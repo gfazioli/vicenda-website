@@ -9,20 +9,21 @@ export default {
     type: 'page',
     title: 'Documentation',
   },
-  beta: {
+  download: {
     type: 'page',
-    title: 'Beta',
+    title: 'Download',
+    href: '/download',
   },
   community: {
     title: 'Community',
     type: 'menu',
     items: {
-      // No newsletter. Vicenda's only list is the beta invite, and a
-      // "Newsletter" entry pointing at another product's Substack was worse
-      // than none.
-      beta: {
-        title: 'Ask for an invite',
-        href: '/beta',
+      // No newsletter and no list. A "Newsletter" entry pointing at another
+      // product's Substack was worse than none, and this app asks nothing of
+      // the people who download it.
+      download: {
+        title: 'Download',
+        href: '/download',
       },
       issues: {
         title: 'Report an Issue',

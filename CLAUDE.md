@@ -15,22 +15,20 @@ anything not yet re-skinned still says FinderGit — see the README for the list
 - The app repository is private; do not link it from anything user-facing.
 
 The website serves as:
-1. **Landing page** — the thesis, the four claims, the invite CTA
+1. **Landing page** — the thesis, the four claims, the screenshots, the download
 2. **Documentation** — user guides, getting started
 3. **Release notes**
-4. **The beta gate** — and NOT a download hub, which is the difference from the
-   two sibling sites
+4. **The download** — `/download` resolves the newest `.dmg` from the Releases
+   API at request time, the same as the two sibling sites
 
-**THERE IS NO PUBLIC DOWNLOAD.** Vicenda is in a closed beta: the disk image is
-sent by hand. `/download` redirects to `/beta` while `config.beta.closed` is
-true, so no affordance anywhere becomes a 404 or an empty releases list. That
-flag is the only switch; do not add a second path to a binary.
-
-**DECIDED 2026-08-26: no updater during the closed beta.** An appcast is
-public XML pointing at a public URL, so a beta build updating from the usual
-feed would put the closed download one `curl` away. An unguessable appcast path
-was rejected — that is a secret shipped inside every copy of the app. A new
-build means a new link. Do not wire Sparkle into a beta build.
+**THE CLOSED BETA IS GONE, dropped 2026-08-26.** It was here: an invite page, a
+`config.beta.closed` gate, and a deliberate decision not to ship Sparkle
+because a public appcast would have made a "closed" download one `curl` away.
+The owner dropped the whole idea — the list, the hand-sent disk image and the
+missing updater added up to more work than filter, and a release process that
+cannot ship a fix without emailing everybody a new link is not a release
+process. **Do not reintroduce beta wording anywhere**: the app is a free
+public download and it updates itself.
 
 ## Tech Stack
 
@@ -102,7 +100,7 @@ build means a new link. Do not wire Sparkle into a beta build.
 ### API Routes (`app/api/`)
 
 - `version/` — returns current package version
-- `github-releases/` — proxies the GitHub Releases API (configured in `config/index.ts`). Points at this repo, which has no releases while the beta is closed. Uses `GITHUB_TOKEN` env var when set to raise the rate limit from 60/hr to 5000/hr.
+- `github-releases/` — proxies the GitHub Releases API (configured in `config/index.ts`). Points at this repo, which is where the app's releases live because the app repo is private. Uses `GITHUB_TOKEN` env var when set to raise the rate limit from 60/hr to 5000/hr.
 - `search/` — pagefind-based full-text search endpoint
 
 ### Environment variables
@@ -133,7 +131,9 @@ In `app/layout.tsx`, CSS imports must follow this order:
   their identity gate, Gmail read+write, the IMAP tier, the block-everything
   reader, one-hue-per-account. NOT built, and not to appear anywhere: in-app
   OAuth consent, sending, archive and delete over IMAP, the notch, the menu bar.
-- **No download links.** Every download affordance goes to `/beta`.
+- **Download links go to `/download`**, never to a versioned asset URL. The
+  route resolves the newest `.dmg` at request time, so nothing on this site
+  carries a version number that can go stale.
 
 ### No infrastructure leaks in user-facing copy
 

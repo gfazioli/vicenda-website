@@ -6,8 +6,8 @@ import { Reflection } from '@gfazioli/mantine-reflection';
 import { Scene } from '@gfazioli/mantine-scene';
 import { TextAnimate } from '@gfazioli/mantine-text-animate';
 import {
-  IconArrowRight,
   IconCards,
+  IconDownload,
   IconEyeOff,
   IconMessages,
   IconPalette,
@@ -25,6 +25,7 @@ import {
   ThemeIcon,
   Title,
 } from '@mantine/core';
+import { Shot } from './Shot';
 import config from '@/config';
 import { ACCOUNT_RING } from '@/theme';
 
@@ -137,10 +138,10 @@ export function Welcome() {
             <Stack gap="xl">
               <Group gap="xs">
                 <Badge variant="light" radius="sm" size="sm">
-                  Closed beta
+                  Free
                 </Badge>
                 <Text size="sm" c="dimmed">
-                  macOS {config.app.minMacOS} or later
+                  macOS {config.app.minMacOS} or later · signed and notarised
                 </Text>
               </Group>
 
@@ -177,13 +178,13 @@ export function Welcome() {
 
               <Group gap="sm" mt="xs">
                 <Button
-                  component={Link}
-                  href="/beta"
+                  component="a"
+                  href="/download"
                   size="md"
                   radius="xl"
-                  rightSection={<IconArrowRight size={16} />}
+                  leftSection={<IconDownload size={16} />}
                 >
-                  Ask for an invite
+                  Download for macOS
                 </Button>
                 <Button component={Link} href="/docs" size="md" radius="xl" variant="default">
                   See how it works
@@ -281,6 +282,33 @@ export function Welcome() {
         </Container>
       </Box>
 
+
+      {/* ---- What it looks like -------------------------------------- */}
+      {/*
+        THE SCREENSHOT COMES BEFORE THE ARGUMENT, and that is the point of the
+        product: the difference is checkable in one image. Every mail client
+        claims it sorts better and none of them can show you the claim.
+
+        Every one of these is shot with the app's Demo Mode on — the names,
+        addresses, labels and card fields are invented and stable, and the
+        shapes are real. See `scripts/uiverify` in the workspace and the
+        Demo Mode notes in the app.
+      */}
+      <Container size="lg" py={{ base: 24, sm: 40 }}>
+        <Stack gap={10}>
+          <Shot
+            src="/screenshot-today.png"
+            width={2880}
+            height={1400}
+            alt="Today: who is waiting on a reply, then what is unread, each row carrying the hue of the mailbox it landed in"
+            priority
+          />
+          <Text size="xs" c="dimmed" ta="center">
+            Today — what is waiting on you, before anything else asks for your attention.
+          </Text>
+        </Stack>
+      </Container>
+
       {/* ---- The problem --------------------------------------------- */}
       <Container size="lg" py={{ base: 40, sm: 70 }}>
         <Stack gap="md" maw={720}>
@@ -332,6 +360,37 @@ export function Welcome() {
         </SimpleGrid>
       </Container>
 
+
+      {/* ---- The two halves, side by side ---------------------------- */}
+      <Container size="lg" py={{ base: 24, sm: 48 }}>
+        <SimpleGrid cols={{ base: 1, md: 2 }} spacing={{ base: 24, md: 32 }}>
+          <Stack gap={10}>
+            <Shot
+              src="/screenshot-channels.png"
+              width={800}
+              height={1420}
+              alt="The column: machine senders listed as channels, each with the address that tells two of one brand apart"
+            />
+            <Text size="xs" c="dimmed">
+              Machines become channels. People become conversations. The column says which is which
+              before you read a word.
+            </Text>
+          </Stack>
+          <Stack gap={10}>
+            <Shot
+              src="/screenshot-cards.png"
+              width={2000}
+              height={620}
+              alt="An invoice rendered as a card: amount, payment method, item and order number as named fields"
+            />
+            <Text size="xs" c="dimmed">
+              A recognised machine message is drawn as a card — the amount, the card, the item, the
+              order — instead of rendered as somebody&apos;s HTML.
+            </Text>
+          </Stack>
+        </SimpleGrid>
+      </Container>
+
       {/* ---- The honest paragraph ------------------------------------ */}
       <Container size="lg" py={{ base: 40, sm: 70 }}>
         <Stack gap="md" maw={720}>
@@ -341,22 +400,22 @@ export function Welcome() {
           <Text c="dimmed" fz={{ base: 16, sm: 18 }} lh={1.6}>
             Vicenda exists because seven mailboxes across Gmail, a PEC and a work account had no
             client that could show me which one a message had landed in. It has no pricing, no
-            telemetry, and no roadmap it owes anybody. The beta is closed because the honest size of
-            this is small.
+            telemetry, and no roadmap it owes anybody.
           </Text>
           <Text c="dimmed" fz={{ base: 16, sm: 18 }} lh={1.6}>
-            If that sounds like your inbox too, leave an address and I will send you the disk image.
-            No list, no drip, no launch — an email when there is a build worth your time.
+            If that sounds like your inbox too, it is a free download and it needs nothing from you
+            — no account, no list, no sign-up. It updates itself when there is a build worth your
+            time, and you can turn that off.
           </Text>
           <Group mt="sm">
             <Button
-              component={Link}
-              href="/beta"
+              component="a"
+              href="/download"
               size="md"
               radius="xl"
-              rightSection={<IconArrowRight size={16} />}
+              leftSection={<IconDownload size={16} />}
             >
-              Ask for an invite
+              Download for macOS
             </Button>
           </Group>
         </Stack>
