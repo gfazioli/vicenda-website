@@ -1,30 +1,21 @@
 import type { ReactNode } from 'react';
-import { Group } from '@mantine/core';
 import {
+  IconArchive,
   IconBook2,
-  IconRocket,
-  IconLayoutList,
-  IconFolders,
-  IconLayoutSidebarRight,
-  IconLayoutGrid,
-  IconUserCircle,
-  IconBrandGithub,
-  IconCloudDownload,
-  IconGitBranch,
-  IconShieldHalfFilled,
-  IconDatabase,
-  IconSparkles,
-  IconGitCompare,
-  IconSettings,
-  IconKeyboard,
+  IconCards,
+  IconEyeOff,
   IconHelpCircle,
+  IconMessages,
+  IconPalette,
+  IconRocket,
+  IconSettings,
 } from '@tabler/icons-react';
+import { Group } from '@mantine/core';
 
-// Sidebar entry with a leading icon. The icon inherits `currentColor`, so it
-// tracks the link's active/hover colour automatically — which is why the
-// label stays a bare string (a Mantine `Text` would impose its own colour
-// token and break that inheritance). Kept as a small helper so every page
-// entry reads as `nav(Icon, 'Label')`.
+// Sidebar entry with a leading icon. The icon inherits `currentColor` when no
+// colour is given, so it tracks the link's active/hover state automatically —
+// which is why the label stays a bare string: a Mantine `Text` would impose
+// its own colour token and break that inheritance.
 function nav(Icon: typeof IconBook2, label: string, color?: string): { title: ReactNode } {
   return {
     title: (
@@ -41,27 +32,22 @@ function nav(Icon: typeof IconBook2, label: string, color?: string): { title: Re
 }
 
 export default {
-  index: nav(IconBook2, 'Introduction', 'blue'),
+  index: nav(IconBook2, 'Introduction', 'vicenda'),
   '---get-started': { type: 'separator', title: 'Get Started' },
   'getting-started': nav(IconRocket, 'Getting Started', 'orange'),
-  'repository-list': nav(IconLayoutList, 'Repository List', 'findergit'),
-  'file-browser': nav(IconFolders, 'File Browser', 'yellow'),
-  'detail-panel': nav(IconLayoutSidebarRight, 'Detail Panel', 'grape'),
-  '---dashboards': { type: 'separator', title: 'Dashboards' },
-  overview: nav(IconLayoutGrid, 'Overview', 'blue'),
-  account: nav(IconUserCircle, 'Account', 'cyan'),
+  // THE SHAPE is its own section on purpose: it is the part of Vicenda that is
+  // not like other mail clients, and burying it under "Guides" would file the
+  // difference as a feature.
+  '---the-shape': { type: 'separator', title: 'The Shape' },
+  'the-stream': nav(IconMessages, 'Channels and Threads', 'vicenda'),
+  cards: nav(IconCards, 'Machine Mail as Cards', 'grape'),
+  accounts: nav(IconPalette, 'Accounts and Colour', 'cyan'),
   '---guides': { type: 'separator', title: 'Guides' },
-  'github-integration': nav(IconBrandGithub, 'GitHub Integration'),
-  'clone-repositories': nav(IconCloudDownload, 'Clone Repositories', 'teal'),
-  'git-actions': nav(IconGitBranch, 'Git Actions', 'green'),
-  'repo-trust': nav(IconShieldHalfFilled, 'Repo Trust', 'orange'),
-  'repo-maintenance': nav(IconDatabase, 'Repo Maintenance', 'grape'),
-  'ai-commit-messages': nav(IconSparkles, 'AI Commit Messages', 'violet'),
-  'diff-viewer': nav(IconGitCompare, 'Diff Viewer', 'teal'),
+  triage: nav(IconArchive, 'Reading and Triage', 'green'),
+  privacy: nav(IconEyeOff, 'Privacy', 'teal'),
   '---reference': { type: 'separator', title: 'Reference' },
   settings: nav(IconSettings, 'Settings'),
-  'keyboard-shortcuts': nav(IconKeyboard, 'Keyboard Shortcuts'),
   '---resources': { type: 'separator', title: 'Resources' },
-  faq: nav(IconHelpCircle, 'FAQ', 'blue'),
+  faq: nav(IconHelpCircle, 'FAQ', 'vicenda'),
   'release-notes': '',
 };

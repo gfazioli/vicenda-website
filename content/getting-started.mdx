@@ -1,117 +1,59 @@
 ---
-description: "Install FinderGit and add your first root folder. How it scans for Git repositories on macOS, the three-pane interface, and first-launch notarization notes."
+description: "What happens on first launch, how a mailbox gets connected, and what Vicenda does — and deliberately does not do — while it catches up."
 ---
 
 # Getting Started
 
-## Installation
+## Requirements
 
-1. **Download** the latest `.dmg` from [GitHub Releases](https://github.com/gfazioli/findergit-website/releases/latest)
-2. **Open** the `.dmg` file
-3. **Drag** FinderGit to your Applications folder
-4. **Launch** FinderGit from Applications or Spotlight
+- **macOS 15** or later.
+- At least one mailbox: **Gmail**, or any account reachable over **IMAP**.
 
-## First launch on macOS
+Vicenda is not on the App Store and is not currently distributed publicly. If
+you are reading this without a build, [ask for an invite](/beta).
 
-FinderGit is signed with **Apple Developer ID** and **notarized by Apple**, so Gatekeeper accepts it on first open. Just double-click — no right-click trick, no System Settings detour.
+## Connecting a mailbox
 
-When you first launch any app downloaded from the internet, macOS shows a one-time confirmation dialog ("*"FinderGit" is an app downloaded from the Internet. Are you sure you want to open it?*"). Click **Open** and you're done — every subsequent launch is silent.
+Vicenda reads Gmail through Google's API and other mailboxes over IMAP. The two
+behave differently in one way worth knowing up front, because it changes what
+the app is allowed to do on your behalf:
 
-## Verifying your download
+| | Gmail | IMAP |
+| --- | --- | --- |
+| Reading mail | yes | yes |
+| Marking read and unread | yes | yes |
+| Archive and delete | yes | **not yet** |
+| Sending | **not yet** | **not yet** |
 
-Every release is signed with an Apple Developer ID and notarized by Apple, so macOS is already checking the app's integrity on your behalf. If you'd rather confirm the DMG yourself, every [release page](https://github.com/gfazioli/findergit-website/releases/latest) publishes the SHA-256 of its DMG. Compare it against the file you downloaded:
+<Callout type="info">
+  Vicenda asks for the narrowest permission that does the job. Reading uses a
+  read-only scope; anything that writes is a separate, explicit decision you
+  make per account in **Settings → Permissions**, and it stays off until you
+  make it.
+</Callout>
 
-```
-shasum -a 256 ~/Downloads/FinderGit-*.dmg
-```
+## The first launch
 
-You can also ask macOS directly, without installing anything:
+The first pass is the slow one. Vicenda walks your mail, works out which
+senders are machines and which are people, and builds the two populations the
+sidebar is made of. After that it keeps up incrementally: new mail arrives into
+the channel or thread it belongs to without a full pass.
 
-```
-spctl -a -vv -t open --context context:primary-signature ~/Downloads/FinderGit-*.dmg
-```
+Two things are worth expecting while it settles:
 
-A genuine build answers with the file's own path, then:
+- **The sidebar is a working set, not a directory.** A label or an address that
+  has seen no traffic for a fortnight is not shown by default — it has not been
+  lost, and "show all" is one click under each section. Measured on a real
+  mailbox: 189 labels existed and 18 had seen traffic.
+- **Messages arrive before their bodies do.** Headers come first so the stream
+  is usable immediately; the text follows. A row that says the body has not
+  been downloaded yet means exactly that, rather than that the message is empty.
 
-```
-/Users/you/Downloads/FinderGit-0.25.1.dmg: accepted
-source=Notarized Developer ID
-origin=Developer ID Application: Giovambattista Fazioli (QWWPDQNH5L)
-```
+## What it will not do behind your back
 
-### If a virus scanner flags the download
-
-Worth knowing why before you worry about it. Antivirus engines increasingly classify files with machine-learning heuristics instead of signatures of known malware, and those heuristics produce false positives on legitimate software — disk images and installers especially. Apple's notarization, by contrast, includes an automated malware scan that every FinderGit release passes before it is published.
-
-Be clear about what each check proves, though. A matching checksum tells you the file wasn't altered between our release page and your Mac; it cannot, on its own, tell you a detection is wrong. What makes a heuristic false positive the far likelier explanation is the three together: the bytes are the ones we published, Apple's notarization scan passed them, and `spctl` accepts them on your machine. When all three hold and a scanner still objects, that's one vendor's heuristic disagreeing with Apple's — and we report those.
-
-If any of them fail — the checksum differs, or `spctl` rejects the file — don't open it. The file you have is not the one we shipped: please [tell us](mailto:feedback@findergit.app?subject=FinderGit%20download%20verification) and download it again from the release page.
-
-## Before first launch (fresh Mac)
-
-FinderGit uses the `git` binary that ships with the Xcode Command Line Tools. On a brand-new Mac you may need to install them and accept the Xcode license — otherwise every Git action inside FinderGit will surface a `nonZeroExit(status: 89, …)` error.
-
-1. **Install the Command Line Tools** (skip if already installed):
-
-   ```
-   xcode-select --install
-   ```
-
-   A system prompt will appear — click Install and wait a few minutes.
-
-2. **Accept the Xcode license**:
-
-   ```
-   sudo xcodebuild -license
-   ```
-
-   Scroll with Space, type `agree`, press Enter.
-
-After these two steps, `git` works system-wide and FinderGit stops complaining.
-
-## Adding your first root folder
-
-When you launch FinderGit for the first time, the Repository List is empty. Add at least one root folder — a directory that FinderGit will scan for Git repositories.
-
-1. Click the **+** button in the toolbar, or go to **File → Add Root Folder** (<Kbd>⌘</Kbd> <Kbd>⇧</Kbd> <Kbd>O</Kbd>)
-2. Select a directory that contains your projects (e.g., `~/Projects` or `~/Developer`)
-3. FinderGit will recursively scan for `.git` directories and display all found repositories
-
-You can add multiple root folders. Each one appears in the sidebar and can be selected individually.
-
-## Understanding the interface
-
-FinderGit opens on the **[Repository List](/docs/repository-list)** — a flat, sortable table of every repository you track. The window has four areas:
-
-### Sidebar (left)
-The control panel. It's organized into **Dashboards** (Overview, Account), **Library** (All Repositories, Favorites, Recents), **Smart Views** (Changes, Ahead, Behind, Dirty, Clean — status filters with live counts), **Filters** (GitHub, GitLab, Bitbucket, Codeberg, Local Only), and **Root Folders** (the directories you scan, and the groups you organize them into). Picking an entry changes what the main area shows. See [Repository List → The sidebar](/docs/repository-list#the-sidebar).
-
-### Main area (center)
-Either the **Repository List** — one sortable row per repo (Repository, Branch, Status, Ahead/Behind, Files, Size) — or, when you select a Root Folder (or double-click a repo), the Finder-style **[File Browser](/docs/file-browser)** tree.
-
-### Detail Panel (right or bottom)
-Select a repository to reveal its detail — an eight-tab panel (Overview · Unstage · Commits · Branches · Issues · Pull Requests · Maintenance · Trust) with the global Fetch / Pull / Push / Refresh actions docked at its edge, reachable from any tab. See [Detail Panel](/docs/detail-panel). For a file you get its info and an inline diff; for a non-git file, basic info (size, date, type).
-
-### Summary bar (bottom)
-A live tally across the whole list — repository count, clean / dirty / ahead / behind, and total size.
-
-## Language
-
-FinderGit ships in 🇬🇧 **English**, 🇮🇹 **Italian**, 🇫🇷 **French**, 🇩🇪 **German**, and 🇪🇸 **Spanish**, and follows your Mac's system language automatically — there is no in-app language switcher. To run FinderGit in a different language, reorder your preferred languages in **System Settings → General → Language & Region** (macOS applies the first language an app supports). Counts and labels inflect correctly in every language, and the post-update "What's New" panel arrives localized too.
-
-## Tips
-
-- **Drop** folders from the macOS Finder directly onto the sidebar to add them as roots
-- **Right-click** for context-sensitive actions (different for files, directories, and git repos)
-- **Space bar** (or <Kbd>⌘</Kbd> <Kbd>Y</Kbd>) on any selected file for Quick Look, right inside the window: source code with syntax highlighting, rendered Markdown, plus images, PDFs and media
-- Use <Kbd>⌘</Kbd> <Kbd>+</Kbd> / <Kbd>⌘</Kbd> <Kbd>−</Kbd> to zoom the tree view font size
-- Toggle **Git Only** above the file browser to hide non-repository files
-- Press <Kbd>⌘</Kbd> <Kbd>?</Kbd> any time to open the live online docs in your browser
-
-## Next steps
-
-- **[Repository List](/docs/repository-list)** — the flat all-repos table, the status sidebar (Smart Views + Filters), Favorites/Recents, and the summary bar.
-- **[Detail Panel](/docs/detail-panel)** — what each of the eight tabs (Overview, Unstage, Commits, Branches, Issues, Pull Requests, Maintenance, Trust) shows when a repo is selected.
-- **[GitHub Integration](/docs/github-integration)** — turn on the Issues, Pull Requests and Overview tabs, plus the file-browser Issues / PRs / Stars columns, by pointing FinderGit at your GitHub auth (`gh` CLI or a token).
-- **[Git Actions](/docs/git-actions)** — the operations available from the docked action bar, the Unstage tab, and the context menus, with their keyboard shortcuts.
-- **[AI Commit Messages](/docs/ai-commit-messages)** — the ✨ button inside the Unstage tab's commit form.
+- It will not **send** anything. The composer writes a local draft and says so.
+- It will not **delete** anything on an IMAP server. The command vocabulary it
+  speaks cannot express a delete, by construction, and there is a test that
+  enumerates every command to keep it that way.
+- It will not **fetch a remote resource** while you read. See
+  [Privacy](/docs/privacy).

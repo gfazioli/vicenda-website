@@ -78,89 +78,50 @@ export function SoftwareApplicationJsonLd() {
   );
 }
 
-// Plain-text mirror of the visible answers in `components/FAQ/FAQ.tsx`.
-// Google requires the schema text to match what's on the page — keep these
-// in sync with FAQ.tsx whenever an answer changes.
+// PLAIN-TEXT MIRROR of the visible answers in `components/FAQ/FAQ.tsx`.
+// Google requires the schema text to match what is on the page, so the two are
+// a pair: change one and the other is wrong — and the wrong one is the
+// invisible one, which is why this file already went a whole day describing a
+// different product.
 const FAQ_ENTRIES: { question: string; answer: string }[] = [
   {
-    question: 'What is FinderGit?',
+    question: 'What is Vicenda?',
     answer:
-      'FinderGit is a native macOS application that works as a Git-aware file browser. Think of it as Finder’s list view, but with Git status, branch info, inline diffs, and commit/push/pull actions built in.',
+      'A native macOS mail client shaped like a conversation. The machines that write to you become channels you visit, the people you correspond with become threads that empty, and a recognised machine message — an invoice, a security advisory — is drawn as a card with named fields instead of being rendered as the sender\u2019s HTML.',
   },
   {
-    question: 'Is FinderGit free?',
+    question: 'How do I get it?',
     answer:
-      'Yes, FinderGit is currently free. If you find it useful, consider sponsoring the project.',
-  },
-  {
-    question: 'Is FinderGit on the App Store? How do updates work?',
-    answer:
-      'FinderGit is distributed directly from findergit.app as a signed and notarized DMG — it’s not on the App Store. Updates are automatic: the app checks for new releases and installs them in place, so you’re always one click away from the latest version.',
+      'Vicenda is in a closed beta. There is no public download and no App Store listing: the disk image is sent by hand to people who ask.',
   },
   {
     question: 'What macOS version do I need?',
-    answer:
-      'macOS 15 (Sequoia) or later. FinderGit is built with SwiftUI and uses APIs available from macOS 15+.',
+    answer: 'macOS 15 or later.',
   },
   {
-    question: 'Which languages does FinderGit speak?',
+    question: 'Which mailboxes does it support?',
     answer:
-      'English, Italian, French, German, and Spanish. FinderGit follows your Mac’s system language automatically — there is no in-app switcher. To use a different language, reorder your preferred languages in System Settings → General → Language & Region.',
+      'Gmail, through Google\u2019s API, and any account reachable over IMAP. Reading works on both. Marking read and unread works on both. Archive and delete work on Gmail accounts where you have turned writing on, and are not built for IMAP yet.',
   },
   {
-    question: 'Does FinderGit replace my Git client?',
+    question: 'Can I send mail with it?',
     answer:
-      'Not entirely — but it covers more ground every release. Day-to-day work happens without leaving the app: status across many repos at once, stage/unstage and discard, commit (with AI-generated messages), push/pull/fetch, branch switching, and keeping forks in sync with their upstream. For advanced surgery (interactive rebase, cherry-pick, complex merges) you’ll still want a full Git client or the terminal.',
+      'Not yet. Vicenda is a reading and triage tool first — composing is secondary and sending is not built. The composer writes a local draft and says so rather than offering a button that quietly does nothing.',
   },
   {
-    question: 'Do I need to connect a GitHub account?',
+    question: 'Where does my mail go?',
     answer:
-      'Only for the GitHub-powered extras — the Account dashboard, the issue / pull-request / star counts in the file browser, and new-star alerts. FinderGit reuses the GitHub CLI if it’s already set up, or a personal access token you paste into Settings — kept in your Keychain, never written to disk. Plain browsing, Git status, diffs and commit / push / pull all work with no GitHub connection at all.',
+      'Nowhere. Vicenda runs no server — not for sync, not for search — and your mail is read from the provider straight to your Mac. It also blocks every remote resource before a message is rendered, so opening an email does not tell the sender you opened it.',
   },
   {
-    question: 'Can FinderGit tell me when one of my repos gets a star?',
+    question: 'What does it cost?',
     answer:
-      'Yes. The Account view shows a badge the moment a repository earns a star — naming which repo, not just bumping a number — and you can optionally turn on desktop notifications in Settings → Git. It checks periodically in the background while the app is running.',
+      'Nothing, and there is no pricing page to visit later. Vicenda is one person\u2019s mail client, opened to a few people. If it turns out to be useful to you, sponsoring the work is welcome and buys you nothing extra.',
   },
   {
-    question: 'How does FinderGit detect repositories?',
+    question: 'Does it update itself?',
     answer:
-      'When you add a root folder, FinderGit recursively scans for directories containing .git/. The scan depth is configurable in Settings (default: 5 levels). Heavy directories like node_modules and DerivedData are automatically skipped.',
-  },
-  {
-    question: 'Does FinderGit modify my repositories?',
-    answer:
-      'Only when you explicitly perform an action (commit, push, pull, stage, etc.). FinderGit reads your repository state via git status and git diff — it never modifies anything without your command.',
-  },
-  {
-    question: 'Is it safe to open repositories I don’t fully trust?',
-    answer:
-      'That’s what Repo Trust is for. FinderGit scans each repository’s auto-run surface — hooks and configuration that could execute code when you open, build, or install — without ever running any of it. Repos with findings are flagged in the list, and you get an alert when that surface changes after a pull.',
-  },
-  {
-    question: 'How do I verify a download — and what if a virus scanner flags it?',
-    answer:
-      'Every release is signed with an Apple Developer ID and notarized by Apple, and each release page publishes the SHA-256 of its DMG, so you can confirm the file you downloaded is byte-for-byte the one we shipped. Antivirus engines do sometimes flag a notarized Mac app on a machine-learning heuristic rather than an actual malware signature. A matching checksum can’t prove a detection wrong on its own, but together with Apple’s notarization scan and a clean spctl it makes a heuristic false positive much the likeliest reading, and we report those to the vendor. If the checksum doesn’t match, or macOS rejects the file, don’t open it — tell us.',
-  },
-  {
-    question: 'Does FinderGit send my data anywhere?',
-    answer:
-      'No telemetry, ever. GitHub data (issues, pull requests, stars, fork status) is fetched directly from api.github.com using your own credentials. The only exception is the optional AI commit message feature: when you click ✨ AI, your staged diff is sent to generate the message — nothing is stored, and nothing is sent unless you ask.',
-  },
-  {
-    question: 'How does the live update work?',
-    answer:
-      'FinderGit uses macOS FSEvents to monitor file system changes in real time. When a file changes inside a watched repository, the status is automatically refreshed within ~300ms.',
-  },
-  {
-    question: 'I found a bug. How do I report it?',
-    answer:
-      'Please open a Bug Report on GitHub. Include your FinderGit version, macOS version, and steps to reproduce the issue. Screenshots are very helpful!',
-  },
-  {
-    question: 'I have an idea for a new feature. Where can I suggest it?',
-    answer:
-      'We’d love to hear your ideas! Open a Feature Request on GitHub and describe what you’d like FinderGit to do. The more detail you provide, the better we can evaluate and prioritize it.',
+      'Not during the closed beta, deliberately. An auto-update feed is a public file pointing at a public download, which would put the "closed" build one request away from anyone who found it. A new build means a new link, sent to you.',
   },
 ];
 

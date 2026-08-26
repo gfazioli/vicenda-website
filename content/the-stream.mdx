@@ -1,0 +1,65 @@
+---
+description: "Machines become channels and people become threads, because they are not the same kind of mail. The stream reads oldest-to-newest, like a conversation rather than an inbox."
+---
+
+# Channels and Threads
+
+This is the part of Vicenda that is not like other mail clients, so it is worth
+a page of its own.
+
+## Two populations, separated at the door
+
+Mail arrives from two kinds of sender, and they want opposite things from you.
+
+A **machine** — your bank, a deployment bot, a subscription renewal — writes on
+its own schedule, expects nothing back, and is only interesting when you go
+looking. That is a **channel**: a place you visit.
+
+A **person** waiting for an answer is the opposite. They are few, they are
+owed something, and the number of them can reach zero by the end of a day.
+That is a **thread**, and it belongs in a list that empties.
+
+Most clients put both in one column and give you filters to pull them apart
+again. Vicenda separates them before you see them, which is why the sidebar has
+two sections rather than one inbox and a set of rules.
+
+<Callout type="info">
+  The rule that decides which is which is deliberately strict: **a person is
+  someone you have written to**. Without that, a payment notice, a taxi receipt
+  and a phone bill all look like people — measured on a real mailbox, 28 of the
+  42 senders once filed as people were machines. The switch is in **Settings →
+  Sidebar** if you want the looser rule.
+</Callout>
+
+## The stream reads like a conversation
+
+A channel opens as a **stream**: oldest at the top, newest at the bottom, and
+it opens at the bottom — the shape of a place things arrive, rather than a list
+of subjects you open one at a time.
+
+Inside it:
+
+- **Day dividers** break the run, and each one is also a jump: click it to go to
+  today, yesterday, last week, or a date you pick.
+- **A `New` line** marks where you stopped reading. It is drawn once, from what
+  was unread when you opened the channel — so it survives the channel being
+  marked read a second and a half later, which is when it would otherwise
+  vanish under you.
+- **Messages group into blocks** by sender *and subject*. Not by sender and time
+  alone: six security advisories arriving in the same minute are six different
+  things, and grouping them under one header would make them read as one.
+- **`More unread above`** appears when the line you stopped at has scrolled off
+  the top, and takes you back to it.
+
+## Collapsed by default, and why
+
+Every message shows its opening lines and says how many more there are.
+
+That is not a space-saving default, it is what makes the shape survive contact
+with real mail. Slack's layout works because Slack messages are short; email is
+not. Measured on a real mailbox: one channel held 239 messages averaging 39,000
+characters — about six hundred lines each, a hundred and forty thousand lines
+in a single channel. Shown whole, it is not a stream, it is a wall.
+
+Open a message and you get the real thing: the sender's own HTML, rendered
+inline, with every remote resource blocked. See [Privacy](/docs/privacy).

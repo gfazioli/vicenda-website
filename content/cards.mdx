@@ -1,0 +1,74 @@
+---
+description: "A recognised machine message is drawn as a card with named fields rather than rendered as HTML — and a card is only allowed to look authoritative when the receiving server vouched for the sender."
+---
+
+# Machine Mail as Cards
+
+An invoice has an amount, a payment method, an item and an order number. Those
+are facts with names. Rendering them as somebody's marketing HTML throws that
+structure away and hands you a web page to read.
+
+Vicenda **binds** the facts and draws them.
+
+## All or nothing
+
+A rule either binds everything it needs, or it declines and the message stays
+ordinary mail.
+
+That sounds strict, and it is the most important rule here. A card that renders
+with a missing field still *looks* authoritative — it has the provider's mark,
+the layout, the confident typography — and a reader has no way to tell that the
+amount is missing rather than zero. **A half-filled card is worse than no
+card**, so a rule that cannot bind a mandatory field fails and the next one is
+tried.
+
+The same reasoning decides what a card may contain: only what a rule actually
+read out of the message. Vicenda never calculates, converts, rounds or sums a
+monetary value — it reprints the string the sender wrote.
+
+## The identity gate
+
+This is the part that matters most, and it runs **before** the shape rules
+rather than after.
+
+A card is allowed to look authoritative only when the receiving server vouched
+for the sender — when the message's own authentication results align with the
+address it claims to be from. When that verdict is present and passing, the
+card is solid-bordered, carries the provider's mark, and may offer buttons.
+
+When it is **not**, the card still renders — so you learn that the shape was
+recognised — but it says so in words, it is dashed rather than solid, it prints
+the raw `From` in full, and it carries **no buttons at all**.
+
+<Callout type="warning">
+  A "copy the code" button on a card nobody vouched for is not a design
+  preference, it is a working phishing kit. The button is removed by the type
+  that builds the card, not by each rule remembering — a rule that forgets is
+  not a bug anyone would notice.
+</Callout>
+
+A near-miss sender is not claimed at all. A rule that matched anything *ending*
+in a provider's domain would claim mail from a lookalike, and the identity gate
+would then be the only thing standing between a forged message and a card —
+one guard instead of two.
+
+## Where a link can point
+
+A card's buttons are **built** from a validated identifier, never forwarded
+from the message body. The body is the sender's to write; a URL they chose,
+behind a button the card makes look official, is exactly the vulnerability this
+whole design refuses.
+
+## The Templates window
+
+**⌥⌘T** opens Templates: every rule, and what it actually does on *your*
+mailbox rather than in principle.
+
+For each one you get the count of messages it turned into cards, how many of
+those the server vouched for, and how many messages from the same senders it
+left as mail — which is usually the right outcome, since marketing and one-off
+announcements are not cards. You can switch a rule off, choose its icon and
+colour, and see a **live preview built from a real message it actually bound**.
+
+It also lists senders no rule claims, ranked by how repetitive they are, which
+is the honest measure of whether a template is even possible.

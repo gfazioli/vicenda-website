@@ -1,0 +1,69 @@
+---
+description: "Read state, archive and delete, two-finger triage, reminders and the way out of a sender — plus what happens when the server disagrees with you."
+---
+
+# Reading and Triage
+
+## Read and unread
+
+Opening a channel marks it read — after a second and a half, not instantly, so
+a channel flicked past on the way to another one keeps its unread.
+
+Marking a single message read or unread is a per-message action from the hover
+toolbar. Where it goes next depends on the account and on a switch you own:
+
+- **Gmail**, with writing enabled, sends the change to the server, so Vicenda
+  and Gmail agree.
+- **Without** writing enabled, the change stays local — and Vicenda says so in
+  Settings rather than pretending otherwise.
+- **IMAP** is the interesting case, below.
+
+<Callout type="info">
+  On an IMAP account, Vicenda keeps a small **log of intentions**. If you mark
+  something read locally, that intention is remembered, and the next sync will
+  not silently revert it just because the server was never told. The server
+  wins again as soon as it agrees with you once.
+</Callout>
+
+## Archive and delete
+
+Both are available on Gmail accounts where you have turned writing on. Both go
+through a queue that survives the app closing, and both are checked against
+what the server actually did — a write that fails does not repaint as a success.
+
+**Neither is available on IMAP yet.** Archiving over IMAP is a copy, a flag and
+an expunge, and an expunge is not reversible. That wants a design before it
+wants an implementation, so the command vocabulary Vicenda speaks cannot
+express it at all today.
+
+## Two-finger triage
+
+Swipe a row horizontally with two fingers: **right archives**, **left deletes**
+— Gmail's gesture and Apple Mail's, in that order. A coloured backdrop names
+the action as the row moves, and the commit is visible: the row flies out the
+way you pushed it before anything happens.
+
+A swipe on an account that cannot write **does not move at all**. A row that
+stirs and stops reads as half-broken; one that plainly refuses is honest, and
+the hover toolbar explains why in words.
+
+## Reminders
+
+Reminders are Vicenda's own idea and stay on your Mac. They never touch the
+server, so they cannot collide with a flag or a label, and nothing appears in
+your mailbox from another device.
+
+## Leaving a sender
+
+A channel that carries a `List-Unsubscribe` header offers a way out, and the
+**Subscriptions** screen collects every one of them in a single list — which is
+the point, since the per-channel button only reaches a sender you were already
+thinking about.
+
+Where the sender supports one-click unsubscribe, Vicenda sends a single request
+and nothing else. Where it does not, it opens their page: those are different
+actions with different reliability, and a row that hid the difference would
+promise more than half of them can keep.
+
+The row **stays** after you leave, marked. Senders keep sending for days, and a
+row that vanished on click would read as a lie when tomorrow's issue lands.

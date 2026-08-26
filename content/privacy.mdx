@@ -1,0 +1,67 @@
+---
+description: "No server, ever, and no remote resource fetched while you read. Opening a message in Vicenda does not tell the sender you opened it."
+---
+
+# Privacy
+
+Two claims, and both are structural rather than promised.
+
+## No server, ever
+
+Vicenda runs no server. Not for sync, not for search, not for the clever parts.
+Your mail is read from the provider straight to your Mac and stored in a local
+database; nothing is relayed through anybody's infrastructure on the way.
+
+That is not a policy that could be changed in an update without you noticing —
+it is the reason the app is shaped as it is. There is no account to create, no
+service to sign in to, and no telemetry, so there is nothing to switch off.
+
+## No pixel
+
+Opening an email is the one everyday act that reports itself. A tracking pixel
+is a one-pixel image on a sender's server: your client fetches it to draw the
+message, and the fetch itself says *this person opened it, at this time, from
+roughly here*.
+
+Vicenda does not make the request. Before a message is rendered, a rule list is
+compiled that blocks **every** remote resource, of every type, unconditionally.
+Not a filter list to tune — the reading tier has no legitimate remote fetch, so
+the correct rule is the total one and there is nothing to keep current.
+
+<Callout type="warning">
+  **It fails closed.** If that rule list cannot be compiled, Vicenda does not
+  render the HTML anyway — it falls back to the message's text, which cannot
+  fetch anything, and tells you why. A safety claim printed unconditionally but
+  enforced conditionally is worse than no claim, because you stop checking.
+</Callout>
+
+JavaScript is off at the configuration level, not by a preference something
+could relax. A link in a message opens in your browser rather than navigating
+inside the reader, so nothing can replace the message with a page that then
+looks like the message.
+
+## Sender pictures
+
+Vicenda can show a face beside a sender, and each source is a separate decision
+because each has a different cost.
+
+- **The Mac's address book** — local. The photo is one you already have and
+  nothing leaves the computer. On by default.
+- **The sending domain's logo** — fetched from the domain's own published brand
+  record, falling back to its favicon. It identifies a *company*, not a person,
+  and repeats across hundreds of messages. Off by default.
+- **Gravatar** — off, and it should stay off unless you want it. Asking a third
+  party about an address tells them that this Mac corresponds with that person.
+  It is a smaller leak than a tracking pixel — once per address, and to
+  Automattic rather than to the sender — but it is the same kind.
+
+## Demo Mode
+
+Demo Mode masks every identity at the point where the app reads its own data:
+names, addresses, monograms, labels and timestamps. It is there so the app can
+be shown, screenshotted or demonstrated without showing the mailbox.
+
+It **fails closed**: anything it cannot positively identify as a vendor gets
+masked, rather than the other way round. And it masks the *pictures* too — a
+masked name over a real brand's logo is still that brand, and looks handled
+while leaking exactly what it claims to hide.
