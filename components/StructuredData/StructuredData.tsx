@@ -66,8 +66,8 @@ export function SoftwareApplicationJsonLd() {
         applicationCategory: 'CommunicationApplication',
         operatingSystem: `macOS ${config.app.minMacOS}+`,
         url: `${SITE}/`,
-        // The invite page while the beta is closed — `config.app.downloadUrl`
-        // is `/beta`. Never point this at an asset that does not exist.
+        // The site's own `/download`, which resolves the newest `.dmg` at
+        // request time. Never point this at an asset that does not exist.
         downloadUrl: `${SITE}${config.app.downloadUrl}`,
         softwareVersion: config.app.version,
         image: `${SITE}/opengraph-image.jpeg`,
@@ -92,7 +92,7 @@ const FAQ_ENTRIES: { question: string; answer: string }[] = [
   {
     question: 'How do I get it?',
     answer:
-      'Vicenda is in a closed beta. There is no public download and no App Store listing: the disk image is sent by hand to people who ask.',
+      'Vicenda is a free download for macOS, signed and notarised by Apple. There is no App Store listing and no account to create.',
   },
   {
     question: 'What macOS version do I need?',
@@ -121,7 +121,7 @@ const FAQ_ENTRIES: { question: string; answer: string }[] = [
   {
     question: 'Does it update itself?',
     answer:
-      'Not during the closed beta, deliberately. An auto-update feed is a public file pointing at a public download, which would put the "closed" build one request away from anyone who found it. A new build means a new link, sent to you.',
+      'Yes. Vicenda checks for updates on its own and installs them when you say so, the same way FinderGit and Netfox do. You can turn the check off in Settings.',
   },
 ];
 

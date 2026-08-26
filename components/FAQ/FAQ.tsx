@@ -28,10 +28,10 @@ const faqItems: { value: string; question: string; answer: ReactNode }[] = [
     question: 'How do I get it?',
     answer: (
       <Text size="sm">
-        Vicenda is in a closed beta. There is no public download and no App Store listing: the
-        disk image is sent by hand to people who ask.{' '}
-        <Anchor component={Link} href="/beta" size="sm">
-          Ask for an invite
+        Vicenda is a free download for macOS, signed and notarised by Apple. There is no
+        App Store listing and no account to create.{' '}
+        <Anchor component={Link} href="/download" size="sm">
+          Download it
         </Anchor>
         .
       </Text>
@@ -79,7 +79,7 @@ const faqItems: { value: string; question: string; answer: ReactNode }[] = [
     value: 'updates',
     question: 'Does it update itself?',
     answer:
-      'Not during the closed beta, deliberately. An auto-update feed is a public file pointing at a public download, which would put the "closed" build one request away from anyone who found it. A new build means a new link, sent to you.',
+      'Yes. Vicenda checks for updates on its own and installs them when you say so, the same way FinderGit and Netfox do. You can turn the check off in Settings.',
   },
 ];
 

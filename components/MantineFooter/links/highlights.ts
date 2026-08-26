@@ -1,10 +1,9 @@
 export const highlights = [
   {
-    key: 'beta',
-    title: 'Ask for an invite',
-    // CLOSED BETA: there is no asset to link. `/download` also lands here, so
-    // an old bookmark is not a dead end either.
-    href: '/beta',
+    key: 'download',
+    title: 'Download',
+    // `/download` resolves the newest .dmg at request time — see the route.
+    href: '/download',
   },
   {
     key: 'release-notes',

@@ -8,7 +8,7 @@
 
 <p align="center">
   <a href="https://www.apple.com/macos/"><img src="https://img.shields.io/badge/macOS-15%2B-1A181E" alt="macOS 15+" /></a>
-  <img src="https://img.shields.io/badge/beta-closed-E05252" alt="Closed beta" />
+  <img src="https://img.shields.io/badge/download-free-4CBD88" alt="Free download" />
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License" /></a>
 </p>
 
@@ -19,10 +19,16 @@
 The **marketing and docs site** for Vicenda, at `vicenda.app`. The app itself
 lives elsewhere and is private.
 
-Unlike its two sibling sites, **this one hosts no downloads**. Vicenda is in a
-closed beta: the disk image is sent by hand to people who ask, so `/download`
-redirects to `/beta` for as long as `config.beta.closed` is true. Flipping that
-one flag is what opens the door, and it is the only place to flip it.
+`/download` resolves the newest `.dmg` from the Releases API at request time,
+exactly as the two sibling sites do, so the public URL carries no version and
+never goes stale. Any failure falls back to the Releases page — the button is
+never a dead end.
+
+**There was a closed beta here and there is not any more.** It was dropped on
+2026-08-26: the invite list, the disk image sent by hand and the deliberate
+absence of an updater added up to more work than filter. What it bought —
+a hand-picked first audience — was not worth a release process that could not
+ship a fix without emailing everybody a new link.
 
 ## What Vicenda is
 
@@ -60,19 +66,6 @@ account had no client that could answer four questions at a glance:
 **Not built** — do not put these on the site: in-app OAuth consent, sending,
 archive and delete over IMAP, the notch, the menu bar.
 
-## The beta
-
-There is no public download and no App Store listing. `/beta` asks people to
-write; the disk image goes out by hand.
-
-> **DECIDED: no updater during the closed beta.** Sparkle would have made it
-> leaky — an appcast is a public XML file and the asset it points at is a
-> public URL, so a beta build updating from the usual feed puts the "closed"
-> download one `curl` away from anyone who finds the feed. An appcast at an
-> unguessable path was considered and rejected: that is a secret shipped inside
-> every copy of the app, which anyone who opens the bundle reads. A new build
-> means a new link.
-
 ## Design decisions worth not re-deriving
 
 **The face is EB Garamond, and that is a substitution.** The reference is
@@ -93,7 +86,7 @@ invented here would disagree with every screenshot placed on top of it.
 `component={Link}` fails at *prerender*, not at typecheck, with an unhelpful
 "element type is invalid". The template's precedent is a thin server page
 exporting `metadata` and delegating to a `'use client'` component — see
-`app/beta/page.tsx` and `components/Beta/Beta.tsx`.
+`app/page.tsx` and `components/Welcome/Welcome.tsx`.
 
 ## Still inherited from FinderGit
 

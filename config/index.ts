@@ -99,23 +99,16 @@ export default {
   app: {
     version: '0.1.0',
     minMacOS: '15.0',
-    // NO PUBLIC DOWNLOAD. Vicenda is in closed beta: the disk image is sent by
-    // hand to people who ask, so every "download" affordance on this site goes
-    // to the invite page instead of to a file. When that changes, this is the
-    // one place to change it.
-    downloadUrl: '/beta',
+    /**
+     * The FALLBACK for `/download`, not the link people click.
+     *
+     * `/download` resolves the newest `.dmg` from the Releases API at request
+     * time so the public URL carries no version; this is where it lands when
+     * that resolution fails, so the button is never a dead end. Same shape as
+     * the two sibling sites — and it points at the WEBSITE repo, because the
+     * app repo is private and its releases are not readable.
+     */
+    downloadUrl: 'https://github.com/gfazioli/vicenda-website/releases/latest',
   },
 
-  beta: {
-    /** Whether the download is gated. Flip this and the CTAs follow. */
-    closed: true,
-    /** Where an address goes. Decided with the owner — see the site README. */
-    inviteUrl: '/beta',
-    /**
-     * PROVISIONAL. A `mailto:` needs no infrastructure and works today, and it
-     * relies on the catch-all this domain already has for the other two sites.
-     * Confirm the address resolves before this page ships.
-     */
-    inviteEmail: 'beta@vicenda.app',
-  },
 } as const;

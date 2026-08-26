@@ -1,14 +1,17 @@
-import { IconMail } from '@tabler/icons-react';
+import { IconDownload } from '@tabler/icons-react';
 import { Button, Stack, Text, Title } from '@mantine/core';
 
+import config from '@/config';
+
 /**
- * The shared newsletter call-to-action (heading + blurb + Subscribe button),
- * used both in the footer band (NewsletterSignup) and the scroll-triggered
- * popup (NewsletterModal) so the copy and link stay in one place.
+ * The shared call-to-action, used both in the footer band
+ * (`NewsletterSignup`) and the scroll-triggered popup (`NewsletterModal`), so
+ * the copy and the link stay in one place.
  *
- * Vicenda has no newsletter: the only list is the closed beta, so this asks
- * for that instead of for a subscription. It links to `/beta` rather than
- * carrying a form, which keeps the promise honest — see `components/Beta`.
+ * **There is no newsletter and no list.** The template this site came from
+ * asks for an email address here; Vicenda asks for nothing and hands over the
+ * file. A form that collects an address it has nowhere to put is the kind of
+ * control this project treats as worse than an absent one.
  */
 export function NewsletterCallToAction() {
   return (
@@ -17,16 +20,17 @@ export function NewsletterCallToAction() {
         Want to try it?
       </Title>
       <Text c="dimmed" ta="center" size="sm" maw={420}>
-        Vicenda is in closed beta. Leave an address and the disk image comes by email.
+        Free, and it needs macOS {config.app.minMacOS} or later. No account, no list, nothing to
+        sign up to.
       </Text>
       <Button
         component="a"
-        href="/beta"
-        leftSection={<IconMail size={16} />}
+        href="/download"
+        leftSection={<IconDownload size={16} />}
         radius="xl"
         mt="xs"
       >
-        Ask for an invite
+        Download for macOS
       </Button>
     </Stack>
   );
