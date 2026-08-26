@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0"
+  xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"
+  xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>Vicenda</title>
+    <link>https://vicenda.app/appcast.xml</link>
+    <description>Most recent Vicenda updates.</description>
+    <language>en</language>
+    <!--
+      Sparkle update feed. Each <item> is a release; `scripts/release.sh` in
+      the app repo prepends a new one on every publish, with its EdDSA
+      signature and asset URL.
+
+      EMPTY IS CORRECT until the first release, and it has to EXIST: the app
+      ships with `SUFeedURL` pointing here, and a 404 makes every update check
+      fail rather than report "you are up to date". The release script also
+      refuses to run without this file, deliberately — a publish that created
+      the feed as a side effect would put the first users on a feed nobody had
+      ever looked at.
+    -->
+    <!-- release.sh inserts new <item> entries right below this marker -->
+  </channel>
+</rss>
