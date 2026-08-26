@@ -65,12 +65,13 @@ archive and delete over IMAP, the notch, the menu bar.
 There is no public download and no App Store listing. `/beta` asks people to
 write; the disk image goes out by hand.
 
-> **Sparkle would make this leaky, and the decision has to come before the
-> first DMG goes out.** An appcast is a public XML file and the asset it points
-> at is a public URL, so a beta build updating from the usual feed puts the
-> "closed" download one `curl` away from anyone who finds the feed. Either the
-> beta ships without an updater, or the appcast lives at an unguessable path
-> and the DMGs stay off the public releases repo. A URL cannot be recalled.
+> **DECIDED: no updater during the closed beta.** Sparkle would have made it
+> leaky — an appcast is a public XML file and the asset it points at is a
+> public URL, so a beta build updating from the usual feed puts the "closed"
+> download one `curl` away from anyone who finds the feed. An appcast at an
+> unguessable path was considered and rejected: that is a secret shipped inside
+> every copy of the app, which anyone who opens the bundle reads. A new build
+> means a new link.
 
 ## Design decisions worth not re-deriving
 

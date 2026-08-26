@@ -26,11 +26,11 @@ sent by hand. `/download` redirects to `/beta` while `config.beta.closed` is
 true, so no affordance anywhere becomes a 404 or an empty releases list. That
 flag is the only switch; do not add a second path to a binary.
 
-**Sparkle would make the beta leaky.** An appcast is public XML pointing at a
-public URL, so a beta build updating from the usual feed puts the closed
-download one `curl` away. Either no updater during the beta, or an unguessable
-appcast path with the DMGs off the public releases repo. Decide before the
-first DMG goes out — a URL cannot be recalled.
+**DECIDED 2026-08-26: no updater during the closed beta.** An appcast is
+public XML pointing at a public URL, so a beta build updating from the usual
+feed would put the closed download one `curl` away. An unguessable appcast path
+was rejected — that is a secret shipped inside every copy of the app. A new
+build means a new link. Do not wire Sparkle into a beta build.
 
 ## Tech Stack
 
