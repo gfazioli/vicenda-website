@@ -379,13 +379,13 @@ export function Welcome() {
           <Stack gap={10}>
             <Shot
               src="/screenshot-cards.png"
-              width={2000}
-              height={620}
-              alt="An invoice rendered as a card: amount, payment method, item and order number as named fields"
+              width={1060}
+              height={280}
+              alt="A security advisory rendered as a card: the package, the severity and the advisory number as named fields"
             />
             <Text size="xs" c="dimmed">
-              A recognised machine message is drawn as a card — the amount, the card, the item, the
-              order — instead of rendered as somebody&apos;s HTML.
+              A recognised machine message is drawn as a card — named fields you can read at a
+              glance — instead of rendered as somebody&apos;s HTML.
             </Text>
           </Stack>
         </SimpleGrid>
