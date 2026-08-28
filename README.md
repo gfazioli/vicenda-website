@@ -7,6 +7,11 @@
 </p>
 
 <p align="center">
+  <a href="https://vicenda.app"><strong>vicenda.app</strong></a>
+</p>
+
+<p align="center">
+  <a href="https://vicenda.app"><img src="https://img.shields.io/badge/site-vicenda.app-2B6CB0" alt="vicenda.app" /></a>
   <a href="https://www.apple.com/macos/"><img src="https://img.shields.io/badge/macOS-15%2B-1A181E" alt="macOS 15+" /></a>
   <img src="https://img.shields.io/badge/download-free-4CBD88" alt="Free download" />
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License" /></a>
@@ -16,8 +21,14 @@
 
 ## What this repository is
 
-The **marketing and docs site** for Vicenda, at `vicenda.app`. The app itself
-lives elsewhere and is private.
+The **marketing and docs site** for Vicenda, live at
+[vicenda.app](https://vicenda.app). The app itself lives elsewhere and is
+private.
+
+It also serves the **Sparkle appcast** at
+[`/appcast.xml`](https://vicenda.app/appcast.xml), which every installed copy
+polls for updates, and the release `.dmg` files from this repository's GitHub
+Releases.
 
 `/download` resolves the newest `.dmg` from the Releases API at request time,
 exactly as the two sibling sites do, so the public URL carries no version and
