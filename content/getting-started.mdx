@@ -33,11 +33,34 @@ the app is allowed to do on your behalf:
 | Sending | **not yet** | **not yet** |
 
 <Callout type="info">
-  Vicenda asks for the narrowest permission that does the job. Reading uses a
-  read-only scope; anything that writes is a separate, explicit decision you
-  make per account in **Settings → Permissions**, and it stays off until you
-  make it.
+  Vicenda asks for **one** Google permission, `gmail.modify`, and it is the
+  narrowest one that can do the job: the next step down cannot mark a message
+  read, so a message you read here would stay unread everywhere else. Google
+  describes it on the consent screen as *"Read, compose, send and permanently
+  delete all your email"* — that is Google's wording for the whole permission,
+  not a list of what Vicenda does. Vicenda cannot send at all, and it never
+  deletes permanently: it moves messages to Gmail's own Trash, where you can
+  get them back.
+
+  Whether anything is written at all is a separate, local decision in
+  **Settings → Permissions**, off until you turn it on. Turning it on does not
+  ask you to sign in again — the permission was granted when you connected the
+  account; the switch decides whether it is used.
 </Callout>
+
+## Adding a mailbox
+
+On first launch Vicenda opens a setup window rather than an empty inbox. Type
+the address, and Google's consent screen appears **over the app** — no browser
+opens, and nothing listens on a port. Vicenda cannot see into that window; it
+receives only Google's answer.
+
+Until Google finishes verifying the app you will meet a warning screen and have
+to click **Advanced → Go to Vicenda**. That is expected while verification is
+pending, and it is the same for every app in that state.
+
+Afterwards, **Settings → Accounts → Add…** connects another mailbox, or
+**⇧⌘N** from anywhere.
 
 ## The first launch
 

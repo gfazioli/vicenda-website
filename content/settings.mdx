@@ -9,10 +9,13 @@ description: "What each preference actually changes, and which ones decide wheth
 Two switches decide whether Vicenda may change anything in your mailbox, and
 both are off until you turn them on.
 
-**Allow mail modification** is the master. Reading uses a read-only permission;
-turning this on means re-consenting every connected account against a wider one
-that can also change and delete mail. It is a real decision, which is why it is
-not bundled into the first launch.
+**Allow mail modification** is the master, and it is a local switch rather than
+a new permission. Vicenda asks Google for one permission when you connect an
+account, and it is the narrowest one that can also mark a message read; this
+switch decides whether Vicenda ever uses that half. Turning it on does not send
+you back to a consent screen, and turning it off does not give the permission
+back — it stops mail being changed on the server. It is a real decision, which
+is why it is not bundled into the first launch.
 
 **Mark read on the server** decides whether reading in Vicenda also marks read
 in Gmail. It requires the switch above — without it, Vicenda's idea of read and
