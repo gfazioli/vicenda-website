@@ -51,9 +51,24 @@ the app is allowed to do on your behalf:
 ## Adding a mailbox
 
 On first launch Vicenda opens a setup window rather than an empty inbox. Type
-the address, and Google's consent screen appears **over the app** — no browser
-opens, and nothing listens on a port. Vicenda cannot see into that window; it
-receives only Google's answer.
+the address; what happens next depends on where the mailbox lives.
+
+**Gmail.** Google's consent screen appears **over the app** — no browser opens,
+and nothing listens on a port. Vicenda cannot see into that window; it receives
+only Google's answer.
+
+**Anything else** is connected over IMAP, and Vicenda asks for two things an
+address cannot tell it: the server's hostname and a password. It connects on
+**port 993 with TLS** and signs in **before saving anything**, so a wrong
+server or a wrong password is a message on that screen rather than a broken
+mailbox on your rail. The password goes straight to your keychain.
+
+<Callout type="info">
+  Some providers want an **app-specific password** rather than the one you use
+  to sign in. And if the mailbox is a **Google Workspace** account — Gmail on
+  your own domain — use **Use Google sign-in** on that screen instead: Google
+  does not accept ordinary passwords for IMAP by default.
+</Callout>
 
 Until Google finishes verifying the app you will meet a warning screen and have
 to click **Advanced → Go to Vicenda**. That is expected while verification is
