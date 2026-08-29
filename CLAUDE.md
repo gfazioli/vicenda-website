@@ -63,7 +63,7 @@ public download and it updates itself.
 - **App Router** (`app/`): Next.js 16 app router with Nextra integration
 - **Docs content** (`content/`): MDX files rendered via Nextra at `/docs/[[...mdxPath]]`
 - Nextra is configured with `contentDirBasePath: '/docs'` — all MDX content is served under `/docs`
-- `content/_meta.ts` controls sidebar navigation order and labels
+- `content/_meta.tsx` controls sidebar navigation order and labels
 
 ### Layout & Theme Integration
 
@@ -127,10 +127,15 @@ In `app/layout.tsx`, CSS imports must follow this order:
   recognised machine message is drawn as a card instead of rendered as
   somebody's HTML. That is checkable in one screenshot, which is why it is the
   pitch.
-- **Only describe what the app ships.** Built: the stream, the embed cards and
-  their identity gate, Gmail read+write, the IMAP tier, the block-everything
-  reader, one-hue-per-account. NOT built, and not to appear anywhere: in-app
-  OAuth consent, sending, archive and delete over IMAP, the notch, the menu bar.
+- **Only describe what the app ships**, and check the list rather than trusting
+  it — this one said in-app OAuth consent was NOT built and must not appear
+  anywhere, on the day the site's own Getting Started described it. Built: the
+  stream, the embed cards and their identity gate, Gmail read+write, the IMAP
+  tier, the block-everything reader, one-hue-per-account, and since 2026-08-28
+  the **first-run wizard** — consent presented over the app with no browser, and
+  from 2026-08-29 IMAP too, credentials proved against the server before an
+  account is written. NOT built, and not to appear anywhere: sending, archive
+  and delete over IMAP, the notch, the menu bar.
 - **Download links go to `/download`**, never to a versioned asset URL. The
   route resolves the newest `.dmg` at request time, so nothing on this site
   carries a version number that can go stale.
