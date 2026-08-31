@@ -104,6 +104,19 @@ export default {
   },
   app: {
     version: '0.1.0',
+    /**
+     * Publication date of `version`, UTC. Written by `release.sh` in the app
+     * repo alongside the version and the floor, and EMPTY until the first
+     * release, because there has not been one.
+     *
+     * Nothing renders it yet. It exists so the first release captures its own
+     * date rather than leaving it to be reconstructed later: the sibling sites
+     * read this as the offline fallback for the homepage release strip, and as
+     * the JSON-LD `dateModified`. Vicenda gets neither until there are enough
+     * releases for a cadence to be worth showing - one release dated today
+     * says less than nothing.
+     */
+    releaseDate: '',
     minMacOS: '15.0',
     /**
      * The FALLBACK for `/download`, not the link people click.
@@ -116,5 +129,4 @@ export default {
      */
     downloadUrl: 'https://github.com/gfazioli/vicenda-website/releases/latest',
   },
-
 } as const;
