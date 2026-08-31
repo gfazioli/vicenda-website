@@ -72,15 +72,21 @@ export default {
   releaseNotes: {
     // External link to the GitHub Releases page — used by the
     // "View full changelog on GitHub" button at the bottom of /docs/release-notes.
-    url: 'https://github.com/gfazioli/findergit-website/releases',
+    url: 'https://github.com/gfazioli/vicenda-website/releases',
     maxReleases: 10,
     // Releases live on the website repo, which ALSO carries the website's
     // own releases (the Mantine/Nextra template tags a `v6.x` release when
-    // its packages are bumped). release.sh names every FinderGit app
-    // release "FinderGit X.Y.Z"; the feed keeps only releases with this
-    // name prefix so a website-internal entry never appears in the app's
-    // release notes. (Cross-port: netfox-website would use 'Netfox'.)
-    appReleaseNamePrefix: 'FinderGit',
+    // its packages are bumped). `release.sh` titles every app release
+    // `"$APP_NAME $VERSION"` and `APP_NAME="Vicenda"`, so the feed keeps
+    // only releases starting with that word and a website-internal entry
+    // never appears in the app's release notes.
+    //
+    // THIS SAID 'FinderGit' UNTIL 2026-08-31, carried over with the rest of
+    // the template. The filter would have discarded every release this site
+    // exists to show, leaving the page permanently empty on the day Vicenda
+    // first shipped -- and nothing would have reported it, because an empty
+    // feed and a filtered-out feed render identically.
+    appReleaseNamePrefix: 'Vicenda',
     // How many recent releases to render on the page + in the TOC. The
     // rest stay one click away via "View full changelog on GitHub" at the
     // bottom — the page was growing unbounded. Sliced AFTER the app-name
