@@ -116,7 +116,7 @@ export default {
      * releases for a cadence to be worth showing - one release dated today
      * says less than nothing.
      */
-    releaseDate: '',
+    releaseDate: '2026-09-04',
     minMacOS: '15.0',
     /**
      * The FALLBACK for `/download`, not the link people click.

@@ -20,5 +20,18 @@
       ever looked at.
     -->
     <!-- release.sh inserts new <item> entries right below this marker -->
+<item>
+            <title>Version 0.1.0</title>
+            <pubDate>Fri, 04 Sep 2026 14:21:16 +0000</pubDate>
+            <sparkle:version>335</sparkle:version>
+            <sparkle:shortVersionString>0.1.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>15.0</sparkle:minimumSystemVersion>
+            <sparkle:releaseNotesLink>https://vicenda.app/release-notes/0.1.0.html</sparkle:releaseNotesLink>
+            <enclosure
+                url="https://github.com/gfazioli/vicenda-website/releases/download/v0.1.0/Vicenda-0.1.0.dmg"
+                sparkle:edSignature="JWLYJeGEnRWBaN/EXavivhAEH06TU93VsgwAR7arXO1dXnPZbDMy7AOAZiUs4EQMyri/Lbo9NGkXZq70x9Z2Aw==" length="21029981"
+                type="application/octet-stream" />
+        </item>
+
   </channel>
 </rss>
