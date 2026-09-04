@@ -19,7 +19,9 @@ export function NewsletterModal() {
   const [scroll] = useWindowScroll();
   const [opened, { open, close }] = useDisclosure(false);
   const [dismissed, setDismissed] = useLocalStorage({
-    key: 'vicenda-download-prompt-dismissed',
+    // A new key on purpose: the download prompt this replaced had its own,
+    // and a visitor who dismissed THAT should still see the newsletter once.
+    key: 'vicenda-newsletter-prompt-dismissed',
     defaultValue: false,
     // Read localStorage only after mount, so SSR and first client render agree.
     getInitialValueInEffect: true,
@@ -48,7 +50,7 @@ export function NewsletterModal() {
       radius="lg"
       overlayProps={{ blur: 2 }}
       transitionProps={{ transition: 'pop' }}
-      aria-label="Download Vicenda"
+      aria-label="Subscribe to the Vicenda newsletter"
     >
       <NewsletterCallToAction />
     </Modal>

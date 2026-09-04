@@ -119,6 +119,11 @@ const FAQ_ENTRIES: { question: string; answer: string }[] = [
       'Nothing, and there is no pricing page to visit later. Vicenda is one person\u2019s mail client, opened to a few people. If it turns out to be useful to you, sponsoring the work is welcome and buys you nothing extra.',
   },
   {
+    question: 'Does it use AI?',
+    answer:
+      'Only if you ask it to, and only on your Mac. An optional local model can build a card for a machine message no template covers — a download you choose in Settings, run entirely on your Mac, never sent anywhere. It needs an Apple silicon Mac, and Vicenda is complete without it.',
+  },
+  {
     question: 'Does it update itself?',
     answer:
       'Yes. Vicenda checks for updates on its own and installs them when you say so, the same way FinderGit and Netfox do. You can turn the check off in Settings.',

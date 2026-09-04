@@ -18,12 +18,13 @@ export default {
     title: 'Community',
     type: 'menu',
     items: {
-      // No newsletter and no list. A "Newsletter" entry pointing at another
-      // product's Substack was worse than none, and this app asks nothing of
-      // the people who download it.
-      download: {
-        title: 'Download',
-        href: '/download',
+      // Release news only, on Vicenda's own Substack — the sibling sites'
+      // shape. (This entry once pointed at ANOTHER product's Substack, carried
+      // over with the template, and was removed rather than fixed; the app
+      // has its own publication now.)
+      newsletter: {
+        title: 'Newsletter',
+        href: 'https://vicenda.substack.com',
       },
       issues: {
         title: 'Report an Issue',

@@ -131,113 +131,113 @@ export function Welcome() {
           <Scene.Noise opacity={0.03} grain={0.8} octaves={2} />
         </Scene>
 
-      {/* ---- Hero ---------------------------------------------------- */}
+        {/* ---- Hero ---------------------------------------------------- */}
         <Container size="lg" py={{ base: 56, sm: 104 }} style={{ position: 'relative' }}>
-        <Grid gap={{ base: 40, md: 64 }} align="center">
-          <Grid.Col span={{ base: 12, md: 7 }}>
-            <Stack gap="xl">
-              <Group gap="xs">
-                <Badge variant="light" radius="sm" size="sm">
-                  Free
-                </Badge>
-                <Text size="sm" c="dimmed">
-                  macOS {config.app.minMacOS} or later · signed and notarised
-                </Text>
-              </Group>
+          <Grid gap={{ base: 40, md: 64 }} align="center">
+            <Grid.Col span={{ base: 12, md: 7 }}>
+              <Stack gap="xl">
+                <Group gap="xs">
+                  <Badge variant="light" radius="sm" size="sm">
+                    Free
+                  </Badge>
+                  <Text size="sm" c="dimmed">
+                    macOS {config.app.minMacOS} or later · signed and notarised
+                  </Text>
+                </Group>
 
-              <Title order={1} fz={{ base: 44, sm: 76 }} fw={400} lh={1.02}>
-                <span className="display-hero">
-                  {/*
+                <Title order={1} fz={{ base: 44, sm: 76 }} fw={400} lh={1.02}>
+                  <span className="display-hero">
+                    {/*
                     One pass on mount, by word. `loop` exists and is not used:
                     a headline that keeps re-animating is a headline you cannot
                     finish reading.
                   */}
-                  {/*
+                    {/*
                     `inherit` is load-bearing. TextAnimate is a Mantine `Text`
                     underneath, so without it the component applies Text's own
                     default size and SILENTLY overrides the Title around it —
                     a 76px headline rendered at 14px, which on a dark ground
                     read as no headline at all.
                   */}
-                  <TextAnimate
-                    inherit
-                    animation="blurUp"
-                    by="word"
-                    trigger="inView"
-                    duration={0.7}
+                    <TextAnimate
+                      inherit
+                      animation="blurUp"
+                      by="word"
+                      trigger="inView"
+                      duration={0.7}
+                    >
+                      Your mail is not a list.
+                    </TextAnimate>
+                  </span>
+                </Title>
+
+                <Text fz={{ base: 18, sm: 21 }} c="dimmed" maw={560} lh={1.55}>
+                  Vicenda is a Mac mail client shaped like a conversation. The machines that write
+                  to you get channels. The people get threads. Nothing ever leaves your Mac.
+                </Text>
+
+                <Group gap="sm" mt="xs">
+                  <Button
+                    component="a"
+                    href="/download"
+                    size="md"
+                    radius="xl"
+                    leftSection={<IconDownload size={16} />}
                   >
-                    Your mail is not a list.
-                  </TextAnimate>
-                </span>
-              </Title>
+                    Download for macOS
+                  </Button>
+                  <Button component={Link} href="/docs" size="md" radius="xl" variant="default">
+                    See how it works
+                  </Button>
+                </Group>
 
-              <Text fz={{ base: 18, sm: 21 }} c="dimmed" maw={560} lh={1.55}>
-                Vicenda is a Mac mail client shaped like a conversation. The machines that write to
-                you get channels. The people get threads. Nothing ever leaves your Mac.
-              </Text>
-
-              <Group gap="sm" mt="xs">
-                <Button
-                  component="a"
-                  href="/download"
-                  size="md"
-                  radius="xl"
-                  leftSection={<IconDownload size={16} />}
-                >
-                  Download for macOS
-                </Button>
-                <Button component={Link} href="/docs" size="md" radius="xl" variant="default">
-                  See how it works
-                </Button>
-              </Group>
-
-              {/*
+                {/*
                 THE ACCOUNT RING, the app's own and nobody else's: eight hues at
                 one lightness, 45° apart on an OKLCH circle. The site opens with
                 it rather than with a logo, because it is the single graphic
                 device the product already has.
               */}
-              <Stack gap={6} mt="md">
-                <Group gap={6} aria-hidden>
-                  {ACCOUNT_RING.map((hue) => (
-                    <Box key={hue} w={26} h={4} style={{ background: hue, borderRadius: 2 }} />
-                  ))}
-                </Group>
-                <Text size="xs" c="dimmed">
-                  One hue per mailbox. Seven accounts, one glance.
-                </Text>
+                <Stack gap={6} mt="md">
+                  <Group gap={6} aria-hidden>
+                    {ACCOUNT_RING.map((hue) => (
+                      <Box key={hue} w={26} h={4} style={{ background: hue, borderRadius: 2 }} />
+                    ))}
+                  </Group>
+                  <Text size="xs" c="dimmed">
+                    One hue per mailbox. Seven accounts, one glance.
+                  </Text>
+                </Stack>
               </Stack>
-            </Stack>
-          </Grid.Col>
+            </Grid.Col>
 
-          <Grid.Col span={{ base: 12, md: 5 }}>
-            {/*
+            <Grid.Col span={{ base: 12, md: 5 }}>
+              {/*
               The mark at its full 512, with a reflection under it. An app icon
               standing on a dark plane is the most honest hero image a Mac app
               has: it is the thing you will actually see in the Dock.
             */}
-            {/*
+              {/*
               `isolation: isolate` is load-bearing, not tidiness. The reflected
               copy is painted at `z-index: -2`, so without a stacking context
               of its own here it goes BEHIND the Scene layers underneath and
               disappears — the icon simply floats. Isolating clamps that -2 to
               this box, which puts it above the ground and below the icon.
             */}
-            <Box
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                // The root only ever needs to be as tall as the icon.
-                // (This was tried as the fix for the detached reflection and
-                // was NOT it — measurement showed the root already hugging the
-                // image at 235px. Kept because it is correct, not because it
-                // solved anything.)
-                alignItems: 'flex-start',
-                position: 'relative',
-                isolation: 'isolate',
-              }}
-            >
-              {/*
+              <Box
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  // The root only ever needs to be as tall as the icon.
+                  // (This was tried as the fix for the detached reflection and
+                  // was NOT it — measurement showed the root already hugging the
+                  // image at 235px. Kept because it is correct, not because it
+                  // solved anything.)
+                  alignItems: 'flex-start',
+                  position: 'relative',
+                  isolation: 'isolate',
+                }}
+              >
+                {/*
                 MEASURED, after three wrong answers — the baseline gap, the
                 flex stretch, and the transform origin.
                 
@@ -254,34 +254,33 @@ export function Welcome() {
                 and held down by opacity, which is what a reflection on a dark
                 plane looks like anyway.
               */}
-              <Reflection
-                reflectionDistance={0}
-                reflectionStretch={1}
-                reflectionOpacity={0.10}
-                reflectionBlur={9}
-                reflectionStart={0}
-                reflectionEnd={45}
-                shadow={false}
-                disableChildren
-              >
-                <Image
-                  src="/icon-512x512.png"
-                  alt="The Vicenda app icon"
-                  width={512}
-                  height={512}
-                  priority
-                  sizes="(max-width: 62em) 60vw, 380px"
-                  // `block`, so the inline baseline adds no descender gap
-                  // of its own under the image.
-                  style={{ display: 'block', width: '100%', maxWidth: 380, height: 'auto' }}
-                />
-              </Reflection>
-            </Box>
-          </Grid.Col>
-        </Grid>
+                <Reflection
+                  reflectionDistance={0}
+                  reflectionStretch={1}
+                  reflectionOpacity={0.1}
+                  reflectionBlur={9}
+                  reflectionStart={0}
+                  reflectionEnd={45}
+                  shadow={false}
+                  disableChildren
+                >
+                  <Image
+                    src="/icon-512x512.png"
+                    alt="The Vicenda app icon"
+                    width={512}
+                    height={512}
+                    priority
+                    sizes="(max-width: 62em) 60vw, 380px"
+                    // `block`, so the inline baseline adds no descender gap
+                    // of its own under the image.
+                    style={{ display: 'block', width: '100%', maxWidth: 380, height: 'auto' }}
+                  />
+                </Reflection>
+              </Box>
+            </Grid.Col>
+          </Grid>
         </Container>
       </Box>
-
 
       {/* ---- What it looks like -------------------------------------- */}
       {/*
@@ -360,7 +359,6 @@ export function Welcome() {
         </SimpleGrid>
       </Container>
 
-
       {/* ---- The two halves, side by side ---------------------------- */}
       <Container size="lg" py={{ base: 24, sm: 48 }}>
         <SimpleGrid cols={{ base: 1, md: 2 }} spacing={{ base: 24, md: 32 }}>
@@ -404,8 +402,8 @@ export function Welcome() {
           </Text>
           <Text c="dimmed" fz={{ base: 16, sm: 18 }} lh={1.6}>
             If that sounds like your inbox too, it is a free download and it needs nothing from you
-            — no account, no list, no sign-up. It updates itself when there is a build worth your
-            time, and you can turn that off.
+            — no account, no sign-up. It updates itself when there is a build worth your time, and
+            you can turn that off.
           </Text>
           <Group mt="sm">
             <Button
