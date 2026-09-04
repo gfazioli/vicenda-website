@@ -94,8 +94,8 @@ export const MantineFooter = () => {
                 <ActionIcon
                   variant="subtle"
                   component="a"
-                  href="mailto:feedback@vicenda.app?subject=Vicenda"
-                  aria-label="Write to the developer"
+                  href="https://vicenda.substack.com"
+                  aria-label="Subscribe to the newsletter"
                 >
                   <IconMailHeart size={24} />
                 </ActionIcon>

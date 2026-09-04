@@ -74,3 +74,29 @@ colour, and see a **live preview built from a real message it actually bound**.
 
 It also lists senders no rule claims, ranked by how repetitive they are, which
 is the honest measure of whether a template is even possible.
+
+## Senders no rule knows
+
+A template exists for a sender somebody sat down and wrote one for. Everything
+else — the hosting company, a bank in another country, the tool you signed up
+for last week — arrives as ordinary mail, however card-shaped it is.
+
+Vicenda can close that gap with an **optional local model**: a compact language
+model, downloaded once and run entirely on your Mac. It reads a machine message
+no rule claimed and proposes a card the way a rule would — a headline and a
+handful of named facts — and the same binder that checks every template checks
+the proposal: each fact must appear in the message, word for word, or the card
+is not drawn. A card it built carries a **DYNAMIC** mark, so you always know
+which kind you are looking at.
+
+Three things about it are worth knowing:
+
+- **It is off until you choose it.** Vicenda is complete without a model. The
+  first time a channel could use one, a line in the stream offers it; **Settings
+  → Local Model** downloads it, tries it on a recent message, and removes it
+  again — the download can always be repeated.
+- **Mail never leaves the Mac.** The model runs on your Mac and nothing is sent
+  anywhere to build a card. It needs an Apple silicon Mac, and the larger of
+  the two models wants 16 GB of memory; the lighter one runs on 8.
+- **It is not asked about everything.** A sender that runs a mailing list is
+  never sent to it, and a written template always wins over a generated card.

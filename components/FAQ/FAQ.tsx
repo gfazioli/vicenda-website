@@ -28,8 +28,8 @@ const faqItems: { value: string; question: string; answer: ReactNode }[] = [
     question: 'How do I get it?',
     answer: (
       <Text size="sm">
-        Vicenda is a free download for macOS, signed and notarised by Apple. There is no
-        App Store listing and no account to create.{' '}
+        Vicenda is a free download for macOS, signed and notarised by Apple. There is no App Store
+        listing and no account to create.{' '}
         <Anchor component={Link} href="/download" size="sm">
           Download it
         </Anchor>
@@ -74,6 +74,21 @@ const faqItems: { value: string; question: string; answer: ReactNode }[] = [
     question: 'What does it cost?',
     answer:
       'Nothing, and there is no pricing page to visit later. Vicenda is one person’s mail client, opened to a few people. If it turns out to be useful to you, sponsoring the work is welcome and buys you nothing extra.',
+  },
+  {
+    value: 'model',
+    question: 'Does it use AI?',
+    answer: (
+      <Text size="sm">
+        Only if you ask it to, and only on your Mac. An optional local model can build a card for a
+        machine message no template covers — a download you choose in Settings, run entirely on your
+        Mac, never sent anywhere. It needs an Apple silicon Mac, and Vicenda is complete without it.{' '}
+        <Anchor component={Link} href="/docs/cards#senders-no-rule-knows" size="sm">
+          How it is kept honest
+        </Anchor>
+        .
+      </Text>
+    ),
   },
   {
     value: 'updates',
