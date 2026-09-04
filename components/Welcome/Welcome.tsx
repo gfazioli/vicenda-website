@@ -297,8 +297,8 @@ export function Welcome() {
         <Stack gap={10}>
           <Shot
             src="/screenshot-today.png"
-            width={2880}
-            height={1400}
+            width={2000}
+            height={1310}
             alt="Today: who is waiting on a reply, then what is unread, each row carrying the hue of the mailbox it landed in"
             priority
           />
@@ -362,12 +362,19 @@ export function Welcome() {
       {/* ---- The two halves, side by side ---------------------------- */}
       <Container size="lg" py={{ base: 24, sm: 48 }}>
         <SimpleGrid cols={{ base: 1, md: 2 }} spacing={{ base: 24, md: 32 }}>
+          {/*
+            Two WHOLE windows at one size. These were two hand-cropped
+            fragments — a column 800x1420 tall beside a card 1060x280 short —
+            and in a two-column grid they could not line up. Every image on
+            this site now comes out of `scripts/screenshots/shoot.sh` in the
+            app repo at the same 2000px, so the grid needs no framing.
+          */}
           <Stack gap={10}>
             <Shot
               src="/screenshot-channels.png"
-              width={800}
-              height={1420}
-              alt="The column: machine senders listed as channels, each with the address that tells two of one brand apart"
+              width={2000}
+              height={1310}
+              alt="The column with machine senders listed as channels under a hash, and one of them open as a stream beside it"
             />
             <Text size="xs" c="dimmed">
               Machines become channels. People become conversations. The column says which is which
@@ -377,9 +384,9 @@ export function Welcome() {
           <Stack gap={10}>
             <Shot
               src="/screenshot-cards.png"
-              width={1060}
-              height={280}
-              alt="A security advisory rendered as a card: the package, the severity and the advisory number as named fields"
+              width={2000}
+              height={1310}
+              alt="The inbox as a stream: machine mail collapsed to its first lines, and one message drawn as a card with named fields"
             />
             <Text size="xs" c="dimmed">
               A recognised machine message is drawn as a card — named fields you can read at a
