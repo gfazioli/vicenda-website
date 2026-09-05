@@ -103,7 +103,7 @@ export default {
     defaultLanguage: 'en',
   },
   app: {
-    version: '0.1.0',
+    version: '0.2.0',
     /**
      * Publication date of `version`, UTC. Written by `release.sh` in the app
      * repo alongside the version and the floor, and EMPTY until the first
@@ -116,7 +116,7 @@ export default {
      * releases for a cadence to be worth showing - one release dated today
      * says less than nothing.
      */
-    releaseDate: '2026-09-04',
+    releaseDate: '2026-09-05',
     minMacOS: '15.0',
     /**
      * The FALLBACK for `/download`, not the link people click.

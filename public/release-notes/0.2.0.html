@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vicenda 0.2.0 — Release Notes</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #ffffff;
+    --fg: #1a1a1a;
+    --accent: #0056C7;
+    --muted: #6b6b73;
+    --code-bg: #f4f4f5;
+    --border: rgba(0,0,0,0.12);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1e;
+      --fg: #ececec;
+      /* A LIGHTER accent in dark, and it is measured rather than eyeballed.
+         The brand blue #0056C7 sits at 2.56:1 on this ground — under WCAG AA
+         for any text — while it is a comfortable 6.65:1 on white. #5C9AFD is
+         step 4 of the same ramp `theme.ts` builds the website from, and lands
+         at 6.07:1. Netfox's orange happened to work in both and so this
+         override never existed there; blue does not get away with it. */
+      --accent: #5C9AFD;
+      --muted: #9c9ca5;
+      --code-bg: #2c2c2e;
+      --border: rgba(255,255,255,0.14);
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    font: 14px/1.55 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+    color: var(--fg);
+    background: var(--bg);
+    margin: 0 auto;
+    padding: 20px 24px 40px;
+    max-width: 720px;
+  }
+  header.page-header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 14px;
+    margin-bottom: 22px;
+  }
+  header.page-header h1 { font-size: 1.7em; margin: 0 0 4px; letter-spacing: -0.02em; }
+  header.page-header .subtitle { color: var(--muted); margin: 0; font-size: 0.92em; }
+  h1, h2, h3, h4 { letter-spacing: -0.01em; margin: 1.5em 0 0.5em; }
+  h1 { font-size: 1.4em; }
+  h2 { font-size: 1.2em; }
+  h3 { font-size: 1em; }
+  a { color: var(--accent); }
+  hr { border: 0; border-top: 1px solid var(--border); margin: 22px 0; }
+  ul, ol { padding-left: 1.4em; }
+  li { margin: 4px 0; }
+  code {
+    font: 0.9em ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    background: var(--code-bg);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  pre {
+    background: var(--code-bg);
+    padding: 12px 14px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-size: 0.88em;
+  }
+  pre code { background: transparent; padding: 0; font-size: 1em; }
+  blockquote {
+    margin: 12px 0;
+    padding-left: 12px;
+    border-left: 3px solid var(--border);
+    color: var(--muted);
+  }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 0.95em; }
+  th, td { border: 1px solid var(--border); padding: 6px 10px; text-align: left; }
+  th { background: var(--code-bg); }
+  img { max-width: 100%; }
+</style>
+</head>
+<body>
+<header class="page-header">
+  <h1>Vicenda 0.2.0</h1>
+  <p class="subtitle">Release notes</p>
+</header>
+<p>Vicenda 0.2.0 — the Unread view, and a swipe that feels finished</p>
+<p>Two things you touch every day: a place that holds every unread message at once, and a triage gesture that now tells you what it is about to do.</p>
+<h2>What is new</h2>
+<ul>
+<li><strong>Unread, in one place.</strong> A new view under Today: every unread message in the inbox in one stream, grouped by conversation — people first, then channels, each in the order its newest message arrived. Group headers stay put while you scroll, each with a count and <strong>Mark as read</strong>; <strong>Mark all as read</strong> does the whole inbox. Rows you mark read stay on screen, drawn as read, until you leave, so nothing runs away under the pointer. Esc marks the active group read and moves on; the arrows move between rows and fold groups. The two-finger triage works on every row.</li>
+<li><strong>A swipe that arms before it commits.</strong> The row follows your fingers one to one, then with resistance; past the commit point it arms — the colour lifts, the icon springs, the trackpad ticks — so you know what letting go will do before you let go. A fast flick commits short of it. The commit is visible: the row leaves by its own width and the gap closes behind it before the action runs, in both renderers. A row that stays, or a commit the server refuses, springs back with the toast that says why.</li>
+<li><strong>Kept honest in both directions.</strong> A swipe on an account that cannot write does not move at all, and the hover toolbar says why.</li>
+</ul>
+<h2>Requirements</h2>
+<p>macOS 15 or later. The optional local model needs an Apple silicon Mac.</p>
+<h2>Known limits</h2>
+<p>Sending is not built yet; archive and delete work on Gmail only. Google shows a warning on its consent screen while the app's verification is pending — Advanced, then Go to Vicenda.</p>
+</body>
+</html>
