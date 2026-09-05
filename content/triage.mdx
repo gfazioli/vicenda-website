@@ -1,5 +1,5 @@
 ---
-description: "Read state, archive and delete, two-finger triage, reminders and the way out of a sender — plus what happens when the server disagrees with you."
+description: "Read state, the Unread view, archive and delete, two-finger triage, reminders and the way out of a sender — plus what happens when the server disagrees with you."
 ---
 
 # Reading and Triage
@@ -32,6 +32,24 @@ A thread opens as a conversation rather than as a list of subjects — oldest
 first, dividers by day, and the quoted history stripped out so you read each
 reply once instead of once per level of nesting.
 
+## Unread, in one place
+
+**Unread**, under Today in the sidebar, is every unread message in the inbox in
+one stream, grouped by conversation: people first, then channels, each in the
+order its newest message arrived. Its badge is the one number a day is measured
+by — it reaches zero.
+
+Each group has a header that stays put while you scroll, a count, and **Mark as
+read**: one click empties a sender without opening anything. **Mark all as
+read** does the whole inbox. Rows you mark read here stay, drawn as read, until
+you leave the view, so nothing runs away under the pointer; a message read on
+your phone, or archived anywhere, drops on the next sync.
+
+The keyboard drives it. **Esc** marks the active group read and moves to the
+next; **↑** and **↓** move between rows; **←** and **→** fold and unfold a
+group. The two-finger triage works on every row here too, which is the part a
+chat app cannot do with mail.
+
 ## Archive and delete
 
 Both are available on Gmail accounts where you have turned writing on. Both go
@@ -46,9 +64,18 @@ express it at all today.
 ## Two-finger triage
 
 Swipe a row horizontally with two fingers: **right archives**, **left deletes**
-— Gmail's gesture and Apple Mail's, in that order. A coloured backdrop names
-the action as the row moves, and the commit is visible: the row flies out the
-way you pushed it before anything happens.
+— Gmail's gesture and Apple Mail's, in that order. The row follows your fingers
+one to one and a coloured backdrop names the action as it uncovers. Past the
+point that commits, the row **arms**: the colour lifts, the icon springs and the
+trackpad ticks, so you know what letting go will do before you let go. Pull
+back under that point and it disarms. A fast flick commits short of it, the way
+every list on the platform does.
+
+Letting go on an armed row is visible: the row leaves by its own width the way
+you pushed it, the gap closes behind it, and only then does the action run. A
+row that stays — archiving from a channel keeps the message in that channel,
+only its inbox membership changes — springs back instead, and a commit the
+server refuses springs back with the toast that says why.
 
 A swipe on an account that cannot write **does not move at all**. A row that
 stirs and stops reads as half-broken; one that plainly refuses is honest, and
