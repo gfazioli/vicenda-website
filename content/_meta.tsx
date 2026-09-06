@@ -5,10 +5,12 @@ import {
   IconCards,
   IconEyeOff,
   IconHelpCircle,
+  IconKeyboard,
   IconMessages,
   IconPalette,
   IconRocket,
   IconSettings,
+  IconSparkles,
 } from '@tabler/icons-react';
 import { Group } from '@mantine/core';
 
@@ -41,12 +43,14 @@ export default {
   '---the-shape': { type: 'separator', title: 'The Shape' },
   'the-stream': nav(IconMessages, 'Channels and Threads', 'vicenda'),
   cards: nav(IconCards, 'Machine Mail as Cards', 'grape'),
+  'local-model': nav(IconSparkles, 'The Local Model', 'yellow'),
   accounts: nav(IconPalette, 'Accounts and Colour', 'cyan'),
   '---guides': { type: 'separator', title: 'Guides' },
   triage: nav(IconArchive, 'Reading and Triage', 'green'),
   privacy: nav(IconEyeOff, 'Privacy', 'teal'),
   '---reference': { type: 'separator', title: 'Reference' },
   settings: nav(IconSettings, 'Settings'),
+  keyboard: nav(IconKeyboard, 'Keyboard', 'indigo'),
   '---resources': { type: 'separator', title: 'Resources' },
   faq: nav(IconHelpCircle, 'FAQ', 'vicenda'),
   'release-notes': '',
