@@ -26,6 +26,11 @@ import {
   Title,
 } from '@mantine/core';
 import { Shot } from './Shot';
+import {
+  fallbackReleaseCadence,
+  type ReleaseCadence as Cadence,
+} from '@/components/ReleaseCadence/release-cadence';
+import { ReleaseCadence } from '@/components/ReleaseCadence/ReleaseCadence';
 import config from '@/config';
 import { ACCOUNT_RING } from '@/theme';
 
@@ -85,7 +90,13 @@ const PILLARS = [
   },
 ];
 
-export function Welcome() {
+/**
+ * `cadence` defaults so the component still renders in a test or a story with
+ * no server fetch behind it. The default is the CONFIG-derived fallback rather
+ * than a hand-written object, so what renders offline is the same shape the
+ * live failure path produces.
+ */
+export function Welcome({ cadence = fallbackReleaseCadence() }: { cadence?: Cadence }) {
   return (
     <Box style={{ position: 'relative' }}>
       {/*
@@ -140,8 +151,20 @@ export function Welcome() {
                   <Badge variant="light" radius="sm" size="sm">
                     Free
                   </Badge>
+                  {/*
+                    ONE TEMPLATE LITERAL, not JSX text with interpolations.
+                    Both sibling sites shipped a missing space for months where
+                    an interpolation met a following separator across a wrapped
+                    JSX chunk, and the idiomatic {' '} fix does not survive
+                    oxfmt. A string is out of reach of both.
+
+                    "Universal" is measured, not assumed: `lipo -archs` on the
+                    shipped 0.2.0 bundle reports `x86_64 arm64`. Only the
+                    OPTIONAL local model requires Apple silicon, and that
+                    belongs on the docs page rather than in a hero meta line.
+                  */}
                   <Text size="sm" c="dimmed">
-                    macOS {config.app.minMacOS} or later · signed and notarised
+                    {`v${config.app.version} · macOS ${config.app.minMacOS} or later · Universal · signed and notarised`}
                   </Text>
                 </Group>
 
@@ -189,6 +212,16 @@ export function Welcome() {
                   <Button component={Link} href="/docs" size="md" radius="xl" variant="default">
                     See how it works
                   </Button>
+                </Group>
+
+                {/*
+                  How recently, and how often — the question the meta line
+                  above cannot answer. It carries no version of its own: the
+                  line above already prints one, and two versions 40px apart
+                  is one more place for them to disagree.
+                */}
+                <Group mt={-4}>
+                  <ReleaseCadence cadence={cadence} />
                 </Group>
 
                 {/*
