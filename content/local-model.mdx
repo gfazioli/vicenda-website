@@ -1,0 +1,129 @@
+---
+description: "The optional local model: what it adds, which two models Vicenda offers, what they cost in memory, and the rules that decide what it is never shown."
+---
+
+# The Local Model
+
+Vicenda can read a machine message no rule claims and propose a card for it,
+using a small language model that runs entirely on your Mac. It is optional,
+it is off until you choose it, and the app is complete without it.
+
+This page is the long version. The short one lives on
+[Machine Mail as Cards](/docs/cards#senders-no-rule-knows), because that is the
+feature the model serves.
+
+## What it is for, and what it is not
+
+Vicenda draws a machine message as a **card** when a template claims the sender:
+a headline and a handful of named facts, instead of somebody else's HTML. A
+template exists for a sender somebody sat down and wrote one for, which leaves
+everything else looking like ordinary mail however card-shaped it is.
+
+The model closes that gap and nothing else. It proposes a **dynamic template**
+for a sender no rule knows, and the card it produces is marked **DYNAMIC** so
+you always know which kind you are looking at.
+
+Three things it is deliberately not:
+
+- **It does not replace templates.** A written rule always wins. A sender that
+  has one is never sent to the model.
+- **It does not decide what deserves a card.** That decision belongs to the app
+  and its own signals. The model is asked a narrower question: given this
+  message, what are the facts and what should they be called.
+- **It does not read your mail in general.** It is invoked for one message at a
+  time, on the distilled text the card engine already works with, and only for
+  senders that reached the gap above.
+
+## The two models
+
+Both are 4-bit quantised builds published by the `mlx-community` project under
+**Apache-2.0**, mirrored unchanged in Vicenda's own releases.
+
+| | Qwen3 4B | Qwen2.5 1.5B |
+| --- | --- | --- |
+| Download | 2.12 GiB | 0.82 GiB |
+| Memory while loaded | 3.66 GB | 1.88 GB |
+| Mac must have | 16 GB | 8 GB |
+| In the app's words | Reads the most, and writes the cleanest fields. Slower to answer. | Two thirds of the reach at half the memory. Noisier field names. |
+
+The larger one is the recommendation if your Mac has the memory for it. On a
+hand-labelled set of 150 machine messages, it produced at least one true fact
+for **74%** of the ones a card was wanted for, against **66%** for the lighter
+model, and it names fields more consistently. Neither number is a promise about
+your mail: it is the measurement the choice was made on, and it is here so the
+choice is yours to make on the same basis.
+
+**One model is active at a time**, for every feature that uses one. Two would
+be a second thing to explain and a second thing to keep in memory.
+
+## Where the weights come from
+
+From **Vicenda's own GitHub releases**, not from a model host. The app already
+talks to GitHub for its updates, and adding a second network destination to
+fetch two gigabytes of weights is not a thing to do quietly.
+
+Every file is pinned in the app by **SHA-256** and by byte count. If a download
+does not match, the app refuses it rather than loading weights it cannot vouch
+for. The Apache-2.0 licence text and a notice describing where each model came
+from are downloaded **into the model's own directory**, beside the weights,
+rather than left on a release page nobody opens.
+
+The files live **outside the app bundle**, so updating Vicenda never downloads
+them again, and removing a model is a real removal rather than a flag.
+
+## What runs where
+
+The model runs on Apple's own machine-learning framework, which means it needs
+an **Apple silicon Mac**. Vicenda itself is a universal binary and runs on Intel
+Macs; this one feature does not.
+
+Nothing is sent anywhere. There is no API key to enter, no account, and no
+network call at the moment a card is built. If you are offline, it still works.
+
+## How a proposal becomes a card
+
+The model's answer is not trusted. It goes through the same binder every
+written template goes through, and that binder is **all or nothing**:
+
+1. The model proposes a headline and a set of named facts.
+2. Each fact must appear in the message **word for word**. A value the binder
+   cannot find in the text is not a value.
+3. If any required field fails, **no card is drawn** and the message renders as
+   ordinary mail.
+
+That is why a generated card is worth looking at: it cannot contain a number
+the message does not contain. It can still contain the *wrong* number, and the
+rules below exist for the cases where that was measured.
+
+### The guards, and why each one exists
+
+- **Numeric boundaries.** `$100` must not be lifted out of `$100 million`. The
+  binder matches whole values, not substrings of them.
+- **Fields that look like secrets are dropped.** In testing, a model extracted a
+  **password verbatim** into a card. Seven fields of that shape were found, and
+  they are refused by name and by shape rather than by hoping.
+- **Gateway banners are stripped** before the message is shown to the model, so
+  a security notice added in transit does not become the story.
+
+### Demo Mode covers generated cards too
+
+[Demo Mode](/docs/privacy#demo-mode) masks a dynamic card exactly as it masks
+everything else, and it does so **inside** the card builder rather than after
+it, so the two paths cannot drift apart. The title and the field names of a
+generated card are the model's words taken from your mail, so they are
+synthesised rather than scrubbed: a title comes from a fixed pool, and a label
+becomes the *shape* of its value.
+
+## Using it
+
+**Settings, Local Model.** The pane lists what is available with its size and
+memory cost, downloads one, makes it the one in use, and removes it again.
+
+**Try it on a recent message** picks a recent message from a sender no template
+claims and shows you the card the model would build, or tells you why it built
+none. It is the honest way to decide whether the download is worth it, and it
+works before you commit to anything.
+
+The first time a channel could use a model, a line appears in the stream
+offering one. It is a line in the stream and never a dialog: the app does not
+interrupt you to sell you a feature you did not ask for.
