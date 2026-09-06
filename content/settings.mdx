@@ -1,13 +1,18 @@
 ---
-description: "What each preference actually changes, and which ones decide whether Vicenda may write to your mail at all."
+description: "What each preference actually changes, which ones decide whether Vicenda may write to your mail at all, and where the store lives on disk."
 ---
 
 # Settings
 
+**⌘,** opens it, and the field at the top searches the panes. It matches the
+words you would reach for as well as the ones printed on screen, so `sqlite`,
+`snooze` or `dark` each land on the right row. A preference you cannot find is
+one you do not have.
+
 ## Permissions — the ones that matter
 
 Two switches decide whether Vicenda may change anything in your mailbox, and
-both are off until you turn them on.
+both are off until you turn them on. They live in the **Accounts** pane.
 
 **Allow mail modification** is the master, and it is a local switch rather than
 a new permission. Vicenda asks Google for one permission when you connect an
@@ -21,8 +26,42 @@ is why it is not bundled into the first launch.
 in Gmail. It requires the switch above — without it, Vicenda's idea of read and
 Gmail's drift apart, which is a worse outcome than not offering it at all.
 
-Each account then shows what it can actually do, in its own words, rather than
-a green tick that means nothing.
+## Accounts
+
+**Connected mailboxes** lists what Vicenda is reading, each with the colour it
+wears everywhere else in the app, and each saying in its own words what it can
+actually do — read only, or read and write — rather than a green tick that
+means nothing. Which colour a mailbox gets, and why the colours never move, is
+on [Accounts and Colour](/docs/accounts).
+
+**Add account** (**⇧⌘N** from anywhere) starts the consent flow in a system
+sheet over the app. No browser opens, and Vicenda cannot see into the sheet.
+The whole of the first connection is on
+[Getting Started](/docs/getting-started#connecting-a-mailbox).
+
+## The app itself
+
+**Open Vicenda at login** does what it says, through the system's own
+login-items mechanism.
+
+**Check for updates automatically** is on by default and can be turned off.
+Vicenda checks with the site it was downloaded from, downloads an update only
+when you agree to it, and each build is signed and notarised. **Check for
+updates** beside it asks now rather than waiting.
+
+**Version** shows the version and the build number, which is the number to
+quote if you ever report something.
+
+## Appearance
+
+**Theme** is Dark, Light or Match system. The whole palette is dynamic, so the
+change is immediate and reaches windows that are already open. Dark is the
+theme the app was born in; Match system follows macOS, automatic appearance
+included.
+
+One thing does not follow the theme: the **account colours**. A hue means a
+mailbox, in any light. That rule is absolute and it is explained on
+[Accounts and Colour](/docs/accounts).
 
 ## Messages
 
@@ -63,15 +102,33 @@ The default offset for "remind me". Reminders never leave the Mac.
 ## Local Model
 
 Optional, and off until you choose one. The pane lists the models Vicenda can
-use, downloads one, makes it the one in use, or removes it — the files live
-outside the app, so an update never downloads them again. **Try it** picks a
-recent message from a sender no template claims and shows the card the model
-would build, or says why it built none. What it is for, and what it is not
-asked about, is on [Machine Mail as Cards](/docs/cards#senders-no-rule-knows).
+use with what each costs in download and in memory, downloads one, makes it the
+one in use, or removes it. The files live outside the app, so an update never
+downloads them again.
+
+**Try it** picks a recent message from a sender no template claims and shows
+the card the model would build, or says why it built none — which is how to
+decide whether the download is worth it before committing to it.
+
+What it adds, which two models are offered, and the rules that decide what it
+is never shown, are on [The Local Model](/docs/local-model).
 
 ## Advanced
 
-**Messages per page** when walking back up a channel, and how often the local
-store is checked for outside changes. Vicenda does not re-read your mail on a
-timer — it asks the database whether anything changed, which costs almost
-nothing.
+**Messages per page** when walking back up a channel.
+
+**Check the store every** decides how often the local store is examined for
+outside changes. Vicenda does not re-read your mail on a timer — it asks the
+database for its own change counter, which costs 0.0017 ms, and does nothing
+until something has actually been written. A tighter interval therefore costs
+almost nothing.
+
+**Where the store lives** prints the path of the database, ready to select and
+copy. That one file holds the full text of every message Vicenda has
+downloaded. It is created `0600` inside a `0700` folder, which means readable
+by your user account and by nothing else.
+
+## About
+
+The same panel the app menu shows: version, build, licences, and the links to
+the site and to the privacy policy.
