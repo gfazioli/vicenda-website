@@ -1,10 +1,114 @@
 ---
-description: "No server, ever, and no remote resource fetched while you read. Opening a message in Vicenda does not tell the sender you opened it."
+description: "What Google data Vicenda reads, what it does with it, who it is shared with and how it is protected. No server, ever, and no remote resource fetched while you read."
 ---
 
 # Privacy
 
-Two claims, and both are structural rather than promised.
+Two claims, and both are structural rather than promised. Before them, the four
+disclosures a policy is supposed to make in plain words rather than leave to be
+inferred from the design.
+
+## What Google data Vicenda uses, and what happens to it
+
+### What is accessed
+
+Vicenda asks for one Google permission,
+`https://www.googleapis.com/auth/gmail.modify`, and nothing else. No other
+Google product is reached: Contacts, Drive, Calendar and the rest are neither
+requested nor reachable.
+
+Through it the app reads:
+
+- **the address of the mailbox you connect**, which is what labels that account
+  in the app;
+- **the list of messages** in the mailbox, and each message's **headers** —
+  sender, recipients, subject, date, and the labels it carries;
+- **the body of a message**, when the app renders it in a channel or you open
+  it;
+- **the label list** of the mailbox, mirrored into the sidebar with its own
+  colours;
+- **the mailbox's change history**, which is how the app syncs after the first
+  fill without re-reading everything.
+
+### How it is used
+
+To show you your own mail on your own Mac, and to change it when you ask. That
+is the whole of it.
+
+**Reading** builds what you see: the message list, the channels, the threads,
+the cards drawn for machine mail, and the search index that lives in the same
+local database.
+
+**Writing** is three operations, each one you start:
+
+- **mark read or unread** — removes or adds Gmail's `UNREAD` label;
+- **archive** — removes Gmail's `INBOX` label;
+- **move to trash** — Gmail's own trash, which you can undo from Gmail.
+
+Vicenda never deletes a message permanently, never sends mail, and never
+creates or modifies a draft on the server. The composer saves drafts locally
+and cannot send.
+
+The **optional local model** is no exception. It runs on your Mac, is shown one
+message at a time, and produces a card in your own local database. Nothing
+about a message is sent anywhere to build it, and no message is ever used to
+train it or anything else.
+
+None of this data is used for advertising, for profiling, for analytics, or for
+training any model.
+
+### Who it is shared with
+
+**Nobody.** Vicenda runs no server, so there is no infrastructure of the
+developer's for your mail to pass through, sit on, or be processed by. It is
+not sold, not transferred, not disclosed, and not shared with any third party,
+service provider or affiliate. The only network traffic carrying your mail is
+between your Mac and Google.
+
+Two **optional** settings, both **off unless you switch them on**, make an
+outbound request a careful reader should know about, and neither carries
+message content:
+
+- **The sending domain's logo** asks the sender's own domain for its published
+  brand record, falling back to that domain's favicon. What travels is the
+  domain name, which the sender already knows.
+- **Gravatar** sends `gravatar.com` a hash of a sender's address. The address
+  itself does not travel, but the hash identifies it, so Automattic learns that
+  this Mac corresponds with that person.
+
+The third source, the **Mac's own address book**, is local and is the one that
+is on by default; nothing leaves the computer for it.
+
+### How it is protected
+
+- **In transit**: every call to Google is over HTTPS, using the system's own
+  TLS.
+- **At rest**: mail is stored in a single SQLite database in your home
+  directory, created `0600` inside a `0700` folder — readable by your macOS user
+  account and by nothing else on the machine. Settings shows you its exact path.
+- **The credential**: the OAuth refresh token is kept in the macOS login
+  **Keychain**, one item per account under `com.gfazioli.Vicenda.oauth`, and is
+  never synchronised to iCloud. It is not written into the database, into a
+  preference, or into a log.
+- **Nothing is copied off the machine**, so there is no backup of your mail
+  under anybody else's control, and no account of ours that could be breached.
+
+### Deleting it, and taking the permission back
+
+Removing an account in Vicenda removes its mail from the local database, and
+deleting that file removes everything at once. Neither touches your mailbox at
+Google.
+
+The permission is yours to withdraw at any time at
+[myaccount.google.com/permissions](https://myaccount.google.com/permissions).
+Revoking it stops all further access immediately; the app then has no way to
+read or change anything.
+
+### Limited Use
+
+Vicenda's use of information received from Google APIs adheres to the
+[Google API Services User Data Policy](https://developers.google.com/terms/api-services-user-data-policy),
+including the Limited Use requirements.
 
 ## No server, ever
 
@@ -16,10 +120,9 @@ That is not a policy that could be changed in an update without you noticing —
 it is the reason the app is shaped as it is. There is no account to create, no
 service to sign in to, and no telemetry, so there is nothing to switch off.
 
-The [optional local model](/docs/cards#senders-no-rule-knows) is no exception:
-it runs on the Mac, reads a message there, and the only thing it produces is a
-card in your own local database. Nothing about the message is sent anywhere to
-build it.
+The [optional local model](/docs/local-model) is no exception: it runs on the
+Mac, reads a message there, and the only thing it produces is a card in your
+own local database. Nothing about the message is sent anywhere to build it.
 
 ## No pixel
 
