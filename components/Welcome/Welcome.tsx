@@ -25,6 +25,7 @@ import {
   ThemeIcon,
   Title,
 } from '@mantine/core';
+import { FAQ } from '../FAQ/FAQ';
 import { Shot } from './Shot';
 import {
   fallbackReleaseCadence,
@@ -456,6 +457,24 @@ export function Welcome({ cadence = fallbackReleaseCadence() }: { cadence?: Cade
               Download for macOS
             </Button>
           </Group>
+        </Stack>
+      </Container>
+
+      {/* ---- FAQ ----------------------------------------------------- */}
+      {/*
+        The questions a visitor would otherwise leave to go and ask, on the
+        page they are deciding on (user, 2026-09-23: the siblings end on their
+        FAQ and this one did not). The same component and list as /docs/faq,
+        so the two cannot disagree; the FAQPage JSON-LD stays on that page
+        alone, where Google expects one. Before the closing line, so the page
+        still ends on it.
+      */}
+      <Container id="faq" size="lg" py={{ base: 40, sm: 70 }} style={{ scrollMarginTop: 64 }}>
+        <Stack gap="lg" maw={760}>
+          <Title order={2} fz={{ base: 28, sm: 38 }} fw={500}>
+            <span className="display">Frequently asked questions</span>
+          </Title>
+          <FAQ />
         </Stack>
       </Container>
 
