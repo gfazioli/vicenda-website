@@ -9,19 +9,13 @@
  * Selectors go through `.root` so they outrank Mantine's own (`.m_…` for the
  * item, `.m_…[data-active]` for the open one).
  */
-/* This site still has both schemes, so the tokens are set for each. */
+/* The site is dark only: a dark-6 card with a dark-4 edge, the brand's blue
+   one step light for the open one. */
 .root {
-  --faq-card: var(--mantine-color-white);
-  --faq-edge: var(--mantine-color-gray-3);
-  --faq-accent: var(--mantine-color-vicenda-6);
-  --faq-shadow: 0 1px 2px rgb(0 0 0 / 5%);
-
-  @mixin dark {
-    --faq-card: var(--mantine-color-dark-6);
-    --faq-edge: var(--mantine-color-dark-4);
-    --faq-accent: var(--mantine-color-vicenda-4);
-    --faq-shadow: none;
-  }
+  --faq-card: var(--mantine-color-dark-6);
+  --faq-edge: var(--mantine-color-dark-4);
+  --faq-accent: var(--mantine-color-vicenda-4);
+  --faq-shadow: none;
 }
 
 .root .item {
