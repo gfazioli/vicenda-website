@@ -68,7 +68,7 @@ public download and it updates itself.
 ### Layout & Theme Integration
 
 - `app/layout.tsx` wraps the entire app in both `MantineProvider` and Nextra's `Layout`
-- Dark mode sync between Mantine and Nextra is handled by `MantineNextraThemeObserver`
+- **The site is DARK only, with no switch** (2026-09-23, user: keep the dark palette it has, drop the toggle). `ColorSchemeScript` and `MantineProvider` take `forceColorScheme="dark"` — the script's is what stops a visitor who picked light with the old switch from staying on it out of local storage — and Nextra's `Layout` takes `darkMode={false}` plus `nextThemes={{ defaultTheme: 'dark', forcedTheme: 'dark' }}`. `html { color-scheme: dark }` in `theme/global.css`. The palette was not touched: every `@mixin dark` there simply always applies now, and the light values beside them are dead. `ColorSchemeControl`, `ColorSchemeToggle` and `MantineNextraThemeObserver` are gone.
 - Mantine theme overrides go in `theme.ts` (client-side `createTheme`)
 - Global site configuration (metadata, GitHub API, search, Nextra layout) lives in `config/index.ts`
 - Primary colour: `vicenda`, laddered from the APP ICON's own blue (`#0056C7`,
@@ -94,7 +94,6 @@ public download and it updates itself.
   it exports `metadata`, and **a server component may not hand a function —
   `component={Link}` — to a Mantine client component**: it fails at *prerender*
   with "element type is invalid", not at typecheck.
-- `ColorSchemeControl` / `ColorSchemeToggle` — dark mode toggle
 - `ReleaseNotes` — fetches GitHub releases via `/api/github-releases`
 
 ### API Routes (`app/api/`)

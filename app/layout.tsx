@@ -52,10 +52,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" dir="ltr" className={display.variable} {...mantineHtmlProps}>
       <Head>
-        <ColorSchemeScript
-          nonce={head.mantine.nonce}
-          defaultColorScheme={head.mantine.defaultColorScheme}
-        />
+        {/*
+          Forced, not defaulted: the site is dark only, with no switch (user,
+          2026-09-23: keep the dark palette it has, drop the toggle).
+          `forceColorScheme` makes the pre-hydration script write `dark`
+          whatever is in local storage, so a visitor who chose light with the
+          old switch is not left on a scheme nothing here is kept for.
+        */}
+        <ColorSchemeScript nonce={head.mantine.nonce} forceColorScheme="dark" />
         <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
         <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
         <link rel="shortcut icon" href="/favicon.ico" />
@@ -69,13 +73,16 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         */}
       </Head>
       <body>
-        <MantineProvider theme={theme} defaultColorScheme={head.mantine.defaultColorScheme}>
+        <MantineProvider theme={theme} forceColorScheme="dark">
           <Layout
             navbar={<MantineNavBar />}
             pageMap={pageMap}
             docsRepositoryBase={nextraLayout.docsRepositoryBase}
             footer={<MantineFooter />}
             sidebar={nextraLayout.sidebar}
+            // Nextra's dark theme, forced, with no switch in its sidebar.
+            darkMode={false}
+            nextThemes={{ defaultTheme: 'dark', forcedTheme: 'dark' }}
           >
             {children}
           </Layout>
