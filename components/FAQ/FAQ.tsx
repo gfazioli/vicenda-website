@@ -2,7 +2,15 @@
 
 import type { ReactNode } from 'react';
 import Link from 'next/link';
+import {
+  IconGift,
+  IconInfoCircle,
+  IconShieldLock,
+  IconSparkles,
+  type Icon,
+} from '@tabler/icons-react';
 import { Accordion, Anchor, Text } from '@mantine/core';
+import classes from './FAQ.module.css';
 
 /**
  * The visible FAQ.
@@ -98,17 +106,46 @@ const faqItems: { value: string; question: string; answer: ReactNode }[] = [
   },
 ];
 
+/*
+ * A small icon on the questions a visitor most likely came with (user,
+ * 2026-09-23: on the most important ones, not on every one). Keyed by the
+ * item's `value`, so the list the JSON-LD mirrors stays exactly as it is.
+ */
+const faqIcons: Partial<Record<string, Icon>> = {
+  what: IconInfoCircle,
+  privacy: IconShieldLock,
+  price: IconGift,
+  model: IconSparkles,
+};
+
 export function FAQ() {
   return (
-    <Accordion variant="separated" radius="md">
-      {faqItems.map((item) => (
-        <Accordion.Item key={item.value} value={item.value}>
-          <Accordion.Control>{item.question}</Accordion.Control>
-          <Accordion.Panel>
-            {typeof item.answer === 'string' ? <Text size="sm">{item.answer}</Text> : item.answer}
-          </Accordion.Panel>
-        </Accordion.Item>
-      ))}
+    <Accordion
+      variant="separated"
+      radius="md"
+      classNames={{ root: classes.root, item: classes.item }}
+    >
+      {faqItems.map((item) => {
+        const ItemIcon = faqIcons[item.value];
+        return (
+          <Accordion.Item key={item.value} value={item.value}>
+            <Accordion.Control
+              icon={
+                ItemIcon && (
+                  <span className={classes.icon} aria-hidden>
+                    <ItemIcon size={16} stroke={1.8} />
+                  </span>
+                )
+              }
+            >
+              {item.question}
+            </Accordion.Control>
+            <Accordion.Panel>
+              {typeof item.answer === 'string' ? <Text size="sm">{item.answer}</Text> : item.answer}
+            </Accordion.Panel>
+          </Accordion.Item>
+        );
+      })}
     </Accordion>
   );
 }
