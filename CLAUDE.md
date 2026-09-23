@@ -89,7 +89,10 @@ public download and it updates itself.
 - `MantineNavBar` — top navigation
 - `MantineFooter` — 4-column footer with highlights, resources, ecosystem links
 - `Welcome` — the home page: hero, the problem, four claims, the honest
-  paragraph, the closing line
+  paragraph, the FAQ (the same `FAQ` component as `/docs/faq`, whose page alone
+  carries the FAQPage JSON-LD), the closing line. Screenshots go through
+  `Welcome/Shot.tsx`, unframed: each capture carries its window's own edge and
+  shadow over a transparent margin
 - `Beta` — the invite page. A `'use client'` component because the route above
   it exports `metadata`, and **a server component may not hand a function —
   `component={Link}` — to a Mantine client component**: it fails at *prerender*
