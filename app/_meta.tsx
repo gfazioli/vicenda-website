@@ -14,6 +14,13 @@ export default {
     title: 'Download',
     href: '/download',
   },
+  // The home page's FAQ, as the sibling sites link their Features grid. An
+  // absolute anchor, so it also works from inside the docs.
+  faq: {
+    type: 'page',
+    title: 'FAQ',
+    href: '/#faq',
+  },
   community: {
     title: 'Community',
     type: 'menu',
