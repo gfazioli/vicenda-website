@@ -1,19 +1,21 @@
 'use client';
 
 import Image from 'next/image';
-import { Box } from '@mantine/core';
 
 /**
- * One app screenshot, framed.
+ * One app screenshot, unframed.
  *
- * **The frame is doing real work on a dark page.** These captures are of a
- * dark window on a near-black ground, so without a border the window's own
- * edge dissolves into the page and the picture reads as a region of the site
- * rather than as an application. A hairline plus a soft shadow is what says
- * "this is a window".
+ * **It used to sit in a frame** — a hairline, a 12px radius and a soft
+ * shadow — on the argument that a dark window on a near-black page dissolves
+ * into it without one. The user removed it (2026-09-23: "elimina quel bordo
+ * così lasciamo solo l'immagine"), and the captures do not need it: each one
+ * is the window with its own edge and its own shadow baked into the PNG's
+ * alpha, over a transparent margin (measured: alpha 0 at every edge, 0.03 to
+ * 0.05 in the shadow). The frame drew a second, larger rectangle around that
+ * margin, so the window read as a picture inside a box.
  *
- * `sizes` is not decoration either: the sources are 2880 wide and the largest
- * this is ever drawn is the `lg` container, so without it Next serves the
+ * `sizes` is not decoration: the sources are 2000 wide and the largest this
+ * is ever drawn is the `lg` container, so without it Next serves the
  * full-width candidate to a phone.
  */
 export function Shot({
@@ -33,27 +35,14 @@ export function Shot({
   priority?: boolean;
 }) {
   return (
-    <Box
-      style={{
-        borderRadius: 12,
-        overflow: 'hidden',
-        border: '1px solid rgba(255,255,255,.10)',
-        boxShadow: '0 24px 60px rgba(0,0,0,.45)',
-        // The box is only as tall as the picture: a percentage height here
-        // would leave a band of page colour inside the border, which reads as
-        // a rendering fault rather than as padding.
-        lineHeight: 0,
-      }}
-    >
-      <Image
-        src={src}
-        alt={alt}
-        width={width}
-        height={height}
-        priority={priority}
-        sizes="(max-width: 62em) 100vw, 1200px"
-        style={{ width: '100%', height: 'auto', display: 'block' }}
-      />
-    </Box>
+    <Image
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      priority={priority}
+      sizes="(max-width: 62em) 100vw, 1200px"
+      style={{ width: '100%', height: 'auto', display: 'block' }}
+    />
   );
 }
