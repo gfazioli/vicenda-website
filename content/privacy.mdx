@@ -72,9 +72,10 @@ message content:
 - **The sending domain's logo** asks the sender's own domain for its published
   brand record, falling back to that domain's favicon. What travels is the
   domain name, which the sender already knows.
-- **Gravatar** sends `gravatar.com` a hash of a sender's address. The address
-  itself does not travel, but the hash identifies it, so Automattic learns that
-  this Mac corresponds with that person.
+- **Gravatar** sends `gravatar.com` a hash of a sender's address — and, for the
+  pictures on your own accounts, of your own addresses. The address itself does
+  not travel, but the hash identifies it, so Automattic learns that this Mac
+  corresponds with that person.
 
 The third source, the **Mac's own address book**, is local and is the one that
 is on by default; nothing leaves the computer for it.
@@ -95,9 +96,15 @@ is on by default; nothing leaves the computer for it.
 
 ### Deleting it, and taking the permission back
 
-Removing an account in Vicenda removes its mail from the local database, and
-deleting that file removes everything at once. Neither touches your mailbox at
-Google.
+Removing an account in Vicenda — **Settings → Accounts → Remove Account** —
+does three things, in this order: it asks Google to revoke Vicenda's access,
+deletes the account's refresh token from the Keychain, and deletes its mail from
+the local database. If Google cannot be reached, the removal still completes and
+tells you so, with the link below. None of it touches your mailbox at Google.
+
+Deleting the database file removes all the mail at once. The tokens are not in
+that file: they stay in the Keychain until each account is removed, or until
+you delete the `com.gfazioli.Vicenda.oauth` items in Keychain Access.
 
 The permission is yours to withdraw at any time at
 [myaccount.google.com/permissions](https://myaccount.google.com/permissions).
