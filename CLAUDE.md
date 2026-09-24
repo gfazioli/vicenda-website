@@ -97,7 +97,7 @@ public download and it updates itself.
   it exports `metadata`, and **a server component may not hand a function —
   `component={Link}` — to a Mantine client component**: it fails at *prerender*
   with "element type is invalid", not at typecheck.
-- `ReleaseNotes` — fetches GitHub releases via `/api/github-releases`
+- `ReleaseNotes` — renders the releases `content/release-notes.mdx` fetched and compiled at BUILD time (`load-releases.ts`); only when the build got none does it fall back to fetching `/api/github-releases` in the browser
 
 ### API Routes (`app/api/`)
 
@@ -108,8 +108,8 @@ public download and it updates itself.
 ### Environment variables
 
 - `GITHUB_TOKEN` (optional, recommended on Vercel) — fine-grained or classic token with `public_repo` read scope. Used by:
-  - The `/api/github-releases` proxy (runtime).
-  - The `content/release-notes.mdx` TOC metadata, which fetches at build time so Vercel needs the var available during deploys.
+  - The `/api/github-releases` proxy (runtime, now only the fallback).
+  - `content/release-notes.mdx`, which fetches the releases at build time for both the page and its TOC, so Vercel needs the var available during deploys.
   Without the token the app still works but may hit 60 req/hr GitHub rate limit on shared IPs.
 
 ### CSS Import Order
@@ -118,6 +118,16 @@ In `app/layout.tsx`, CSS imports must follow this order:
 1. `@mantine/core/styles.css`
 2. Mantine extension styles (marquee, text-animate, scene)
 3. Global styles
+
+### What a crawler gets is the served HTML
+
+Measured 2026-09-24, when Search Console listed the sibling sites' pages as *Crawled - currently not indexed*; this site had the same two defects, fixed the same way as findergit-website#69.
+
+- **`/docs/release-notes` was stuck on "Loading releases...".** `/api/github-releases` answers **403 to any user agent containing `bot`**, Googlebot's rendering service included. Now `load-releases.ts` fetches and compiles the releases at build time (release.sh creates the GitHub release before it pushes this repo) and the browser makes no request. Bodies compile as `md`, one `try` each: a body is written on GitHub after the build, and a brace in MDX is a JavaScript expression.
+- **`/docs/faq` was 43 words: the 9 questions, no answers**, and the home page's FAQ the same. Mantine 9's Accordion keeps a closed panel in a React `<Activity>`, which renders nothing on the server; only the JSON-LD mirror had the answers. `keepMountedMode="display-none"` renders every answer and only hides it. `FAQ.test.tsx` uses `renderToString`, because a jsdom `render` mounts a hidden Activity's children and cannot see the defect.
+- **`public/robots.txt` is the team-wide file**, generated for all ten Vercel projects and kept in step with the firewall (AI bots ruleset in deny, plus a bypass rule for AI answer engines and Applebot). Change it on every site or on none.
+
+Check a page the way a crawler gets it: `curl -A Googlebot` and count words in `<main>` with the scripts stripped.
 
 ## Content Guidelines
 
