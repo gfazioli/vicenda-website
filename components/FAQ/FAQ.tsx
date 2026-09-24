@@ -24,7 +24,7 @@ import classes from './FAQ.module.css';
  * belongs on this page precisely because it is the thing a reader would
  * otherwise assume.
  */
-const faqItems: { value: string; question: string; answer: ReactNode }[] = [
+export const faqItems: { value: string; question: string; answer: ReactNode }[] = [
   {
     value: 'what',
     question: 'What is Vicenda?',
@@ -124,6 +124,12 @@ export function FAQ() {
       variant="separated"
       radius="md"
       classNames={{ root: classes.root, item: classes.item }}
+      // Mantine 9 keeps a closed panel in a React <Activity>, which renders
+      // nothing on the server: the served markup carried the 9 questions and
+      // not one answer (only the JSON-LD mirror had them), and Google left
+      // pages of the sibling sites "Crawled - currently not indexed"
+      // (2026-09-24). `display-none` renders every answer and only hides it.
+      keepMountedMode="display-none"
     >
       {faqItems.map((item) => {
         const ItemIcon = faqIcons[item.value];
