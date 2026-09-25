@@ -14,7 +14,7 @@ one you do not have.
 Two switches decide whether Vicenda may change anything in your mailbox, and
 both are off until you turn them on. They live in the **Accounts** pane.
 
-**Allow mail modification** is the master, and it is a local switch rather than
+**Allow Vicenda to modify mail** is the master, and it is a local switch rather than
 a new permission. Vicenda asks Google for one permission when you connect an
 account, and it is the narrowest one that can also mark a message read; this
 switch decides whether Vicenda ever uses that half. Turning it on does not send
@@ -22,7 +22,7 @@ you back to a consent screen, and turning it off does not give the permission
 back — it stops mail being changed on the server. It is a real decision, which
 is why it is not bundled into the first launch.
 
-**Mark read on the server** decides whether reading in Vicenda also marks read
+**Mark as read on the server too** decides whether reading in Vicenda also marks read
 in Gmail. It requires the switch above — without it, Vicenda's idea of read and
 Gmail's drift apart, which is a worse outcome than not offering it at all.
 
@@ -34,12 +34,29 @@ actually do — read only, or read and write — rather than a green tick that
 means nothing. Which colour a mailbox gets, and why the colours never move, is
 on [Accounts and Colour](/docs/accounts).
 
-**Add account** (**⇧⌘N** from anywhere) starts the consent flow in a system
+**Add Mailbox** (**⇧⌘N** from anywhere) starts the consent flow in a system
 sheet over the app. No browser opens, and Vicenda cannot see into the sheet.
 The whole of the first connection is on
 [Getting Started](/docs/getting-started#connecting-a-mailbox).
 
 ![Settings, Accounts: the two writing switches above a list of connected mailboxes, each row showing whether it arrived over Gmail or IMAP and whether Vicenda may write to it](/screenshot-settings-accounts.png)
+
+**Open a mailbox** from the list for everything about that one account: what
+it may write, its sign-in, and the two actions below.
+
+**Reconnect…** appears on a Gmail account that needs it — beside **Needs
+re-authentication** when Google has stopped accepting its sign-in, or when the
+account was connected without the permission to write. It reopens the setup
+window with the address filled in. Signing in with the same Google account
+repairs it in place; choosing a different one is refused rather than added as
+a new mailbox.
+
+**Remove Account…** takes the mailbox off this Mac, after a confirmation. For
+Gmail it revokes Vicenda's access at Google, deletes the sign-in from the
+Keychain and deletes the account's mail; for IMAP it deletes the stored
+password and the mail. Nothing in the mailbox itself changes. What travels
+where, and in which order, is on
+[Privacy](/docs/privacy#deleting-it-and-taking-the-permission-back).
 
 ## The app itself
 
