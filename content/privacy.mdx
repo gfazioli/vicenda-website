@@ -96,15 +96,21 @@ is on by default; nothing leaves the computer for it.
 
 ### Deleting it, and taking the permission back
 
-Removing an account in Vicenda — **Settings → Accounts → Remove Account** —
-does three things, in this order: it asks Google to revoke Vicenda's access,
-deletes the account's refresh token from the Keychain, and deletes its mail from
-the local database. If Google cannot be reached, the removal still completes and
-tells you so, with the link below. None of it touches your mailbox at Google.
+Removing an account in Vicenda — **Settings → Accounts**, open the account, then
+**Remove Account…** — does three things, in this order: it asks Google to revoke
+Vicenda's access, deletes the account's refresh token from the Keychain, and
+deletes its mail from the local database. If Google cannot be reached, the
+removal still completes and tells you so, with the link below. None of it
+touches your mailbox at Google.
 
-Deleting the database file removes all the mail at once. The tokens are not in
-that file: they stay in the Keychain until each account is removed, or until
-you delete the `com.gfazioli.Vicenda.oauth` items in Keychain Access.
+An IMAP account has no Google permission to revoke: removing it deletes its
+password from the Keychain and its mail from the local database, and changes
+nothing on the server.
+
+Deleting the database file removes all the mail at once. The credentials are not
+in that file: Gmail refresh tokens and IMAP passwords stay in the Keychain until
+each account is removed, or until you delete the `com.gfazioli.Vicenda.oauth`
+and `com.gfazioli.Vicenda.imap` items in Keychain Access.
 
 The permission is yours to withdraw at any time at
 [myaccount.google.com/permissions](https://myaccount.google.com/permissions).
