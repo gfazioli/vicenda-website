@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vicenda 0.3.0 — Release Notes</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #ffffff;
+    --fg: #1a1a1a;
+    --accent: #0056C7;
+    --muted: #6b6b73;
+    --code-bg: #f4f4f5;
+    --border: rgba(0,0,0,0.12);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #1c1c1e;
+      --fg: #ececec;
+      /* A LIGHTER accent in dark, and it is measured rather than eyeballed.
+         The brand blue #0056C7 sits at 2.56:1 on this ground — under WCAG AA
+         for any text — while it is a comfortable 6.65:1 on white. #5C9AFD is
+         step 4 of the same ramp `theme.ts` builds the website from, and lands
+         at 6.07:1. Netfox's orange happened to work in both and so this
+         override never existed there; blue does not get away with it. */
+      --accent: #5C9AFD;
+      --muted: #9c9ca5;
+      --code-bg: #2c2c2e;
+      --border: rgba(255,255,255,0.14);
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    font: 14px/1.55 -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+    color: var(--fg);
+    background: var(--bg);
+    margin: 0 auto;
+    padding: 20px 24px 40px;
+    max-width: 720px;
+  }
+  header.page-header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 14px;
+    margin-bottom: 22px;
+  }
+  header.page-header h1 { font-size: 1.7em; margin: 0 0 4px; letter-spacing: -0.02em; }
+  header.page-header .subtitle { color: var(--muted); margin: 0; font-size: 0.92em; }
+  h1, h2, h3, h4 { letter-spacing: -0.01em; margin: 1.5em 0 0.5em; }
+  h1 { font-size: 1.4em; }
+  h2 { font-size: 1.2em; }
+  h3 { font-size: 1em; }
+  a { color: var(--accent); }
+  hr { border: 0; border-top: 1px solid var(--border); margin: 22px 0; }
+  ul, ol { padding-left: 1.4em; }
+  li { margin: 4px 0; }
+  code {
+    font: 0.9em ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    background: var(--code-bg);
+    padding: 1px 5px;
+    border-radius: 3px;
+  }
+  pre {
+    background: var(--code-bg);
+    padding: 12px 14px;
+    border-radius: 6px;
+    overflow-x: auto;
+    font-size: 0.88em;
+  }
+  pre code { background: transparent; padding: 0; font-size: 1em; }
+  blockquote {
+    margin: 12px 0;
+    padding-left: 12px;
+    border-left: 3px solid var(--border);
+    color: var(--muted);
+  }
+  table { border-collapse: collapse; width: 100%; margin: 12px 0; font-size: 0.95em; }
+  th, td { border: 1px solid var(--border); padding: 6px 10px; text-align: left; }
+  th { background: var(--code-bg); }
+  img { max-width: 100%; }
+</style>
+</head>
+<body>
+<header class="page-header">
+  <h1>Vicenda 0.3.0</h1>
+  <p class="subtitle">Release notes</p>
+</header>
+<p>Vicenda 0.3.0 — reconnect or remove an account, and a sync that keeps your mail</p>
+<p>An account is now something you can repair and something you can take away. Underneath, both kinds of sync learnt to survive a bad connection without losing mail, and the last thing you tap is the thing that stays.</p>
+<h2>What is new</h2>
+<ul>
+<li><strong>Remove an account.</strong> Settings → Accounts, open the account, then <strong>Remove Account…</strong>. For Gmail it does three things, in this order: asks Google to revoke Vicenda's access, deletes the sign-in from the Keychain, and deletes the account's mail from this Mac. If Google cannot be reached, the removal still completes and tells you where to revoke by hand. For an IMAP account it deletes the stored password and the mail. Nothing in the mailbox itself changes.</li>
+<li><strong>Reconnect a Gmail account.</strong> An account that needs signing in again keeps saying so in Settings, across restarts, and now has <strong>Reconnect…</strong> beside it. Signing in again with the same address reconnects the account instead of answering "already connected", and choosing a different Google account on the consent screen is refused rather than quietly added. An expired access token is retried once before anything asks you to sign in.</li>
+</ul>
+<h2>Fixes</h2>
+<ul>
+<li><strong>The last tap wins.</strong> Read, unread, read again in quick succession could end <em>unread</em> in Gmail, and archive, undo, archive could end in the Inbox. Changes to one message now reach Gmail in the order you made them.</li>
+<li><strong>The archive toast says Undo.</strong> It said Cancel, which undid the archive.</li>
+<li><strong>Gmail sync no longer loses mail on a flaky connection.</strong> A message that could not be fetched for a moment was skipped for good; it is now fetched on the next pass. A gap in Gmail's change history is repaired by fetching the mail that arrived during it. A mark-read made while a sync was in flight is no longer overwritten, and on an account whose read state stays in Vicenda, a star or an archive made elsewhere no longer marks a message you read unread again. A change Gmail refuses now undoes only itself, and a permission error that has nothing to do with Vicenda's access no longer switches writing off.</li>
+<li><strong>IMAP no longer stalls.</strong> A server that never answers used to stop every sync, Gmail's included; connecting now has a deadline. One broken folder or message no longer ends the pass, and a message with an empty content-type header no longer crashes the app on every sync. Encoded subjects and names decode correctly, including accented characters split across lines, and more character sets are read as declared. A message too large to fetch whole keeps its text, with a note that it may end early. <code class="notranslate">INBOX.Sent</code> and <code class="notranslate">INBOX.Trash</code> on servers that separate folders with a dot are recognised as Sent and Trash, and a server that is only busy no longer asks for your password.</li>
+<li><strong>A message built to be slow no longer freezes the app.</strong> Crafted markup could hold Vicenda for up to 49 seconds while its text was extracted; the same input now takes milliseconds. Malformed markup also keeps text that used to vanish after it.</li>
+<li><strong>Gravatar waits for its switch on your own addresses too.</strong> The pictures on your own accounts were asked of Gravatar even with the switch off. They now follow it, as the privacy policy says.</li>
+</ul>
+<h2>Requirements</h2>
+<p>macOS 15 or later. The optional local model needs an Apple silicon Mac.</p>
+<h2>Known limits</h2>
+<p>Sending is not built yet; archive and delete work on Gmail only. Google shows a warning on its consent screen while the app's verification is pending — Advanced, then Go to Vicenda.</p>
+</body>
+</html>
