@@ -6,7 +6,8 @@ const withBundleAnalyzer = bundleAnalyzer({
 });
 
 const withNextra = nextra({
-  latex: true,
+  // No `latex`: nothing on the site is math, and with it on, two dollar signs
+  // in the same paragraph of prose would be typeset as an equation.
   search: {
     codeblocks: false
   },
