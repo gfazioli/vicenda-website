@@ -129,6 +129,27 @@ Measured 2026-09-24, when Search Console listed the sibling sites' pages as *Cra
 
 Check a page the way a crawler gets it: `curl -A Googlebot` and count words in `<main>` with the scripts stripped.
 
+### Performance and SEO: what the pages cost, measured
+
+Audited 2026-09-29 with `~/Lavoro/GitHub/claude-global/scripts/site-audit/`, the same pass as findergit.app's #78.
+- The always-on rule `website-changes-measure-performance-and-seo` says every significant change gets it.
+- The workspace's `.claude/rules/websites.md` holds what the four sites share.
+
+Local production builds of `main` and the branch, Lighthouse mobile, devtools throttling, 6 passes on the home page:
+- JavaScript went from 757 to 354 KiB. The MDX compiler had been in every page's bundle.
+- The home page went from 1,147 to 693 KiB, and blocking time from about 75 to about 40 ms.
+- At rest for 10 s: 191 ms of main thread and 600 style recalcs before, 9 ms and 20 after. The cadence dot's box-shadow pulse had been the only thing that never stopped.
+- The served home page preloads one image, the hero icon, instead of five.
+- LCP did not move, about 2.0 s, because it is a paragraph, bound by the stylesheets and the display font.
+- SEO: the home page is in a `<main>`, five descriptions are cut under 160 characters, and the sitemap has no clone-time `lastmod`.
+
+**The local first paint is bimodal, on both builds.** The same page on the same build painted at about 2.0 s in some passes and 3.7 s in others:
+- the network waterfall and the main thread were identical;
+- the filmstrip was blank until the late paint;
+- it did not appear in vicenda.app's five production passes.
+
+Run four or more passes, and compare early with early. Two passes each can put the two sides in different modes and "measure" 1.7 s of noise.
+
 ## Content Guidelines
 
 - All website content is in **English**
