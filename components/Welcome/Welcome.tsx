@@ -92,6 +92,14 @@ const PILLARS = [
 ];
 
 /**
+ * The two screenshots side by side are each half the `lg` container from `md`
+ * up (538px at 1440), and the full column below it. Shot's default `sizes`
+ * describes a full-width image, so these fetched more than twice the width
+ * they draw.
+ */
+const HALF = '(max-width: 62em) 100vw, 540px';
+
+/**
  * `cadence` defaults so the component still renders in a test or a story with
  * no server fetch behind it. The default is the CONFIG-derived fallback rather
  * than a hand-written object, so what renders offline is the same shape the
@@ -303,7 +311,12 @@ export function Welcome({ cadence = fallbackReleaseCadence() }: { cadence?: Cade
                     alt="The Vicenda app icon"
                     width={512}
                     height={512}
-                    priority
+                    // The largest paint on a laptop (measured at 1440 and 1280
+                    // wide; on a phone it is the paragraph), so it is fetched at
+                    // once and ahead of other images. `priority` did that too,
+                    // and is deprecated in Next 16.
+                    loading="eager"
+                    fetchPriority="high"
                     sizes="(max-width: 62em) 60vw, 380px"
                     // `block`, so the inline baseline adds no descender gap
                     // of its own under the image.
@@ -334,7 +347,6 @@ export function Welcome({ cadence = fallbackReleaseCadence() }: { cadence?: Cade
             width={2000}
             height={1310}
             alt="Today: who is waiting on a reply, then what is unread, each row carrying the hue of the mailbox it landed in"
-            priority
           />
           <Text size="xs" c="dimmed" ta="center">
             Today — what is waiting on you, before anything else asks for your attention.
@@ -408,6 +420,7 @@ export function Welcome({ cadence = fallbackReleaseCadence() }: { cadence?: Cade
               src="/screenshot-channels.png"
               width={2000}
               height={1310}
+              sizes={HALF}
               alt="The column with machine senders listed as channels under a hash, and one of them open as a stream beside it"
             />
             <Text size="xs" c="dimmed">
@@ -420,6 +433,7 @@ export function Welcome({ cadence = fallbackReleaseCadence() }: { cadence?: Cade
               src="/screenshot-cards.png"
               width={2000}
               height={1310}
+              sizes={HALF}
               alt="The inbox as a stream: machine mail collapsed to its first lines, and one message drawn as a card with named fields"
             />
             <Text size="xs" c="dimmed">
