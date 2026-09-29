@@ -16,14 +16,20 @@ import Image from 'next/image';
  *
  * `sizes` is not decoration: the sources are 2000 wide and the largest this
  * is ever drawn is the `lg` container, so without it Next serves the
- * full-width candidate to a phone.
+ * full-width candidate to a phone. A shot drawn narrower than the container
+ * passes its own.
+ *
+ * No `priority`: no shot is in the first fold. The first one starts 821px down
+ * at 1440x900, where only its top edge shows, and 993px down on a phone. So
+ * they all load lazily, and none is preloaded ahead of what the first paint
+ * needs.
  */
 export function Shot({
   src,
   alt,
   width,
   height,
-  priority = false,
+  sizes = '(max-width: 62em) 100vw, 1200px',
 }: {
   src: string;
   alt: string;
@@ -32,7 +38,7 @@ export function Shot({
    *  are not all the same height. */
   width: number;
   height: number;
-  priority?: boolean;
+  sizes?: string;
 }) {
   return (
     <Image
@@ -40,8 +46,7 @@ export function Shot({
       alt={alt}
       width={width}
       height={height}
-      priority={priority}
-      sizes="(max-width: 62em) 100vw, 1200px"
+      sizes={sizes}
       style={{ width: '100%', height: 'auto', display: 'block' }}
     />
   );

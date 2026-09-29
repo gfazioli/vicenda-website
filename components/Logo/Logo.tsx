@@ -11,6 +11,11 @@ import { Group, Text } from '@mantine/core';
  *
  * `.display` rather than a Mantine font prop, because the family arrives as a
  * CSS variable from `next/font` on `<html>` and a theme override would fight it.
+ *
+ * No `priority`: it preloaded this mark twice on every page, the navbar's and
+ * the footer's, ahead of the stylesheets and fonts the first paint waits on, and
+ * neither is ever the largest paint (2026-09-29 audit). next/image loads it
+ * lazily, which for a picture already in view means as soon as layout places it.
  */
 export function Logo({ size = 28 }: { size?: number }) {
   return (
@@ -20,7 +25,6 @@ export function Logo({ size = 28 }: { size?: number }) {
         alt=""
         width={size}
         height={size}
-        priority
         style={{ borderRadius: size * 0.22 }}
       />
       <Text
