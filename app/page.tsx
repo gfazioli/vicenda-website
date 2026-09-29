@@ -43,10 +43,14 @@ export const metadata: Metadata = {
 export default async function HomePage() {
   const cadence = await fetchReleaseCadence();
 
+  // In a <main>: the docs pages get one from Nextra, the home page had none,
+  // so its hero, claims and FAQ sat in no landmark at all (2026-09-29 audit).
   return (
     <>
       <SoftwareApplicationJsonLd />
-      <Welcome cadence={cadence} />
+      <main>
+        <Welcome cadence={cadence} />
+      </main>
     </>
   );
 }
