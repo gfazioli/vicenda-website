@@ -2,6 +2,8 @@
 description: "What Google data Vicenda reads, what it does with it, who it is shared with and how it is protected. No server, and no remote resource fetched while you read."
 ---
 
+import config from "@/config";
+
 # Privacy
 
 Two claims, and both are structural rather than promised. Before them, the four
@@ -63,15 +65,17 @@ training any model.
 developer's for your mail to pass through, sit on, or be processed by. It is
 not sold, not transferred, not disclosed, and not shared with any third party,
 service provider or affiliate. The only network traffic carrying your mail is
-between your Mac and Google.
+between your Mac and your mail provider: Google, or the server of an IMAP
+account you added.
 
 Two **optional** settings, both **off unless you switch them on**, make an
 outbound request a careful reader should know about, and neither carries
 message content:
 
-- **The sending domain's logo** asks the sender's own domain for its published
-  brand record, falling back to that domain's favicon. What travels is the
-  domain name, which the sender already knows.
+- **The sending domain's logo** looks up the domain's published brand record
+  and then asks that domain's own web server for the logo, falling back to its
+  icon. No address and no message travels, but the sender's server sees your
+  IP address and when its logo was asked for, once per domain.
 - **Gravatar** sends `gravatar.com` a hash of a sender's address — and, for the
   pictures on your own accounts, of your own addresses. The address itself does
   not travel, but the hash identifies it, so Automattic learns that this Mac
@@ -80,13 +84,25 @@ message content:
 The third source, the **Mac's own address book**, is local and is the one that
 is on by default; nothing leaves the computer for it.
 
+A few other requests leave the Mac, none of them carrying mail:
+
+- **Update checks**, on by default (Settings → General): about once a day the
+  app asks vicenda.app whether a new version exists. The request carries your
+  IP address and the app's version. A new version's notes come from
+  vicenda.app and its download from GitHub.
+- **The local model**, only when you click Download in Settings → Local Model:
+  the files come from GitHub and are checked against hashes built into the app.
+- **One-click unsubscribe**, only after you confirm it: the app sends the
+  request the sender published for that purpose, to the sender's own server.
+- **The About window** shows a sponsor's picture, which is loaded from GitHub.
+
 ### How it is protected
 
 - **In transit**: every call to Google is over HTTPS, using the system's own
   TLS.
-- **At rest**: mail is stored in a single SQLite database in your home
-  directory, created `0600` inside a `0700` folder — readable by your macOS user
-  account and by nothing else on the machine. Settings shows you its exact path.
+- **At rest**: mail is stored in a single SQLite database in a folder in your
+  home directory; Settings shows you its exact path. Vicenda does not encrypt
+  it itself: with FileVault on, it is encrypted with the rest of your disk.
 - **The credential**: the OAuth refresh token is kept in the macOS login
   **Keychain**, one item per account under `com.gfazioli.Vicenda.oauth`, and is
   never synchronised to iCloud. It is not written into the database, into a
@@ -106,6 +122,9 @@ touches your mailbox at Google.
 An IMAP account has no Google permission to revoke: removing it deletes its
 password from the Keychain and its mail from the local database, and changes
 nothing on the server.
+
+Sender pictures already fetched stay in the app's cache, and a downloaded
+local model stays on disk, until you delete them.
 
 Deleting the database file removes all the mail at once. The credentials are not
 in that file: Gmail refresh tokens and IMAP passwords stay in the Keychain until
@@ -191,3 +210,43 @@ It **fails closed**: anything it cannot positively identify as a vendor gets
 masked, rather than the other way round. And it masks the *pictures* too — a
 masked name over a real brand's logo is still that brand, and looks handled
 while leaking exactly what it claims to hide.
+
+## Who is responsible
+
+The data controller is **{config.legal.owner}** ({config.legal.brand}), an
+independent software developer in Italy, VAT number
+{`IT${config.legal.vatNumber}`}. Write to
+[hello@undolog.com](mailto:hello@undolog.com) about anything on this page. See
+also the [Legal notice](/docs/legal).
+
+## This website
+
+- **No cookies, no tracking.** The site sets no cookies and does not follow you
+  across other sites.
+- **Visit statistics.** Visits are counted by privacy-friendly analytics that
+  use no cookies and build no profile of you: pages viewed, the referring site,
+  country, and browser or device type, in aggregate.
+- **Server logs.** The hosting provider that serves these pages, and the app's
+  update checks, processes your IP address and the details of each request to
+  deliver the site and keep it secure, and keeps them for a limited time.
+- **Your browser's local storage** remembers, in your browser only, that you
+  closed the newsletter prompt. None of it is sent to us.
+- **GitHub.** The sponsor pictures at the bottom of every page are loaded from
+  GitHub, which therefore sees your IP address. Downloads also come from GitHub.
+- **Links.** The newsletter lives on Substack, sponsorships go through GitHub
+  Sponsors and donations through Stripe. If you use them, their own privacy
+  policies apply.
+
+## Why, and your rights
+
+We process the little personal data described here to run and protect the site
+and the app, and to answer you when you write: our legitimate interest, or the
+service you asked for. The hosting and download providers may process it
+outside the European Union, including in the United States, under the
+safeguards the GDPR requires.
+
+Under the GDPR you can ask to access, correct or delete your personal data, to
+restrict or object to its processing, and to receive it in a portable format:
+write to [hello@undolog.com](mailto:hello@undolog.com). You can also lodge a
+complaint with the Italian data protection authority, the
+[Garante per la protezione dei dati personali](https://www.garanteprivacy.it/).

@@ -54,4 +54,6 @@ export default {
   '---resources': { type: 'separator', title: 'Resources' },
   faq: nav(IconHelpCircle, 'FAQ', 'vicenda'),
   'release-notes': '',
+  // Reached from the footer's last line on every page, never from the sidebar.
+  legal: { display: 'hidden', theme: { pagination: false } },
 };
