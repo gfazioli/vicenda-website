@@ -1,3 +1,5 @@
+import config from '@/config';
+
 export const resources = [
   {
     key: 'docs',
@@ -19,6 +21,12 @@ export const resources = [
     key: 'privacy',
     title: 'Privacy',
     href: '/docs/privacy',
+  },
+  {
+    key: 'discord',
+    title: 'Discord',
+    href: config.community.discord,
+    newWindow: true,
   },
   {
     key: 'issues',

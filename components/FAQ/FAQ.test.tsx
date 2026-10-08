@@ -1,7 +1,20 @@
 import { renderToString } from 'react-dom/server';
 import { MantineProvider } from '@mantine/core';
+import { FAQ_ENTRIES } from '@/components/StructuredData/StructuredData';
 import { theme } from '@/theme';
 import { FAQ, faqItems } from './FAQ';
+
+/**
+ * The FAQ JSON-LD in StructuredData.tsx is a plain-text mirror of the visible
+ * accordion, and Google requires the two to match. This pins the question
+ * lists to each other, in order, so a new or reworded entry has to land in
+ * both (findergit.app's FAQ test, ported with the community question).
+ */
+describe('FAQ and its JSON-LD mirror', () => {
+  it('ask the same questions in the same order', () => {
+    expect(FAQ_ENTRIES.map((e) => e.question)).toEqual(faqItems.map((i) => i.question));
+  });
+});
 
 /**
  * The defect lived on the SERVER, so this renders there. Mantine 9 keeps a

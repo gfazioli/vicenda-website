@@ -25,6 +25,7 @@ import {
   ThemeIcon,
   Title,
 } from '@mantine/core';
+import { DiscordCallToAction } from '../Discord/DiscordCallToAction';
 import { FAQ } from '../FAQ/FAQ';
 import { Shot } from './Shot';
 import {
@@ -491,6 +492,9 @@ export function Welcome({ cadence = fallbackReleaseCadence() }: { cadence?: Cade
           <FAQ />
         </Stack>
       </Container>
+
+      {/* ---- Community: the Discord server, for what the FAQ did not answer */}
+      <DiscordCallToAction />
 
       {/* ---- The closing line ---------------------------------------- */}
       <Container size="lg" py={{ base: 70, sm: 120 }}>

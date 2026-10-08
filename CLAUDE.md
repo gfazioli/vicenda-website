@@ -93,6 +93,9 @@ public download and it updates itself.
   carries the FAQPage JSON-LD), the closing line. Screenshots go through
   `Welcome/Shot.tsx`, unframed: each capture carries its window's own edge and
   shadow over a transparent margin
+- `Discord` — the home page's call to action between the FAQ and the closing
+  line; the invite is `config.community.discord`, also in the navbar, the
+  Community menu, the footer and the FAQ. No Slack: it is being retired
 - `Beta` — the invite page. A `'use client'` component because the route above
   it exports `metadata`, and **a server component may not hand a function —
   `component={Link}` — to a Mantine client component**: it fails at *prerender*

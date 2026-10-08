@@ -1,0 +1,12 @@
+/*
+ * Below 340px the Discord button meets the wordmark: measured at 320, the
+ * "Vicenda" text ends at 133px and the button would start at 130 (with the
+ * sponsor and coffee buttons alone the gap was 43px). There the home page's
+ * call to action, the footer and the FAQ still carry the invite. The selector
+ * is doubled to outrank Mantine's own display rule on the ActionIcon root.
+ */
+@media (max-width: 339px) {
+  .discord.discord {
+    display: none;
+  }
+}

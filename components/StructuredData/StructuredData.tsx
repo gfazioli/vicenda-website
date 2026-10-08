@@ -83,7 +83,7 @@ export function SoftwareApplicationJsonLd() {
 // a pair: change one and the other is wrong — and the wrong one is the
 // invisible one, which is why this file already went a whole day describing a
 // different product.
-const FAQ_ENTRIES: { question: string; answer: string }[] = [
+export const FAQ_ENTRIES: { question: string; answer: string }[] = [
   {
     question: 'What is Vicenda?',
     answer:
@@ -127,6 +127,11 @@ const FAQ_ENTRIES: { question: string; answer: string }[] = [
     question: 'Does it update itself?',
     answer:
       'Yes. Vicenda checks for updates on its own and installs them when you say so, the same way FinderGit and Netfox do. You can turn the check off in Settings.',
+  },
+  {
+    question: 'Is there a Vicenda community?',
+    answer:
+      'Yes, on Discord, where Vicenda and its sibling apps live: get help, suggest features, vote on what comes next and talk directly with the maker.',
   },
 ];
 
