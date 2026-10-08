@@ -14,11 +14,13 @@ export function isRecent(since: string, current: string, window = 2): boolean {
   if (!a || !b) return false;
   if (a.major !== b.major) return false;
   const distance = b.minor - a.minor;
-  return distance >= 0 && distance <= window;
+  // Same minor: the patch decides whether `since` is ahead (0.3.1 against 0.3.0).
+  if (distance === 0) return b.patch >= a.patch;
+  return distance > 0 && distance <= window;
 }
 
-function parse(version: string): { major: number; minor: number } | null {
+function parse(version: string): { major: number; minor: number; patch: number } | null {
   const m = /^(\d+)\.(\d+)(?:\.(\d+))?$/.exec(version.trim());
   if (!m) return null;
-  return { major: Number(m[1]), minor: Number(m[2]) };
+  return { major: Number(m[1]), minor: Number(m[2]), patch: Number(m[3] ?? 0) };
 }
