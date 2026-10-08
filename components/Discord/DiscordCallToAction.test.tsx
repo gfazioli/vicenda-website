@@ -33,5 +33,7 @@ describe('isRecent', () => {
   it('is never recent across a major, nor ahead of the app', () => {
     expect(isRecent('0.3.0', '1.0.0')).toBe(false);
     expect(isRecent('0.4.0', '0.3.0')).toBe(false);
+    expect(isRecent('0.3.1', '0.3.0')).toBe(false);
+    expect(isRecent('0.3.1', '0.3.1')).toBe(true);
   });
 });
