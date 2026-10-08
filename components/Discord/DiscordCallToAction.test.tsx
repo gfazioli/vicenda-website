@@ -13,6 +13,14 @@ describe('DiscordCallToAction', () => {
     expect(link).toHaveAttribute('href', config.community.discord);
     expect(link).toHaveAttribute('target', '_blank');
   });
+
+  it('says "Just opened" exactly while isRecent holds for the config', () => {
+    render(<DiscordCallToAction />);
+    const shown = screen.queryByText('Just opened') !== null;
+    expect(shown).toBe(isRecent(config.community.discordSince, config.app.version));
+    // And today it does: the server opened with the app at its current version.
+    expect(shown).toBe(true);
+  });
 });
 
 describe('isRecent', () => {
