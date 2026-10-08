@@ -128,6 +128,16 @@ export default {
      */
     downloadUrl: 'https://github.com/gfazioli/vicenda-website/releases/latest',
   },
+  // The community's home since 2026-10-08: the Undolog Discord server, shared
+  // by Vicenda and its sibling apps. The invite never expires. The Undolog
+  // Slack it replaces is being retired: link nothing there.
+  community: {
+    discord: 'https://discord.gg/rdWu5yFCR6',
+    // The app version current when the server opened. The home page's "Just
+    // opened" badge decays from it (`isRecent`): gone two minor releases on,
+    // with no one having to remember it.
+    discordSince: '0.3.0',
+  },
   // Who publishes the site, as Italian law asks every VAT-registered owner to
   // say: the VAT number on the home page (art. 35 DPR 633/72), and name,
   // contact and VAT number reachable from every page (art. 7 D.Lgs. 70/2003).

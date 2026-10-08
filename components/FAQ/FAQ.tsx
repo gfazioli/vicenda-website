@@ -10,6 +10,7 @@ import {
   type Icon,
 } from '@tabler/icons-react';
 import { Accordion, Anchor, Text } from '@mantine/core';
+import { discordLinkProps } from '@/components/Discord/discord';
 import classes from './FAQ.module.css';
 
 /**
@@ -103,6 +104,20 @@ export const faqItems: { value: string; question: string; answer: ReactNode }[] 
     question: 'Does it update itself?',
     answer:
       'Yes. Vicenda checks for updates on its own and installs them when you say so, the same way FinderGit and Netfox do. You can turn the check off in Settings.',
+  },
+  {
+    value: 'community',
+    question: 'Is there a Vicenda community?',
+    answer: (
+      <Text size="sm">
+        Yes, on{' '}
+        <Anchor {...discordLinkProps} size="sm">
+          Discord
+        </Anchor>
+        , where Vicenda and its sibling apps live: get help, suggest features, vote on what comes
+        next and talk directly with the maker.
+      </Text>
+    ),
   },
 ];
 
