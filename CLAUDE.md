@@ -1,157 +1,13 @@
-# CLAUDE.md
+# vicenda-website
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+The site at vicenda.app: the landing page, the docs and the download for Vicenda. What the four app sites share is in the workspace's `.claude/rules/websites.md`; this file holds what is specific to this one.
 
-## Project Overview
+**No beta wording anywhere**: the closed beta was dropped; Vicenda is a free public download that updates itself.
 
-This is the **marketing and documentation website** for **Vicenda**, a native
-macOS mail client. Bootstrapped verbatim from `findergit-website`, which is why
-anything not yet re-skinned still says FinderGit — see the README for the list.
+## Code and config
 
-**This is NOT a macOS application.** This is a Next.js web project deployed on Vercel.
-
-- **Domain**: `vicenda.app`
-- **Website repository** (this): https://github.com/gfazioli/vicenda-website — PRIVATE
-- The app repository is private; do not link it from anything user-facing.
-
-The website serves as:
-1. **Landing page** — the thesis, the four claims, the screenshots, the download
-2. **Documentation** — user guides, getting started
-3. **Release notes**
-4. **The download** — `/download` resolves the newest `.dmg` from the Releases
-   API at request time, the same as the two sibling sites
-
-**THE CLOSED BETA IS GONE, dropped 2026-08-26.** It was here: an invite page, a
-`config.beta.closed` gate, and a deliberate decision not to ship Sparkle
-because a public appcast would have made a "closed" download one `curl` away.
-The owner dropped the whole idea — the list, the hand-sent disk image and the
-missing updater added up to more work than filter, and a release process that
-cannot ship a fix without emailing everybody a new link is not a release
-process. **Do not reintroduce beta wording anywhere**: the app is a free
-public download and it updates itself.
-
-## Tech Stack
-
-- **Framework**: Next.js 16 + Nextra 4 (docs/MDX)
-- **UI Library**: Mantine 9
-- **Animations**: @gfazioli/mantine-scene, @gfazioli/mantine-text-animate, @gfazioli/mantine-marquee
-- **Icons**: @tabler/icons-react
-- **Analytics**: @vercel/analytics
-- **Hosting**: Vercel
-- **Package Manager**: Yarn 4 (Berry) — do not use npm or pnpm
-
-## Commands
-
-| Command | Purpose |
-|---------|---------|
-| `yarn dev` | Start Next.js dev server |
-| `yarn build` | Production build (Next.js + pagefind search index) |
-| `yarn test` | Full suite: typegen, oxfmt, lint, typecheck, jest |
-| `yarn jest` | Run Jest tests only |
-| `yarn typecheck` | TypeScript type checking (`tsc --noEmit`) |
-| `yarn lint` | oxlint + Stylelint |
-| `yarn format:write` | Auto-format all TS/TSX/CSS files (oxfmt) |
-| `yarn storybook` | Storybook dev server on port 6006 |
-| `yarn analyze` | Bundle analysis with `@next/bundle-analyzer` |
-
-> **If `yarn <cmd>` fails with `command not found: oxfmt` / `next`** the Yarn PATH shim isn't wired on this machine — run the binary directly instead: `./node_modules/.bin/oxfmt`, `./node_modules/.bin/next dev`, `./node_modules/.bin/next build`. `yarn test` / `yarn jest` route through the npm-run shim and work regardless.
-
-## Architecture
-
-### Routing & Content
-
-- **App Router** (`app/`): Next.js 16 app router with Nextra integration
-- **Docs content** (`content/`): MDX files rendered via Nextra at `/docs/[[...mdxPath]]`
-- Nextra is configured with `contentDirBasePath: '/docs'` — all MDX content is served under `/docs`
-- `content/_meta.tsx` controls sidebar navigation order and labels
-
-### Layout & Theme Integration
-
-- `app/layout.tsx` wraps the entire app in both `MantineProvider` and Nextra's `Layout`
-- **The site is DARK only, with no switch** (2026-09-23, user: keep the dark palette it has, drop the toggle). `ColorSchemeScript` and `MantineProvider` take `forceColorScheme="dark"` — the script's is what stops a visitor who picked light with the old switch from staying on it out of local storage — and Nextra's `Layout` takes `darkMode={false}` plus `nextThemes={{ defaultTheme: 'dark', forcedTheme: 'dark' }}`. `html { color-scheme: dark }` in `theme/global.css`. The palette was not touched: every `@mixin dark` there simply always applies now, and the light values beside them are dead. `ColorSchemeControl`, `ColorSchemeToggle` and `MantineNextraThemeObserver` are gone.
-- Mantine theme overrides go in `theme.ts` (client-side `createTheme`)
-- Global site configuration (metadata, GitHub API, search, Nextra layout) lives in `config/index.ts`
-- Primary colour: `vicenda`, laddered from the APP ICON's own blue (`#0056C7`,
-  sampled off the 1024px master, then stepped in OKLCH) — see `theme.ts`
-- **The colours are the APP's, computed rather than picked.** `ACCOUNT_RING` in
-  `theme.ts` is the real eight-hue ring from `Palette.swift` — OKLCH `L=0.72,
-  C=0.13`, 45° apart — and `CHROME` comes from `Tokens.swift`. A palette
-  invented here would disagree with every screenshot placed on top of it.
-- **The display face is EB Garamond**, wired in `app/layout.tsx` via
-  `next/font`. It is a SUBSTITUTION: the *Think Different* campaign was set in
-  Apple Garamond, Apple's own cut of ITC Garamond condensed to ~80%, never
-  licensed to anyone else, and the copies circulating share its provenance. The
-  condensed proportion lives in `.display-hero` (`scaleX(0.92)`), applied to the
-  one line that carries the reference and dropped below `48em`.
-
-### Key Components (`components/`)
-
-- `MantineNavBar` — top navigation
-- `MantineFooter` — 4-column footer with highlights, resources, ecosystem links
-- `Welcome` — the home page: hero, the problem, four claims, the honest
-  paragraph, the FAQ (the same `FAQ` component as `/docs/faq`, whose page alone
-  carries the FAQPage JSON-LD), the closing line. Screenshots go through
-  `Welcome/Shot.tsx`, unframed: each capture carries its window's own edge and
-  shadow over a transparent margin
-- `Discord` — the home page's call to action between the FAQ and the closing
-  line; the invite is `config.community.discord`, also in the navbar, the
-  Community menu, the footer and the FAQ. No Slack: it is being retired
-- `Beta` — the invite page. A `'use client'` component because the route above
-  it exports `metadata`, and **a server component may not hand a function —
-  `component={Link}` — to a Mantine client component**: it fails at *prerender*
-  with "element type is invalid", not at typecheck.
-- `ReleaseNotes` — renders the releases `content/release-notes.mdx` fetched and compiled at BUILD time (`load-releases.ts`); only when the build got none does it fall back to fetching `/api/github-releases` in the browser
-
-### API Routes (`app/api/`)
-
-- `version/` — returns current package version
-- `github-releases/` — proxies the GitHub Releases API (configured in `config/index.ts`). Points at this repo, which is where the app's releases live because the app repo is private. Uses `GITHUB_TOKEN` env var when set to raise the rate limit from 60/hr to 5000/hr.
-- `search/` — pagefind-based full-text search endpoint
-
-### Environment variables
-
-- `GITHUB_TOKEN` (optional, recommended on Vercel) — fine-grained or classic token with `public_repo` read scope. Used by:
-  - The `/api/github-releases` proxy (runtime, now only the fallback).
-  - `content/release-notes.mdx`, which fetches the releases at build time for both the page and its TOC, so Vercel needs the var available during deploys.
-  Without the token the app still works but may hit 60 req/hr GitHub rate limit on shared IPs.
-
-### CSS Import Order
-
-In `app/layout.tsx`, CSS imports must follow this order:
-1. `@mantine/core/styles.css`
-2. Mantine extension styles (marquee, text-animate, scene)
-3. Global styles
-
-### What a crawler gets is the served HTML
-
-Measured 2026-09-24, when Search Console listed the sibling sites' pages as *Crawled - currently not indexed*; this site had the same two defects, fixed the same way as findergit-website#69.
-
-- **`/docs/release-notes` was stuck on "Loading releases...".** `/api/github-releases` answers **403 to any user agent containing `bot`**, Googlebot's rendering service included. Now `load-releases.ts` fetches and compiles the releases at build time (release.sh creates the GitHub release before it pushes this repo) and the browser makes no request. Bodies compile as `md`, one `try` each: a body is written on GitHub after the build, and a brace in MDX is a JavaScript expression.
-- **`/docs/faq` was 43 words: the 9 questions, no answers**, and the home page's FAQ the same. Mantine 9's Accordion keeps a closed panel in a React `<Activity>`, which renders nothing on the server; only the JSON-LD mirror had the answers. `keepMountedMode="display-none"` renders every answer and only hides it. `FAQ.test.tsx` uses `renderToString`, because a jsdom `render` mounts a hidden Activity's children and cannot see the defect.
+- A server component may not pass a function (`component={Link}`) to a Mantine client component: it fails at prerender ("element type is invalid"), not at typecheck. Make the component `'use client'`.
 - **`public/robots.txt` is the team-wide file**, generated for all ten Vercel projects and kept in step with the firewall (AI bots ruleset in deny, plus a bypass rule for AI answer engines and Applebot). Change it on every site or on none.
-
-Check a page the way a crawler gets it: `curl -A Googlebot` and count words in `<main>` with the scripts stripped.
-
-### Performance and SEO: what the pages cost, measured
-
-Audited 2026-09-29 with `~/Lavoro/GitHub/claude-global/scripts/site-audit/`, the same pass as findergit.app's #78.
-- The always-on rule `website-changes-measure-performance-and-seo` says every significant change gets it.
-- The workspace's `.claude/rules/websites.md` holds what the four sites share.
-
-Local production builds of `main` and the branch, Lighthouse mobile, devtools throttling, 6 passes on the home page:
-- JavaScript went from 757 to 354 KiB. The MDX compiler had been in every page's bundle.
-- The home page went from 1,147 to 693 KiB, and blocking time from about 75 to about 40 ms.
-- At rest for 10 s: 191 ms of main thread and 600 style recalcs before, 9 ms and 20 after. The cadence dot's box-shadow pulse had been the only thing that never stopped.
-- The served home page preloads one image, the hero icon, instead of five.
-- LCP did not move, about 2.0 s, because it is a paragraph, bound by the stylesheets and the display font.
-- SEO: the home page is in a `<main>`, five descriptions are cut under 160 characters, and the sitemap has no clone-time `lastmod`.
-
-**The local first paint is bimodal, on both builds.** The same page on the same build painted at about 2.0 s in some passes and 3.7 s in others:
-- the network waterfall and the main thread were identical;
-- the filmstrip was blank until the late paint;
-- it did not appear in vicenda.app's five production passes.
-
-Run four or more passes, and compare early with early. Two passes each can put the two sides in different modes and "measure" 1.7 s of noise.
 
 ## Content Guidelines
 
@@ -163,15 +19,7 @@ Run four or more passes, and compare early with early. Two passes each can put t
   recognised machine message is drawn as a card instead of rendered as
   somebody's HTML. That is checkable in one screenshot, which is why it is the
   pitch.
-- **Only describe what the app ships**, and check the list rather than trusting
-  it — this one said in-app OAuth consent was NOT built and must not appear
-  anywhere, on the day the site's own Getting Started described it. Built: the
-  stream, the embed cards and their identity gate, Gmail read+write, the IMAP
-  tier, the block-everything reader, one-hue-per-account, and since 2026-08-28
-  the **first-run wizard** — consent presented over the app with no browser, and
-  from 2026-08-29 IMAP too, credentials proved against the server before an
-  account is written. NOT built, and not to appear anywhere: sending, archive
-  and delete over IMAP, the notch, the menu bar.
+- **Only describe what the app ships**, and check the app's code rather than this list. Built: the stream, the embed cards and their identity gate, Gmail read+write, the IMAP tier, the block-everything reader, one hue per account, and the first-run wizard (consent over the app with no browser; IMAP credentials proved before an account is written). NOT built, and not to appear anywhere: sending, archive and delete over IMAP, the notch, the menu bar.
 - **Download links go to `/download`**, never to a versioned asset URL. The
   route resolves the newest `.dmg` at request time, so nothing on this site
   carries a version number that can go stale.
@@ -183,20 +31,13 @@ User-facing pages (`content/*.mdx` aimed at end users, the homepage, release not
 - ❌ "Groq", "Llama", "OpenAI", "Anthropic" — say "the AI" or "the AI provider"
 - ❌ "Vercel proxy", "Next.js API route", "Cloudflare Worker" — say "Vicenda handles the request on your behalf"
 - ❌ "Sparkle", "AppKit's NSEvent monitor", framework names — say "the auto-update framework" / "macOS keyboard handling"
-- ✅ User-relevant facts ARE allowed: "free", "no API key required", "diffs are not stored", "macOS 15+ required", "100 KB diff cap"
+- ✅ User-relevant facts ARE allowed: "free", "no server", "the local model runs on your Mac", "macOS 15+ required"
 
 Reasoning: end users care about what the feature does for them, not which vendor or library powers it. Naming the stack also paints us into a corner if we ever swap it (e.g., a different AI provider) — would force rewriting every page.
 
 **Exceptions**:
 - Developer-facing files (commit messages, this `CLAUDE.md`, `CHANGELOG.md`) — name infra freely
 - "Under the hood" sections at the bottom of release notes — okay to be specific for power users who want to know, but prefer generic phrasing where it doesn't lose information
-
-## Tooling
-
-- **Formatter**: oxfmt (`.oxfmtrc.json`)
-- **Linter**: oxlint + stylelint
-- **TypeScript**: 6.x
-- **Package Manager**: Yarn 4 (Berry). Do not use npm or pnpm.
 
 <!-- BEGIN:nextjs-agent-rules -->
 
