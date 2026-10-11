@@ -9,19 +9,20 @@ const withNextra = nextra({
   // No `latex`: nothing on the site is math, and with it on, two dollar signs
   // in the same paragraph of prose would be typeset as an equation.
   search: {
-    codeblocks: false
+    codeblocks: false,
   },
   contentDirBasePath: '/docs',
-})
+});
 
 export default withNextra(
   withBundleAnalyzer({
     reactStrictMode: false,
     cleanDistDir: true,
-    // AVIF first, WebP for a browser that cannot take it. A browser asks for
-    // one format, so the image transformations Vercel bills move to AVIF
-    // rather than double; the first request for each one takes longer to
-    // encode.
+    // AVIF first, WebP for a browser that cannot take it. Next picks the format
+    // from the browser's Accept header and caches each apart: every current
+    // browser takes AVIF, so the transformations Vercel bills move to AVIF, and
+    // a WebP is made only for one that cannot. The first request for each one
+    // takes longer to encode.
     images: {
       formats: ['image/avif', 'image/webp'],
     },
@@ -39,4 +40,5 @@ export default withNextra(
         },
       },
     },
-  }));
+  })
+);
