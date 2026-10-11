@@ -18,6 +18,13 @@ export default withNextra(
   withBundleAnalyzer({
     reactStrictMode: false,
     cleanDistDir: true,
+    // AVIF first, WebP for a browser that cannot take it. A browser asks for
+    // one format, so the image transformations Vercel bills move to AVIF
+    // rather than double; the first request for each one takes longer to
+    // encode.
+    images: {
+      formats: ['image/avif', 'image/webp'],
+    },
     experimental: {
       optimizePackageImports: ['@mantine/core', '@mantine/hooks'],
     },
