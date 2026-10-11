@@ -26,16 +26,18 @@ const TOC_FROM = 1280;
  */
 export function docsSizes(points = Infinity): string {
   const clauses: [string | null, string][] = [];
+  // 767.98, not 767: the layout switches at min-width 768, and a viewport of
+  // 767.5 (a zoom, a fractional DPR) is still the phone's.
   const stretch = (until: number, from: number, gutter: number, top: number) => {
     // The picture fills the column until the column is wider than the picture.
     const full = points + gutter;
     if (points <= from - gutter) {
-      clauses.push([`(max-width: ${until - 1}px)`, `${Math.min(points, top)}px`]);
+      clauses.push([`(max-width: ${until - 0.02}px)`, `${Math.min(points, top)}px`]);
     } else if (full < until && points < top) {
       clauses.push([`(max-width: ${full}px)`, `calc(100vw - ${gutter}px)`]);
-      clauses.push([`(max-width: ${until - 1}px)`, `${points}px`]);
+      clauses.push([`(max-width: ${until - 0.02}px)`, `${points}px`]);
     } else {
-      clauses.push([`(max-width: ${until - 1}px)`, `calc(100vw - ${gutter}px)`]);
+      clauses.push([`(max-width: ${until - 0.02}px)`, `calc(100vw - ${gutter}px)`]);
     }
   };
   stretch(SIDEBAR_FROM, 0, PHONE_GUTTER, Infinity);
@@ -51,25 +53,21 @@ export function docsSizes(points = Infinity): string {
 }
 
 /**
- * The widest a capture is drawn: half its pixel width, the sibling sites' rule
- * for a Retina capture taken at two pixels per point, which a page would
- * otherwise draw at twice the size of the thing it shows.
+ * How wide a picture is drawn when the column leaves it room: its file's own
+ * width, as it always was here.
  *
- * Here every `public/screenshot-*.png` is 2000 px wide: the app's `shoot.sh`
- * captures a 1280x800-point window, shadow included, and resamples it to that
- * width. Half is 1000px, wider than the column at every viewport (927 at
- * most), so no capture on this site is drawn at a different width for it
- * (checked 2026-10-11); it holds a narrower one, should one land, at half.
- *
- * Only a static import knows its size, and only the captures follow the rule:
- * anything else is drawn as it was.
+ * Not halved, as the sibling sites halve their Retina captures: these are not
+ * two pixels per point. The app's `shoot.sh` captures a 1280x800-point window,
+ * shadow included, and resamples it to 2000 px, about 1.56 px per point, so a
+ * half would draw a narrower crop smaller than the thing it shows. Every
+ * capture here is 2000 px, wider than the column at every viewport (927 at
+ * most), so this only tells `sizes` the most it can ever be drawn at.
  */
-function pointWidth(src: DocsImageProps['src']): number | undefined {
+function drawnWidth(src: DocsImageProps['src']): number | undefined {
   if (typeof src !== 'object') {
     return undefined;
   }
-  const image = 'default' in src ? src.default : src;
-  return image.src.includes('/screenshot-') ? Math.round(image.width / 2) : undefined;
+  return 'default' in src ? src.default.width : src.width;
 }
 
 /**
@@ -79,17 +77,9 @@ function pointWidth(src: DocsImageProps['src']): number | undefined {
  * width, and the browser cannot know the column is narrower: the docs' 832px
  * column fetched the 2048px rendering on a laptop, and a phone fetched the
  * 3840px one for a picture drawn 358px wide (measured 2026-09-29, /docs/cards).
- * `docsSizes` follows the column as it was measured, and a capture narrower
+ * `docsSizes` follows the column as it was measured, and a picture narrower
  * than the column says its own width.
  */
 export function DocsImage(props: DocsImageProps) {
-  const points = pointWidth(props.src);
-
-  return (
-    <ImageZoom
-      sizes={docsSizes(points)}
-      {...props}
-      style={points ? { maxWidth: `min(100%, ${points}px)`, ...props.style } : props.style}
-    />
-  );
+  return <ImageZoom sizes={docsSizes(drawnWidth(props.src))} {...props} />;
 }
