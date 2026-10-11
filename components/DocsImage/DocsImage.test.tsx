@@ -24,7 +24,7 @@ const capture = {
 
 /** The whole column, at every width: what a picture as wide as it asks for. */
 const COLUMN =
-  '(max-width: 767px) calc(100vw - 32px), (max-width: 1279px) calc(100vw - 352px), (max-width: 1439px) calc(100vw - 608px), 832px';
+  '(max-width: 767.98px) calc(100vw - 32px), (max-width: 1279.98px) calc(100vw - 352px), (max-width: 1439.98px) calc(100vw - 608px), 832px';
 
 function drawn(props: Parameters<typeof DocsImage>[0]) {
   const { container } = render(<DocsImage {...props} />);
@@ -32,38 +32,27 @@ function drawn(props: Parameters<typeof DocsImage>[0]) {
 }
 
 describe('DocsImage', () => {
-  it('draws a capture at no more than half its pixel width, and asks for the column', () => {
+  it('draws a capture as it always was, and asks for the column', () => {
     const img = drawn({ src: capture, alt: 'The stream' });
-    expect(img.style.maxWidth).toBe('min(100%, 1000px)');
+    expect(img.style.maxWidth).toBe('');
     expect(img.dataset.sizes).toBe(COLUMN);
   });
 
-  it('draws a capture narrower than the column at half its width, and asks for that', () => {
+  // Not halved: these captures are about 1.56 px per point, not two.
+  it('asks for a narrower picture at its own width, and draws it as it was', () => {
     const img = drawn({ src: { ...capture, width: 760, height: 1200 }, alt: 'A crop' });
-    expect(img.style.maxWidth).toBe('min(100%, 380px)');
-    expect(img.dataset.sizes).toBe('(max-width: 412px) calc(100vw - 32px), 380px');
+    expect(img.style.maxWidth).toBe('');
+    expect(img.dataset.sizes).toBe(docsSizes(760));
   });
 
-  it('reads a capture imported as a module the same way', () => {
-    const img = drawn({ src: { default: capture }, alt: 'The stream' });
-    expect(img.style.maxWidth).toBe('min(100%, 1000px)');
+  it('reads a picture imported as a module the same way', () => {
+    const img = drawn({ src: { default: { ...capture, width: 760 } }, alt: 'A crop' });
+    expect(img.dataset.sizes).toBe(docsSizes(760));
   });
 
-  it('leaves anything that is not a capture as it was', () => {
-    const icon = drawn({
-      src: { ...capture, src: '/_next/static/media/icon-512x512.png' },
-      alt: '',
-    });
-    expect(icon.style.maxWidth).toBe('');
-    expect(icon.dataset.sizes).toBe(COLUMN);
-
+  it('asks for the column when it cannot know the size', () => {
     const remote = drawn({ src: 'https://example.com/screenshot-x.png', alt: '' });
-    expect(remote.style.maxWidth).toBe('');
-  });
-
-  it('keeps a style passed in, over its own', () => {
-    const img = drawn({ src: capture, alt: '', style: { maxWidth: '100%' } });
-    expect(img.style.maxWidth).toBe('100%');
+    expect(remote.dataset.sizes).toBe(COLUMN);
   });
 });
 
@@ -78,13 +67,13 @@ describe('docsSizes', () => {
   it('gives a picture narrower than the column its own width', () => {
     expect(docsSizes(380)).toBe('(max-width: 412px) calc(100vw - 32px), 380px');
     expect(docsSizes(600)).toBe(
-      '(max-width: 632px) calc(100vw - 32px), (max-width: 767px) 600px, (max-width: 952px) calc(100vw - 352px), 600px'
+      '(max-width: 632px) calc(100vw - 32px), (max-width: 767.98px) 600px, (max-width: 952px) calc(100vw - 352px), 600px'
     );
   });
 
   it('switches between the column and the picture wherever they cross', () => {
     expect(docsSizes(700)).toBe(
-      '(max-width: 732px) calc(100vw - 32px), (max-width: 767px) 700px, (max-width: 1052px) calc(100vw - 352px), (max-width: 1279px) 700px, (max-width: 1308px) calc(100vw - 608px), 700px'
+      '(max-width: 732px) calc(100vw - 32px), (max-width: 767.98px) 700px, (max-width: 1052px) calc(100vw - 352px), (max-width: 1279.98px) 700px, (max-width: 1308px) calc(100vw - 608px), 700px'
     );
   });
 });
