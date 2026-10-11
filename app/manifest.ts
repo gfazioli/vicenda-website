@@ -10,7 +10,9 @@ import config from '@/config';
  */
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: 'Vicenda — A Mac mail client that is not a list',
+    // The page title, read rather than typed out again, so the two cannot
+    // drift apart.
+    name: config.metadata.title.default,
     short_name: 'Vicenda',
     description: config.metadata.description,
     start_url: '/',

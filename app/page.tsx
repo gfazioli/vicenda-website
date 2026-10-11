@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { SkipNavContent } from 'nextra/components';
 import { fetchReleaseCadence } from '@/components/ReleaseCadence/fetch-release-cadence';
 import { SoftwareApplicationJsonLd } from '@/components/StructuredData/StructuredData';
 import { Welcome } from '@/components/Welcome/Welcome';
@@ -45,9 +46,11 @@ export default async function HomePage() {
 
   // In a <main>: the docs pages get one from Nextra, the home page had none,
   // so its hero, claims and FAQ sat in no landmark at all (2026-09-29 audit).
+  // Nextra's skip link is on every page, its target only in the MDX wrapper.
   return (
     <>
       <SoftwareApplicationJsonLd />
+      <SkipNavContent />
       <main>
         <Welcome cadence={cadence} />
       </main>
