@@ -39,7 +39,12 @@ export const faqItems: { value: string; question: string; answer: ReactNode }[] 
       <Text size="sm">
         Vicenda is a free download for macOS, signed and notarised by Apple. There is no App Store
         listing and no account to create.{' '}
-        <Anchor component={Link} href="/download" size="sm">
+        {/*
+          A plain anchor, not a next/link: `/download` is a route handler that
+          302s to the DMG on GitHub, not a page, so the client router has
+          nothing to prefetch or to fetch as RSC there.
+        */}
+        <Anchor href="/download" size="sm">
           Download it
         </Anchor>
         .
