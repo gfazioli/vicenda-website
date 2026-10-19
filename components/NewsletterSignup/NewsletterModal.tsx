@@ -19,8 +19,9 @@ export function NewsletterModal() {
   const [scroll] = useWindowScroll();
   const [opened, { open, close }] = useDisclosure(false);
   // Mantine ignores Reduce Motion unless the theme opts in, and this one does
-  // not: the pop and the overlay's fade are skipped by hand.
-  const reduced = useReducedMotion();
+  // not: the pop and the overlay's fade are skipped by hand. Otherwise the
+  // durations stay Mantine's own (the pop 250 ms, the overlay 200).
+  const reduced = useReducedMotion(false);
   const [dismissed, setDismissed] = useLocalStorage({
     // A new key on purpose: the download prompt this replaced had its own,
     // and a visitor who dismissed THAT should still see the newsletter once.
@@ -52,7 +53,7 @@ export function NewsletterModal() {
       size="md"
       radius="lg"
       overlayProps={{ blur: 2 }}
-      transitionProps={{ transition: 'pop', duration: reduced ? 0 : 250 }}
+      transitionProps={{ transition: 'pop', ...(reduced ? { duration: 0 } : {}) }}
       // On the element with role="dialog", which has no title to be named by.
       // A plain `aria-label` lands on the modal's root <div>, where it names
       // nothing (read in Chrome on lancetta.app, 2026-10-19).
