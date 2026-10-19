@@ -13,11 +13,14 @@ import { Anchor, Button, Stack, Text, Title } from '@mantine/core';
  * This used to be a download prompt, from the days when the site said "no
  * newsletter and no list". There is a list now, for release news only, and
  * the download keeps its own button in the hero and the honest paragraph.
+ *
+ * An h2 drawn at h3's size: in the footer of a page with no h2 of its own
+ * (Legal, the FAQ), an h3 here followed the h1 with a level skipped.
  */
 export function NewsletterCallToAction() {
   return (
     <Stack gap="xs" align="center">
-      <Title order={3} ta="center" className="display" fw={500}>
+      <Title order={2} size="h3" ta="center" className="display" fw={500}>
         Get release updates
       </Title>
       <Text c="dimmed" ta="center" size="sm" maw={420}>

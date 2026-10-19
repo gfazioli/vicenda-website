@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Modal } from '@mantine/core';
-import { useDisclosure, useLocalStorage, useWindowScroll } from '@mantine/hooks';
+import { useDisclosure, useLocalStorage, useReducedMotion, useWindowScroll } from '@mantine/hooks';
 import { NewsletterCallToAction } from './NewsletterCallToAction';
 
 /**
@@ -18,6 +18,9 @@ const SCROLL_TRIGGER_PX = 1200;
 export function NewsletterModal() {
   const [scroll] = useWindowScroll();
   const [opened, { open, close }] = useDisclosure(false);
+  // Mantine ignores Reduce Motion unless the theme opts in, and this one does
+  // not: the pop and the overlay's fade are skipped by hand.
+  const reduced = useReducedMotion();
   const [dismissed, setDismissed] = useLocalStorage({
     // A new key on purpose: the download prompt this replaced had its own,
     // and a visitor who dismissed THAT should still see the newsletter once.
@@ -49,8 +52,13 @@ export function NewsletterModal() {
       size="md"
       radius="lg"
       overlayProps={{ blur: 2 }}
-      transitionProps={{ transition: 'pop' }}
-      aria-label="Subscribe to the Vicenda newsletter"
+      transitionProps={{ transition: 'pop', duration: reduced ? 0 : 250 }}
+      // On the element with role="dialog", which has no title to be named by.
+      // A plain `aria-label` lands on the modal's root <div>, where it names
+      // nothing (read in Chrome on lancetta.app, 2026-10-19).
+      attributes={{ content: { 'aria-label': 'Subscribe to the Vicenda newsletter' } }}
+      // The button the focus lands on as it opens: an icon alone names nothing.
+      closeButtonProps={{ 'aria-label': 'Close' }}
     >
       <NewsletterCallToAction />
     </Modal>
