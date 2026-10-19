@@ -1,8 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { Modal } from '@mantine/core';
-import { useDisclosure, useLocalStorage, useReducedMotion, useWindowScroll } from '@mantine/hooks';
+import { readLocalStorageValue, useDisclosure } from '@mantine/hooks';
 import { NewsletterCallToAction } from './NewsletterCallToAction';
 
 /**
@@ -15,33 +15,63 @@ import { NewsletterCallToAction } from './NewsletterCallToAction';
  */
 const SCROLL_TRIGGER_PX = 1200;
 
-export function NewsletterModal() {
-  const [scroll] = useWindowScroll();
-  const [opened, { open, close }] = useDisclosure(false);
-  // Mantine ignores Reduce Motion unless the theme opts in, and this one does
-  // not: the pop and the overlay's fade are skipped by hand. Otherwise the
-  // durations stay Mantine's own (the pop 250 ms, the overlay 200).
-  const reduced = useReducedMotion(false);
-  const [dismissed, setDismissed] = useLocalStorage({
-    // A new key on purpose: the download prompt this replaced had its own,
-    // and a visitor who dismissed THAT should still see the newsletter once.
-    key: 'vicenda-newsletter-prompt-dismissed',
-    defaultValue: false,
-    // Read localStorage only after mount, so SSR and first client render agree.
-    getInitialValueInEffect: true,
-  });
-  // Auto-open at most once per page load (independent of the persisted flag).
-  const [armed, setArmed] = useState(false);
+/**
+ * Stored as the JSON `true` once the visitor closes the prompt. A new key on
+ * purpose: the download prompt this replaced had its own, and a visitor who
+ * dismissed THAT should still see the newsletter once.
+ */
+export const DISMISSED_KEY = 'vicenda-newsletter-prompt-dismissed';
 
+const isDismissed = () => readLocalStorageValue({ key: DISMISSED_KEY, defaultValue: false });
+
+export function NewsletterModal() {
+  const [opened, { open, close }] = useDisclosure(false);
+
+  // Watches the scroll only until the prompt opens, at most once a frame, and
+  // not at all for a visitor who has closed it. Mantine's `useWindowScroll`,
+  // which it replaces, rendered on every scroll event for as long as any page
+  // was open: 574 renders in a 13 s scroll down findergit.app's home page,
+  // three quarters of the script the scroll ran (production, CPU 4x,
+  // 2026-10-13), where this same watcher came from.
   useEffect(() => {
-    if (!armed && !dismissed && scroll.y > SCROLL_TRIGGER_PX) {
-      setArmed(true);
-      open();
+    if (isDismissed()) {
+      return undefined;
     }
-  }, [scroll.y, dismissed, armed, open]);
+    let frame = 0;
+    function stop() {
+      window.removeEventListener('scroll', scrolled);
+      window.cancelAnimationFrame(frame);
+    }
+    function check() {
+      frame = 0;
+      if (window.scrollY > SCROLL_TRIGGER_PX) {
+        // At most once per page load. Closed in another tab since this one
+        // loaded counts as closed here too.
+        stop();
+        if (!isDismissed()) {
+          open();
+        }
+      }
+    }
+    function scrolled() {
+      if (!frame) {
+        frame = window.requestAnimationFrame(check);
+      }
+    }
+    window.addEventListener('scroll', scrolled, { passive: true });
+    // A page that opens already past the trigger (a reload, a link to an
+    // anchor) gets the prompt as a scroll there would have given it.
+    scrolled();
+    return stop;
+  }, [open]);
 
   const handleClose = () => {
-    setDismissed(true);
+    try {
+      window.localStorage.setItem(DISMISSED_KEY, JSON.stringify(true));
+    } catch {
+      // Storage refused (site data blocked, a full quota): it closes for this
+      // page load, and the watcher has already stopped.
+    }
     close();
   };
 
@@ -53,7 +83,7 @@ export function NewsletterModal() {
       size="md"
       radius="lg"
       overlayProps={{ blur: 2 }}
-      transitionProps={{ transition: 'pop', ...(reduced ? { duration: 0 } : {}) }}
+      transitionProps={{ transition: 'pop' }}
       // On the element with role="dialog", which has no title to be named by.
       // A plain `aria-label` lands on the modal's root <div>, where it names
       // nothing (read in Chrome on lancetta.app, 2026-10-19).

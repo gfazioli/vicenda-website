@@ -78,6 +78,12 @@ export const theme = createTheme({
       '#012C6B',
     ],
   },
+  /*
+   * Mantine's own transitions (modals, tooltips, menus, accordions) take 0 ms
+   * for a visitor whose system asks for less motion. Mantine's default
+   * ignores that setting.
+   */
+  respectReducedMotion: true,
   headings: {
     fontWeight: '600',
   },
