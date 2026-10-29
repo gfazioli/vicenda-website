@@ -1,215 +1,102 @@
 ---
-description: "What Google data Vicenda reads, what it does with it, who it is shared with and how it is protected. No server, and no remote resource fetched while you read."
+description: "What Vicenda keeps on your Mac, the few requests it makes, and what it never does: no server, no account, no telemetry. And what this website collects."
 ---
 
 import config from "@/config";
 
 # Privacy
 
-Two claims, and both are structural rather than promised. Before them, the four
-disclosures a policy is supposed to make in plain words rather than leave to be
-inferred from the design.
+Vicenda reads your mail on your Mac and keeps it there. It runs no server, asks
+you for no account, and sends no telemetry. This page says what it stores, every
+request it makes, and what this website collects.
 
-## What Google data Vicenda uses, and what happens to it
+_Last updated: 29 October 2026._
 
-### What is accessed
+## What stays on your Mac
 
-Vicenda asks for one Google permission,
-`https://www.googleapis.com/auth/gmail.modify`, and nothing else. No other
-Google product is reached: Contacts, Drive, Calendar and the rest are neither
-requested nor reachable.
+Everything Vicenda knows about your mail is kept on your Mac:
 
-Through it the app reads:
+- **your messages**: their headers (sender, recipients, subject, date), their
+  bodies and the mailboxes or labels they sit in, as read from your provider;
+- **your rules**: what you taught it with "from now on", for one account or for
+  every account;
+- **your decisions**: what you binned, kept under a label, put in To do or left
+  for Later, and what you confirmed in a batch;
+- **your accounts**: each one's address, server and colour.
 
-- **the address of the mailbox you connect**, which is what labels that account
-  in the app;
-- **the list of messages** in the mailbox, and each message's **headers** —
-  sender, recipients, subject, date, and the labels it carries;
-- **the body of a message**, when the app renders it in a channel or you open
-  it;
-- **the label list** of the mailbox, mirrored into the sidebar with its own
-  colours;
-- **the mailbox's change history**, which is how the app syncs after the first
-  fill without re-reading everything.
+They live in one database in a folder of your home directory,
+`~/.vicenda-dump/`, which only your macOS user can open. Vicenda does not encrypt
+it itself; with FileVault on, it is encrypted with the rest of your disk.
 
-### How it is used
+**The password of each account** is an app password, kept in the macOS login
+**Keychain** under `com.gfazioli.Vicenda.imap` and never synchronised to iCloud.
+It is not written into the database, into a preference or into a log.
 
-To show you your own mail on your own Mac, and to change it when you ask. That
-is the whole of it.
+## Your mailbox stays as it is
 
-**Reading** builds what you see: the message list, the channels, the threads,
-the cards drawn for machine mail, and the search index that lives in the same
-local database.
+Today every decision you make in Vicenda is recorded **in Vicenda**, on your Mac.
+Nothing is moved, archived or deleted on your provider's server: binning a mail
+takes it out of your report, not out of your mailbox. Carrying decisions to the
+server is still to come, and this page will say so when it does.
 
-**Writing** is three operations, each one you start:
+The one thing Vicenda can change on the server is whether a message is **read or
+unread**, and only if you turn that on in Settings; it is off until you do.
 
-- **mark read or unread** — removes or adds Gmail's `UNREAD` label;
-- **archive** — removes Gmail's `INBOX` label;
-- **move to trash** — Gmail's own trash, which you can undo from Gmail.
+## The model works on the device
 
-Vicenda never deletes a message permanently, never sends mail, and never
-creates or modifies a draft on the server. The composer saves drafts locally
-and cannot send.
+Where Vicenda uses a model, to write a mail's one line in the report, it runs
+on your Mac: **Apple Intelligence** on macOS 26 and later, or a **model you
+download once** from Settings. No message, and
+nothing about one, is sent anywhere to do it, and no message is used to train
+anything.
 
-The **optional local model** is no exception. It runs on your Mac, is shown one
-message at a time, and produces a card in your own local database. Nothing
-about a message is sent anywhere to build it, and no message is ever used to
-train it or anything else.
+## Every request Vicenda makes
 
-None of this data is used for advertising, for profiling, for analytics, or for
-training any model.
+These are all the connections the app opens. None of them carries your mail to
+anybody but your own provider.
 
-### Who it is shared with
-
-**Nobody.** Vicenda runs no server, so there is no infrastructure of the
-developer's for your mail to pass through, sit on, or be processed by. It is
-not sold, not transferred, not disclosed, and not shared with any third party,
-service provider or affiliate. The only network traffic carrying your mail is
-between your Mac and your mail provider: Google, or the server of an IMAP
-account you added.
-
-Two **optional** settings, both **off unless you switch them on**, make an
-outbound request a careful reader should know about, and neither carries
-message content:
-
-- **The sending domain's logo** looks up the domain's published brand record
-  and then asks that domain's own web server for the logo, falling back to its
-  icon. No address and no message travels, but the sender's server sees your
-  IP address and when its logo was asked for, once per domain.
-- **Gravatar** sends `gravatar.com` a hash of a sender's address — and, for the
-  pictures on your own accounts, of your own addresses. The address itself does
-  not travel, but the hash identifies it, so Automattic learns that this Mac
-  corresponds with that person.
-
-The third source, the **Mac's own address book**, is local and is the one that
-is on by default; nothing leaves the computer for it.
-
-A few other requests leave the Mac, none of them carrying mail:
-
-- **Update checks**, on by default (Settings → General): about once a day the
-  app asks vicenda.app whether a new version exists. The request carries your
-  IP address and the app's version. A new version's notes come from
-  vicenda.app and its download from GitHub.
-- **The local model**, only when you click Download in Settings → Local Model:
-  the files come from GitHub and are checked against hashes built into the app.
-- **One-click unsubscribe**, only after you confirm it: the app sends the
-  request the sender published for that purpose, to the sender's own server.
+- **Your mail providers.** Vicenda connects to each account's IMAP server over
+  an encrypted connection, at launch and then every few minutes, to read new
+  mail. This is the only traffic that carries your mail, and it goes only
+  between your Mac and your provider.
+- **The model download**, only when you click Download in Settings: the files
+  come from GitHub Releases and are checked against hashes built into the app.
+  Apple Intelligence needs no download.
+- **Update checks**, on unless you turn off "Check for updates automatically" in
+  Settings: the app asks vicenda.app whether a new version exists. The request
+  carries your IP address and the app's version.
+- **Gravatar**, off unless you switch on "Ask Gravatar for the photo": the app
+  sends `gravatar.com` a hash of a sender's address to ask for a photo. The
+  address itself does not travel, but the hash identifies it, so Gravatar learns
+  that this Mac corresponds with that person. The Mac's own address book, on by
+  default, is the other source of photos, and nothing leaves the Mac for it.
 - **The About window** shows a sponsor's picture, which is loaded from GitHub.
 
-### How it is protected
-
-- **In transit**: every call to Google is over HTTPS, using the system's own
-  TLS.
-- **At rest**: mail is stored in a single SQLite database in a folder in your
-  home directory; Settings shows you its exact path. Vicenda does not encrypt
-  it itself: with FileVault on, it is encrypted with the rest of your disk.
-- **The credential**: the OAuth refresh token is kept in the macOS login
-  **Keychain**, one item per account under `com.gfazioli.Vicenda.oauth`, and is
-  never synchronised to iCloud. It is not written into the database, into a
-  preference, or into a log.
-- **Nothing is copied off the machine**, so there is no backup of your mail
-  under anybody else's control, and no account of ours that could be breached.
-
-### Deleting it, and taking the permission back
-
-Removing an account in Vicenda — **Settings → Accounts**, open the account, then
-**Remove Account…** — does three things, in this order: it asks Google to revoke
-Vicenda's access, deletes the account's refresh token from the Keychain, and
-deletes its mail from the local database. If Google cannot be reached, the
-removal still completes and tells you so, with the link below. None of it
-touches your mailbox at Google.
-
-An IMAP account has no Google permission to revoke: removing it deletes its
-password from the Keychain and its mail from the local database, and changes
-nothing on the server.
-
-Sender pictures already fetched stay in the app's cache, and a downloaded
-local model stays on disk, until you delete them.
-
-Deleting the database file removes all the mail at once. The credentials are not
-in that file: Gmail refresh tokens and IMAP passwords stay in the Keychain until
-each account is removed, or until you delete the `com.gfazioli.Vicenda.oauth`
-and `com.gfazioli.Vicenda.imap` items in Keychain Access.
-
-The permission is yours to withdraw at any time at
-[myaccount.google.com/permissions](https://myaccount.google.com/permissions).
-Revoking it stops all further access immediately; the app then has no way to
-read or change anything.
-
-### Limited Use
-
-Vicenda's use of information received from Google APIs adheres to the
-[Google API Services User Data Policy](https://developers.google.com/terms/api-services-user-data-policy),
-including the Limited Use requirements.
-
-## No server, ever
-
-Vicenda runs no server. Not for sync, not for search, not for the clever parts.
-Your mail is read from the provider straight to your Mac and stored in a local
-database; nothing is relayed through anybody's infrastructure on the way.
-
-That is not a policy that could be changed in an update without you noticing —
-it is the reason the app is shaped as it is. There is no account to create, no
-service to sign in to, and no telemetry, so there is nothing to switch off.
-
-The [optional local model](/docs/local-model) is no exception: it runs on the
-Mac, reads a message there, and the only thing it produces is a card in your
-own local database. Nothing about the message is sent anywhere to build it.
+Two things Vicenda does **not** do today: it sends no mail of any kind, and it
+sends no unsubscribe. "Bin and unsubscribe" bins the mail in Vicenda and records
+your wish; the unsubscribe itself is not built yet. When it is, it will be a
+single request to the address the sender published for that purpose, sent only
+when you click or when a rule you taught says so.
 
 ## No pixel
 
 Opening an email is the one everyday act that reports itself. A tracking pixel
-is a one-pixel image on a sender's server: your client fetches it to draw the
-message, and the fetch itself says *this person opened it, at this time, from
-roughly here*.
+is a tiny image on a sender's server: a client that fetches it to draw the
+message tells the sender *this person opened it, at this time, from roughly
+here*.
 
-Vicenda does not make the request. Before a message is rendered, a rule list is
-compiled that blocks **every** remote resource, of every type, unconditionally.
-Not a filter list to tune — the reading tier has no legitimate remote fetch, so
-the correct rule is the total one and there is nothing to keep current.
+Vicenda does not make that request. Before a message is shown, every remote
+resource in it is blocked, of every type, unconditionally. If that block cannot
+be put in place, the message is shown as plain text instead, which cannot fetch
+anything. JavaScript in a message is off, and a link you click opens in your
+browser, not inside Vicenda.
 
-<Callout type="warning">
-  **It fails closed.** If that rule list cannot be compiled, Vicenda does not
-  render the HTML anyway — it falls back to the message's text, which cannot
-  fetch anything, and tells you why. A safety claim printed unconditionally but
-  enforced conditionally is worse than no claim, because you stop checking.
-</Callout>
+## Removing your data
 
-JavaScript is off at the configuration level, not by a preference something
-could relax. A link in a message opens in your browser rather than navigating
-inside the reader, so nothing can replace the message with a page that then
-looks like the message.
-
-## Sender pictures
-
-Vicenda can show a face beside a sender, and each source is a separate decision
-because each has a different cost.
-
-- **The Mac's address book** — local. The photo is one you already have and
-  nothing leaves the computer. On by default.
-- **The sending domain's logo** — fetched from the domain's own published brand
-  record, falling back to its favicon. It identifies a *company*, not a person,
-  and repeats across hundreds of messages. Off by default.
-- **Gravatar** — off, and it should stay off unless you want it. Asking a third
-  party about an address tells them that this Mac corresponds with that person.
-  It is a smaller leak than a tracking pixel — once per address, and to
-  Automattic rather than to the sender — but it is the same kind.
-
-## Demo Mode
-
-Demo Mode masks every identity at the point where the app reads its own data:
-names, addresses, monograms, labels and timestamps. It is there so the app can
-be shown, screenshotted or demonstrated without showing the mailbox.
-
-![The Unread view as it appears in Demo Mode: every sender name, address and subject on screen is invented at the render layer](/screenshot-unread.png)
-
-That image is Demo Mode, and so is every other screenshot on this site. There is
-no before-and-after here on purpose: the "before" would be somebody's real mail.
-
-It **fails closed**: anything it cannot positively identify as a vendor gets
-masked, rather than the other way round. And it masks the *pictures* too — a
-masked name over a real brand's logo is still that brand, and looks handled
-while leaking exactly what it claims to hide.
+Removing an account in Vicenda deletes its password from the Keychain and its
+mail from the local database, and changes nothing on the server. Deleting the `~/.vicenda-dump/` folder removes everything at once. A
+downloaded model stays in `~/Library/Application Support/Vicenda/Models`, and
+sender photos in the app's cache, until you delete them.
 
 ## Who is responsible
 
@@ -218,6 +105,10 @@ independent software developer in Italy, VAT number
 {`IT${config.legal.vatNumber}`}. Write to
 [privacy@undolog.com](mailto:privacy@undolog.com) about anything on this page.
 See also the [Legal notice](/docs/legal).
+
+Because Vicenda runs no server and has no accounts, the developer never receives
+your mail, your rules or your decisions, and has none of them to hand over, lose
+or sell.
 
 ## This website
 
@@ -229,9 +120,12 @@ See also the [Legal notice](/docs/legal).
 - **Your browser's local storage** remembers, in your browser only, that you
   closed the newsletter prompt. None of it is sent to us.
 - **Email.** If you write to us, we use your address and message only to answer
-  you, and keep them no longer than the conversation needs.
+  you, and keep them no longer than the exchange needs.
 - **GitHub.** The sponsor pictures at the bottom of every page are loaded from
-  GitHub, which therefore sees your IP address. Downloads also come from GitHub.
+  GitHub, which therefore sees your IP address. The app's model downloads also
+  come from GitHub.
+- **Pictures of the app.** The mail drawn on this site is invented: no sender,
+  subject or address on it belongs to anybody.
 - **Links.** The newsletter lives on Substack, sponsorships go through GitHub
   Sponsors and donations through Stripe. If you use them, their own privacy
   policies apply.
