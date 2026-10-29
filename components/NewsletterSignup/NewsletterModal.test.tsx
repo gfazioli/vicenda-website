@@ -1,6 +1,7 @@
 import { Profiler } from 'react';
 import { act, cleanup, fireEvent, render, screen, waitFor } from '@/test-utils';
-import { DISMISSED_KEY, NewsletterModal } from './NewsletterModal';
+import { NewsletterModal } from './NewsletterModal';
+import { DISMISSED_KEY, PROMPT_OPEN_ATTRIBUTE } from './prompt-open';
 
 /*
  * The prompt watches the scroll on every page of the site, so what it costs
@@ -51,6 +52,7 @@ describe('NewsletterModal', () => {
     // Unmounted while the doubles are still in place: its cleanup cancels a
     // frame the mock queued, which the real cancelAnimationFrame never issued.
     cleanup();
+    document.documentElement.removeAttribute(PROMPT_OPEN_ATTRIBUTE);
     jest.restoreAllMocks();
   });
 
@@ -100,6 +102,20 @@ describe('NewsletterModal', () => {
     render(<NewsletterModal />);
     runFrames();
     expect(isOpen()).toBe(true);
+  });
+
+  it('marks <html> while it is open, for the envelope, and clears the mark when it closes', () => {
+    // The envelope in the corner steps aside while the prompt is open
+    // (`Mascot/ScrollGuide`), and comes back once the mark has gone.
+    const marked = () => document.documentElement.getAttribute(PROMPT_OPEN_ATTRIBUTE);
+    render(<NewsletterModal />);
+    expect(marked()).toBeNull();
+    scrollTo(1300);
+    runFrames();
+    expect(isOpen()).toBe(true);
+    expect(marked()).toBe('open');
+    fireEvent.keyDown(screen.getByRole('dialog'), { key: 'Escape' });
+    expect(marked()).toBeNull();
   });
 
   it('remembers that the visitor closed it', () => {
