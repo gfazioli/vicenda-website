@@ -10,17 +10,10 @@
  * says what the app says.
  */
 
-import type { Account, FaceCard, ToolIcon } from '../MailCard/MailCard';
+import type { Account, DeckCard, FaceCard, Tray } from '../MailCard/MailCard';
 
 export const GF: Account = { monogram: 'GF', slot: 0 };
 export const JF: Account = { monogram: 'JF', slot: 3 };
-
-/** A card in the deck: only its bottom strip shows. */
-export interface DeckCard {
-  account: Account;
-  sender: string;
-  subject: string;
-}
 
 /** The top card: proposed for the Bin, and the one that goes there. */
 export const leaving: FaceCard = {
@@ -73,25 +66,29 @@ export const deck: DeckCard[] = [
  */
 export const more = '+7 in the hand';
 
-export interface Tray {
-  title: string;
-  /** The title on a phone, where a tray is a small tile. */
-  short?: string;
-  icon: ToolIcon;
-}
+/*
+ * The trays, for the hero's table and the Today section's legend. The
+ * sub-lines are the app's own (`Tray.sub` in `SortingModel.swift`), and only
+ * those that hold today: the app's Bin says "gone, recoverable for 30 days"
+ * and its unsubscribe tray "and no more of this kind", but no decision
+ * reaches a server yet (`reportDecisionsTravel` is false for every account,
+ * `Overview.swift`) and no unsubscribe is sent (`UnsubscribeSender` has no
+ * caller), so the site repeats neither. The table's trays are too small for
+ * a sub-line and draw none.
+ */
 
 /** On the left, what lets mail go (`Tray.letGo`). The Bin is first. */
 export const letGo: Tray[] = [
   { title: 'Bin', icon: 'bin' },
   { title: 'Bin and unsubscribe', short: 'Unsubscribe', icon: 'unsubscribe' },
-  { title: 'Later', icon: 'later' },
+  { title: 'Later', sub: 'back in the hand tomorrow', icon: 'later' },
 ];
 
 /** On the right, what keeps it: two labels the rules name, and To do. */
 export const keep: Tray[] = [
   { title: 'Invoices 2026', icon: 'archive' },
   { title: 'Travel', icon: 'archive' },
-  { title: 'To do', icon: 'todo' },
+  { title: 'To do', sub: 'keep it in front of me', icon: 'todo' },
 ];
 
 /** What the table says to a screen reader: it is a picture, and says of what. */

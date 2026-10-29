@@ -58,20 +58,17 @@
   }
 }
 
-.caption {
+/*
+ * The captions above the trays and the hand (`MailCard`'s `.caption`), each
+ * one fixed height, so the top card and the Bin start level and the trip
+ * between them is a length this sheet knows.
+ */
+.capRow {
   display: flex;
   align-items: flex-start;
   gap: rem(7px);
   height: var(--cap-h);
-  margin: 0;
-  padding-inline-start: rem(4px);
-  color: var(--vic-ground-caption);
-  font-size: rem(11px);
-  font-weight: 600;
-  letter-spacing: rem(1px);
   line-height: rem(16px);
-  text-transform: uppercase;
-  white-space: nowrap;
 }
 
 /* The New section's own colour, as its heading's mark in the app. */
@@ -96,99 +93,17 @@
   gap: var(--tray-gap);
 }
 
-/* ---- A tray (`TrayFace`): on the ground, dashed ------------------------ */
-
-.tray {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: rem(7px);
-  height: var(--tray-h);
-  padding: rem(8px) rem(10px) rem(8px) rem(12px);
-  border: 1px dashed var(--vic-hair-16);
-  border-radius: rem(14px);
-  background: rgb(255 255 255 / 5%);
-  font-size: rem(12.5px);
-  font-weight: 600;
-  line-height: 1.25;
-}
-
 /*
- * The proposal: a thin, steady ring in the accent, on the tray the top card's
- * first tool names. Drawn on a layer of its own so it can come and go by
- * opacity; at rest it is on the tray the NEXT card proposes.
+ * A tray (`MailCard`'s `TrayFace`) at the table's fixed height. At rest the
+ * proposal ring is on the tray the NEXT card proposes; the table's own class
+ * outranks the face's `opacity: 0`, whichever sheet loads last.
  */
-.tray::before,
-.tray::after {
-  position: absolute;
-  inset: -1px;
-  border-radius: inherit;
-  pointer-events: none;
-  content: '';
-  opacity: 0;
+.trayInTable {
+  height: var(--tray-h);
 }
 
-.tray::before {
-  border: 1.5px solid var(--vic-royal);
-}
-
-.ringArrives::before {
+.table .ringArrives::before {
   opacity: 1;
-}
-
-/* A card over the tray: brighter, with a plain solid edge. Off at rest. */
-.tray::after {
-  border: 1px solid var(--vic-hair-24);
-  background: rgb(255 255 255 / 13%);
-}
-
-/* Above the lit layer, which washes the tray rather than the words on it. */
-.trayIcon {
-  position: relative;
-  z-index: 1;
-  display: inline-flex;
-  flex: none;
-  color: var(--vic-ice);
-}
-
-.tray[data-icon='todo'] .trayIcon {
-  color: var(--vic-todo-ink);
-}
-
-/* It may take two lines: "Bin and unsubscribe" in a tray this narrow. */
-.trayTitle {
-  position: relative;
-  z-index: 1;
-  flex: 1;
-  overflow: hidden;
-  min-width: 0;
-}
-
-.short {
-  display: none;
-}
-
-/* The tally, as the app writes it: a small capsule of tabular figures. */
-.count {
-  position: relative;
-  z-index: 1;
-  display: inline-grid;
-  flex: none;
-  overflow: hidden;
-  min-width: rem(20px);
-  height: rem(17px);
-  padding-inline: rem(6px);
-  border-radius: 999px;
-  background: rgb(255 255 255 / 12%);
-  font-size: rem(11.5px);
-  font-variant-numeric: tabular-nums;
-  font-weight: 500;
-  line-height: rem(17px);
-  text-align: center;
-}
-
-.count > span {
-  grid-area: 1 / 1;
 }
 
 /* At rest the Bin holds one card: the 0 has gone up and out. */
@@ -286,42 +201,6 @@
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: var(--tile-gap);
-  }
-
-  /* A tile: the symbol and the tally on top, the name under them. */
-  .tray {
-    display: grid;
-    grid-template-columns: auto 1fr auto;
-    grid-template-rows: auto auto;
-    align-content: center;
-    row-gap: rem(4px);
-    column-gap: 0;
-    padding: rem(7px) rem(8px) rem(7px) rem(10px);
-    border-radius: rem(12px);
-    font-size: rem(12px);
-  }
-
-  .trayIcon {
-    grid-area: 1 / 1;
-  }
-
-  .count {
-    grid-area: 1 / 3;
-  }
-
-  .trayTitle {
-    display: block;
-    grid-area: 2 / 1 / 3 / 4;
-    white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-
-  .full {
-    display: none;
-  }
-
-  .short {
-    display: inline;
   }
 }
 
