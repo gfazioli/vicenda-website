@@ -1,6 +1,7 @@
 import { TextAnimate } from '@gfazioli/mantine-text-animate';
 import { IconArrowDown } from '@tabler/icons-react';
 import { Button, Container, Text, Title } from '@mantine/core';
+import { HeroGuide } from '../Mascot/HeroGuide';
 import { SortingTable } from '../SortingTable/SortingTable';
 import { HeroGrain } from './HeroGrain';
 import config from '@/config';
@@ -109,6 +110,9 @@ export function Hero() {
 
           <div className={classes.stage}>
             <SortingTable />
+            {/* The envelope, walking in along the table's bottom edge to
+                stand under the Bin (`components/Mascot`). */}
+            <HeroGuide />
           </div>
         </div>
       </Container>

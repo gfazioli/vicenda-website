@@ -84,7 +84,10 @@
   }
 }
 
+/* `position`, because the envelope (`components/Mascot`) stands under the
+   table, in the box `HeroGuide` lays over it. */
 .stage {
+  position: relative;
   width: 100%;
   max-width: rem(760px);
   justify-self: center;
