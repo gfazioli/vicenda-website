@@ -39,17 +39,19 @@ export const metadata = config.metadata;
  * Garamond's condensed proportion actually lives — see `.display-hero`.
  *
  * TWO CALLS, AND ONLY THE UPRIGHT ONE PRELOADED. One call with both styles
- * preloaded the italic's file on every page, and the italic is drawn only by
- * the home page's closing line, far below the fold. Chrome's render-blocking
- * fonts hold the first paint for a preloaded font the page is loading, and a
- * font no text above the fold asks for never settles: the paint waited for a
- * timeout instead, about 1.1 s after the preload turned render-blocking.
- * Measured 2026-10-29 in Lighthouse traces of /docs/privacy, main and branch
- * alike: the upright file landed at 1.83 s and the first paint at 2.68 s, in
- * 2 of 3 runs on main and 1 of 3 on the branch; the paint lands at 1.69 s when
- * it wins the race. Both calls name the same variable, so `.display` is one
- * family with an upright and an italic face, as lancetta.app's layout does it;
- * the italic is fetched when the closing line asks for it.
+ * preloaded the italic's file on every page (47 KB), and the italic is drawn
+ * only by the home page's closing line, far below the fold. Both calls name
+ * the same variable, so `.display` is one family with an upright and an
+ * italic face, as lancetta.app's layout does it; the italic is fetched when
+ * the closing line asks for it.
+ *
+ * What this does NOT fix, measured 2026-10-29 in Lighthouse traces of
+ * /docs/privacy with Chrome's RenderBlockingFonts on: in some runs the first
+ * paint is presented at about 2.67 s instead of about 1.6 s, with the main
+ * thread idle in between. It happened on main (4 of 6 runs), with this split
+ * (2 of 4), and with no font preloaded at all (2 of 5), so it is Chrome's race
+ * around fonts loading before the first frame, not a font this site preloads.
+ * With the feature off, every run paints early on both.
  */
 const display = EB_Garamond({
   subsets: ['latin'],
