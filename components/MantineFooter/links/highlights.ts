@@ -1,3 +1,5 @@
+import { COFFEE_URL, SPONSOR_URL } from '../../Support/support';
+
 export const highlights = [
   {
     key: 'release-notes',
@@ -7,13 +9,13 @@ export const highlights = [
   {
     key: 'sponsor',
     title: 'Sponsor',
-    href: 'https://github.com/sponsors/gfazioli?o=esb',
+    href: `${SPONSOR_URL}?o=esb`,
     newWindow: true,
   },
   {
     key: 'buy-me-a-coffee',
     title: 'Buy me a coffee',
-    href: 'https://donate.stripe.com/fZu4gy4Tn3b1dgudGx0co00',
+    href: COFFEE_URL,
     newWindow: true,
   },
 ];

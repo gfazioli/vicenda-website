@@ -1,5 +1,6 @@
 'use client';
 
+import { COFFEE_INK, COFFEE_URL, SPONSOR_URL } from '../Support/support';
 import {
   IconBrandDiscordFilled,
   IconBrandGithubFilled,
@@ -94,7 +95,7 @@ export const MantineFooter = ({ year }: { year: number }) => {
                   Discord
                 </Anchor>{' '}
                 or{' '}
-                <Anchor fz={13} href="https://github.com/sponsors/gfazioli">
+                <Anchor fz={13} href={SPONSOR_URL}>
                   sponsor the project
                 </Anchor>
                 .
@@ -197,7 +198,7 @@ export const MantineFooter = ({ year }: { year: number }) => {
                 </Anchor>
               ))}
               <Anchor
-                href="https://github.com/sponsors/gfazioli"
+                href={SPONSOR_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 underline="never"
@@ -215,7 +216,7 @@ export const MantineFooter = ({ year }: { year: number }) => {
             <Group gap="sm" justify="center">
               <Button
                 component="a"
-                href="https://github.com/sponsors/gfazioli"
+                href={SPONSOR_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 variant="gradient"
@@ -229,7 +230,7 @@ export const MantineFooter = ({ year }: { year: number }) => {
               </Button>
               <Button
                 component="a"
-                href="https://donate.stripe.com/fZu4gy4Tn3b1dgudGx0co00"
+                href={COFFEE_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 variant="filled"
@@ -239,8 +240,8 @@ export const MantineFooter = ({ year }: { year: number }) => {
                 // Dark ink on the yellow, not white: white on yellow-6 measured
                 // 1.9:1; this is about 8:1.
                 styles={{
-                  label: { color: '#3b2600' },
-                  section: { color: '#3b2600' },
+                  label: { color: COFFEE_INK },
+                  section: { color: COFFEE_INK },
                 }}
               >
                 Buy me a coffee

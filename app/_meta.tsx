@@ -1,5 +1,6 @@
 import { Group } from '@mantine/core';
 import { IconBrandDiscordFilled, IconCoffee, IconHeartFilled } from '@tabler/icons-react';
+import { COFFEE_URL, SPONSOR_URL } from '@/components/Support/support';
 import config from '@/config';
 
 export default {
@@ -67,7 +68,7 @@ export default {
             Sponsor
           </Group>
         ),
-        href: 'https://github.com/sponsors/gfazioli',
+        href: SPONSOR_URL,
       },
       // External donation link; no ↗, for the same reason as the sponsor's.
       coffee: {
@@ -77,7 +78,7 @@ export default {
             Buy me a coffee
           </Group>
         ),
-        href: 'https://donate.stripe.com/fZu4gy4Tn3b1dgudGx0co00',
+        href: COFFEE_URL,
       },
     },
   },

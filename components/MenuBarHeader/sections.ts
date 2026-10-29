@@ -4,11 +4,7 @@
  * because a link to an anchor that does not exist scrolls nowhere and nothing
  * reports it. It is also the list the bar's scroll spy walks.
  */
-export const productSections = [
-  { id: 'overview', label: 'Overview' },
-  { id: 'how-it-works', label: 'How it works' },
-  { id: 'faq', label: 'FAQ' },
-] as const;
+export const productSections = [{ id: 'overview' }, { id: 'how-it-works' }, { id: 'faq' }] as const;
 
 export type ProductSectionId = (typeof productSections)[number]['id'];
 
@@ -18,15 +14,21 @@ export type ProductSectionId = (typeof productSections)[number]['id'];
  * not `#faq`), because the bar is on every page and a bare fragment from
  * inside the docs scrolls nowhere.
  *
- * Privacy is the policy page for now; the home page's "On your Mac" section
- * comes with the next step of the rewrite.
+ * Privacy is the policy itself: the home page's "On your Mac" says the gist,
+ * the policy says all of it.
  */
+const toSection = (section: ProductSectionId, label: string) => ({
+  section,
+  href: `/#${section}`,
+  label,
+});
+
 export const menus: { section: ProductSectionId | null; href: string; label: string }[] = [
-  { section: 'overview', href: '/#overview', label: 'Overview' },
-  { section: 'how-it-works', href: '/#how-it-works', label: 'How it works' },
+  toSection('overview', 'Overview'),
+  toSection('how-it-works', 'How it works'),
   { section: null, href: '/docs/privacy', label: 'Privacy' },
   { section: null, href: '/docs', label: 'Docs' },
-  { section: 'faq', href: '/#faq', label: 'FAQ' },
+  toSection('faq', 'FAQ'),
 ];
 
 /**
