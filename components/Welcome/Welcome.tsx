@@ -17,7 +17,8 @@ import { Hero } from './Hero';
  * section scrolls in, and the two `TextAnimate` lines (`Hero.tsx` has the two
  * lessons that animation taught: `trigger="inView"`, and `inherit`). A
  * marketing page is not an app, but it is somebody's battery, and the brand is
- * restraint.
+ * restraint. The envelope (`components/Mascot`) walks only on its way in and
+ * while the page scrolls under it; standing, it blinks once and is still.
  */
 export function Welcome() {
   return (

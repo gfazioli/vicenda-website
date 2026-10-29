@@ -32,6 +32,16 @@ describe('the envelope under the table', () => {
   });
 });
 
+describe('the envelope in the corner', () => {
+  it('rides above the hero’s table, whose cards stack up to z-index 30', () => {
+    // The corner is z-index 10, under the bar and every overlay; the table
+    // keeps its cards' stacking to itself, or they cover the envelope.
+    expect(cssValue(cssBlock(css, '\n.corner {'), 'z-index')).toBe('10');
+    const hero = readFileSync(join(__dirname, '../Welcome/Hero.module.css'), 'utf8');
+    expect(cssValue(cssBlock(hero, '\n.stage {'), 'isolation')).toBe('isolate');
+  });
+});
+
 describe('the Support card bubble on a phone', () => {
   // On a phone the bubble hangs from its bottom, so a line that wraps to more
   // rows grows up into the room above the card instead of down over the
