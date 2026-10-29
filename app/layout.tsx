@@ -37,13 +37,35 @@ export const metadata = config.metadata;
  *
  * The hero line takes a slight horizontal scale in CSS, which is where Apple
  * Garamond's condensed proportion actually lives — see `.display-hero`.
+ *
+ * TWO CALLS, AND ONLY THE UPRIGHT ONE PRELOADED. One call with both styles
+ * preloaded the italic's file on every page, and the italic is drawn only by
+ * the home page's closing line, far below the fold. Chrome's render-blocking
+ * fonts hold the first paint for a preloaded font the page is loading, and a
+ * font no text above the fold asks for never settles: the paint waited for a
+ * timeout instead, about 1.1 s after the preload turned render-blocking.
+ * Measured 2026-10-29 in Lighthouse traces of /docs/privacy, main and branch
+ * alike: the upright file landed at 1.83 s and the first paint at 2.68 s, in
+ * 2 of 3 runs on main and 1 of 3 on the branch; the paint lands at 1.69 s when
+ * it wins the race. Both calls name the same variable, so `.display` is one
+ * family with an upright and an italic face, as lancetta.app's layout does it;
+ * the italic is fetched when the closing line asks for it.
  */
 const display = EB_Garamond({
   subsets: ['latin'],
   weight: ['400', '500', '600'],
-  style: ['normal', 'italic'],
+  style: 'normal',
   variable: '--font-display',
   display: 'swap',
+});
+
+const displayItalic = EB_Garamond({
+  subsets: ['latin'],
+  weight: ['400'],
+  style: 'italic',
+  variable: '--font-display',
+  display: 'swap',
+  preload: false,
 });
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -61,7 +83,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       lang="en"
       dir="ltr"
       data-scroll-behavior="smooth"
-      className={display.variable}
+      className={`${display.variable} ${displayItalic.variable}`}
       {...mantineHtmlProps}
     >
       <Head>
