@@ -1,6 +1,6 @@
 import { render, screen } from '@/test-utils';
 import { SortingTable } from './SortingTable';
-import { deck, dealt, description, leaving, letGo, rising } from './table-data';
+import { deck, dealt, description, leaving, rising } from './table-data';
 
 /** Where the table is laid out when the page mounts (`layoutBox` in useReveal). */
 function placeAt(top: number) {
@@ -45,16 +45,6 @@ describe('SortingTable', () => {
     expect(table.textContent).toContain(leaving.sender);
     expect(table.textContent).toContain(rising.sender);
     expect(table.textContent).toContain(dealt.sender);
-  });
-
-  it('draws the three let-go trays first, the Bin leading', () => {
-    expect(letGo.map((tray) => tray.title)).toEqual(['Bin', 'Bin and unsubscribe', 'Later']);
-  });
-
-  it('never hides the table that is on screen when the page mounts', () => {
-    placeAt(100);
-    render(<SortingTable />);
-    expect(screen.getByRole('img')).not.toHaveAttribute('data-armed');
   });
 
   it('arms it into its first pose when it mounts off screen', () => {

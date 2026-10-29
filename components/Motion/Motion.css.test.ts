@@ -11,35 +11,10 @@ import { join } from 'node:path';
  */
 const css = readFileSync(join(__dirname, 'Motion.module.css'), 'utf8');
 
-/** The text between the braces that follow `header`, which must occur once. */
-function body(header: string) {
-  const at = css.indexOf(header);
-  if (at < 0 || css.indexOf(header, at + 1) >= 0) {
-    throw new Error(`expected exactly one ${JSON.stringify(header)}`);
-  }
-  const open = css.indexOf('{', at + header.length - 1);
-  let depth = 0;
-  for (let i = open; i < css.length; i += 1) {
-    if (css[i] === '{') {
-      depth += 1;
-    } else if (css[i] === '}') {
-      depth -= 1;
-      if (depth === 0) {
-        return css.slice(open + 1, i);
-      }
-    }
-  }
-  throw new Error(`unclosed ${header}`);
-}
+import { cssBlock, cssValue } from '@/test-utils/css';
 
-/** One declaration's value in a block, e.g. `transform`. */
-function value(block: string, property: string) {
-  const match = block.match(new RegExp(`(?:^|[\\s;{])${property}:\\s*([^;]+);`));
-  if (!match) {
-    throw new Error(`no ${property} in ${block}`);
-  }
-  return match[1].trim();
-}
+const body = (header: string) => cssBlock(css, header);
+const value = cssValue;
 
 const ENTRANCES = [
   'reveal-fade',
