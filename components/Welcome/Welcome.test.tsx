@@ -34,6 +34,25 @@ describe('Welcome component', () => {
     expect(marked).toEqual(Object.keys(SECTION_LINES));
   });
 
+  it('labels each section’s lines with the eyebrow the reader sees above it', () => {
+    // The envelope's bubble names the section it speaks for; an eyebrow edited
+    // on the page must take the label with it. The FAQ's band has a title,
+    // not an eyebrow.
+    const { container } = render(<Welcome />);
+    const pairs = [...container.querySelectorAll(`[${SECTION_ATTRIBUTE}]`)]
+      .map((band) => [band.getAttribute(SECTION_ATTRIBUTE), band] as const)
+      .filter(([section]) => section !== 'faq')
+      .map(([section, band]) => [
+        section,
+        band.querySelector('.eyebrow')?.textContent,
+        SECTION_LINES[section as keyof typeof SECTION_LINES].label,
+      ]);
+    expect(pairs).toHaveLength(Object.keys(SECTION_LINES).length - 1);
+    for (const [section, eyebrow, label] of pairs) {
+      expect([section, eyebrow]).toEqual([section, label]);
+    }
+  });
+
   it('sends "See how it works" to the section under the hero', () => {
     render(<Welcome />);
     expect(screen.getByRole('link', { name: /see how it works/i })).toHaveAttribute(

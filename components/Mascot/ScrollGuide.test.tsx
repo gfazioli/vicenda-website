@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen } from '@/test-utils';
-import { dismissGuide, guideMemory } from './guide';
-import { DELAY_MS, WAKE_MS } from './HeroGuide';
+import { dismissGuide, guideMemory, sectionInView } from './guide';
+import { DELAY_MS, SNIFF_MS } from './HeroGuide';
 import { MORNING, SECTION_ATTRIBUTE, SECTION_LINES } from './lines';
 import {
   CARD_IN_MS,
@@ -8,7 +8,6 @@ import {
   HERO_FOLD_MS,
   LEAVE_MS,
   ScrollGuide,
-  sectionInView,
   SPONSOR_LINE,
   STILL_MS,
 } from './ScrollGuide';
@@ -182,7 +181,7 @@ describe('ScrollGuide', () => {
     rowOnScreen();
     wait(CORNER_IN_MS);
     expect(screen.queryByText(first)).toBeNull();
-    wait(WAKE_MS);
+    wait(SNIFF_MS);
     expect(screen.getByText(first)).toBeInTheDocument();
     expect(screen.getByText(MORNING.label)).toBeInTheDocument();
     // Arrived on its own, so a screen reader is not interrupted by it.
@@ -202,7 +201,7 @@ describe('ScrollGuide', () => {
     wait(CORNER_IN_MS);
     fireEvent.click(envelope()!);
     expect(screen.getByText(first)).toBeInTheDocument();
-    wait(WAKE_MS);
+    wait(SNIFF_MS);
     expect(screen.getByText(first)).toBeInTheDocument();
     expect(screen.queryByText(second)).toBeNull();
     wait(HERO_FOLD_MS);
@@ -214,7 +213,7 @@ describe('ScrollGuide', () => {
     render(<Page />);
     wait(DELAY_MS);
     rowOnScreen();
-    wait(CORNER_IN_MS + WAKE_MS);
+    wait(CORNER_IN_MS + SNIFF_MS);
     expect(screen.getByText(first)).toBeInTheDocument();
     rowPassed();
     expect(screen.queryByText(first)).toBeNull();

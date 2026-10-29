@@ -1,3 +1,5 @@
+import { type GuideSection, SECTION_ATTRIBUTE, SECTION_LINES } from './lines';
+
 /**
  * What the envelope remembers, for the life of the page. It is one character
  * in three places -- under the hero's sorting table (`HeroGuide`), in the
@@ -41,4 +43,25 @@ export function onGuideDismissed(listener: () => void) {
   return () => {
     dismissedListeners.delete(listener);
   };
+}
+
+/**
+ * The section the reader is in: the last one whose top has come up past the
+ * middle of the window, read when the reader asks rather than watched, since
+ * only a click needs it. None above the first: the hero, whose words are the
+ * morning's.
+ */
+export function sectionInView(): GuideSection | null {
+  const middle = window.innerHeight / 2;
+  let found: GuideSection | null = null;
+  for (const el of document.querySelectorAll<HTMLElement>(`[${SECTION_ATTRIBUTE}]`)) {
+    if (el.getBoundingClientRect().top > middle) {
+      break;
+    }
+    const name = el.getAttribute(SECTION_ATTRIBUTE);
+    if (name && name in SECTION_LINES) {
+      found = name as GuideSection;
+    }
+  }
+  return found;
 }

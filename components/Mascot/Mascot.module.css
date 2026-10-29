@@ -110,7 +110,8 @@
   cursor: pointer;
   /* The navy outline sits on the hero's night: a glow in the sun's own gold
      separates it better than a drop shadow could. */
-  filter: drop-shadow(0 0 6px rgb(255 194 74 / 26%)) drop-shadow(0 3px 4px rgb(0 0 0 / 45%));
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--vic-sun) 26%, transparent))
+    drop-shadow(0 3px 4px rgb(0 0 0 / 45%));
 }
 
 .walker:focus-visible {
@@ -134,12 +135,12 @@
 
 /* One hop and one blink on arrival, and again with every new line, then
    still. Every effect here ends. */
-.hint[data-phase='waking'] .sprite,
+.hint[data-phase='sniffing'] .sprite,
 .hint[data-phase='pointing'] .sprite {
   animation: hop 420ms ease-out 1;
 }
 
-.hint[data-phase='waking'] .blink,
+.hint[data-phase='sniffing'] .blink,
 .hint[data-phase='pointing'] .blink {
   animation: blink 170ms steps(1) 160ms 1;
 }
@@ -236,7 +237,7 @@
   border-radius: rem(12px);
   background: var(--vic-card);
   box-shadow:
-    0 0 0 1px rgb(255 194 74 / 38%),
+    0 0 0 1px color-mix(in srgb, var(--vic-sun) 38%, transparent),
     0 12px 28px -10px rgb(0 0 0 / 55%);
   animation: pop 220ms ease-out both;
 }
@@ -247,8 +248,8 @@
   left: rem(-5px);
   width: rem(10px);
   height: rem(10px);
-  border-bottom: 1px solid rgb(255 194 74 / 38%);
-  border-left: 1px solid rgb(255 194 74 / 38%);
+  border-bottom: 1px solid color-mix(in srgb, var(--vic-sun) 38%, transparent);
+  border-left: 1px solid color-mix(in srgb, var(--vic-sun) 38%, transparent);
   background: var(--vic-card);
   content: '';
   transform: rotate(45deg);
@@ -261,7 +262,8 @@
   }
 }
 
-/* What it says, and Next under it. */
+/* What it says, and Next under it. `text-align` kept from netfox.app, whose
+   hero is centred: nothing around it here is, but it keeps the sheets alike. */
 .say {
   display: flex;
   flex-direction: column;
@@ -289,8 +291,9 @@
   }
 }
 
-/* Whose line it is: the morning's, or the section's, in the page's eyebrow
-   type. Where netfox.app's fox shows the machine speak it translates. */
+/* Whose line it is, the morning's or a section's: a small caption in capitals,
+   in the sun's gold, above the line. Where netfox.app's fox shows the machine
+   speak it translates. */
 .label {
   color: var(--vic-sun);
   font-size: rem(10.5px);
@@ -460,7 +463,7 @@
   border-radius: rem(12px);
   background: var(--vic-card);
   box-shadow:
-    0 0 0 1px rgb(255 194 74 / 38%),
+    0 0 0 1px color-mix(in srgb, var(--vic-sun) 38%, transparent),
     0 12px 28px -10px rgb(0 0 0 / 55%);
   animation: pop-up 220ms ease-out both;
   transform-origin: bottom right;
@@ -472,8 +475,8 @@
   bottom: rem(-5px);
   width: rem(10px);
   height: rem(10px);
-  border-right: 1px solid rgb(255 194 74 / 38%);
-  border-bottom: 1px solid rgb(255 194 74 / 38%);
+  border-right: 1px solid color-mix(in srgb, var(--vic-sun) 38%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, var(--vic-sun) 38%, transparent);
   background: var(--vic-card);
   content: '';
   transform: rotate(45deg);
@@ -506,7 +509,8 @@
 .sitter {
   position: relative;
   display: block;
-  filter: drop-shadow(0 0 6px rgb(255 194 74 / 26%)) drop-shadow(0 3px 4px rgb(0 0 0 / 45%));
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--vic-sun) 26%, transparent))
+    drop-shadow(0 3px 4px rgb(0 0 0 / 45%));
 }
 
 .card[data-phase='arriving'] .sitter {
@@ -533,7 +537,7 @@
   border-radius: rem(12px);
   background: var(--vic-card);
   box-shadow:
-    0 0 0 1px rgb(255 194 74 / 38%),
+    0 0 0 1px color-mix(in srgb, var(--vic-sun) 38%, transparent),
     0 12px 28px -10px rgb(0 0 0 / 55%);
   animation: pop-up 220ms ease-out both;
   transform-origin: top right;
@@ -545,8 +549,8 @@
   right: rem(-5px);
   width: rem(10px);
   height: rem(10px);
-  border-top: 1px solid rgb(255 194 74 / 38%);
-  border-right: 1px solid rgb(255 194 74 / 38%);
+  border-top: 1px solid color-mix(in srgb, var(--vic-sun) 38%, transparent);
+  border-right: 1px solid color-mix(in srgb, var(--vic-sun) 38%, transparent);
   background: var(--vic-card);
   content: '';
   transform: rotate(45deg);
