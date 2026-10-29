@@ -5,11 +5,13 @@
  * the sponsor wall as a card whose edges do the separating; the colophon and
  * sharing on one line.
  *
- * The site is dark only: "deeper" is #0b0c0e under the dark-9 page, the
- * card is white at 4% and every edge white at 10%.
+ * The site is dark only: "deeper" is the night ground (`--vic-ground`,
+ * #09112F) taken a step toward black, so the footer stays the app's navy
+ * rather than turning grey; the card is white at 4% and every edge white
+ * at 10%.
  */
 .contentFooter {
-  --vi-footer: #0b0c0e;
+  --vi-footer: #050b22;
   --vi-card: rgb(255 255 255 / 4%);
   --vi-rule: rgb(255 255 255 / 10%);
 

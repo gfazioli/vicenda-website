@@ -80,8 +80,8 @@ export const MantineFooter = ({ year }: { year: number }) => {
             <Stack gap="sm">
               <Logo size={44} />
               <Text fz={13} c="dimmed" maw={340} lh={1.6}>
-                Vicenda is a native macOS mail client shaped like a conversation — machines get
-                channels, people get threads, and nothing leaves your Mac. Built by{' '}
+                Vicenda turns a morning of mail into a few decisions, sorted by kind with rules it
+                learns as you go, and all of it on your Mac. Built by{' '}
                 <Anchor fz={13} href="https://gfazioli.github.io/">
                   Undolog
                 </Anchor>

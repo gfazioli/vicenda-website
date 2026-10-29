@@ -4,7 +4,7 @@ The site at vicenda.app: the landing page, the docs and the download for Vicenda
 
 **No beta wording anywhere**: the closed beta was dropped; Vicenda is a free public download that updates itself.
 
-**No download link on the site until the next version** (owner, 2026-10-29): the app is being rebuilt as a morning report, and 0.3.0 is the old mail client. `/download`, `public/appcast.xml` and the `models-v1` release stay up: installed copies poll the feed, and the app downloads its local model from that release. The full rewrite of copy and design follows; the Content Guidelines below describe the old app until then.
+**No download link on the site until the next version** (owner, 2026-10-29): the app is being rebuilt as a morning report, and 0.3.0 is the old mail client. `/download`, `public/appcast.xml` and the `models-v1` release stay up: installed copies poll the feed, and the app downloads its local model from that release. The home page, the FAQ and the privacy policy describe the morning report (#43); the docs pages still describe the old app until their rewrite.
 
 ## Code and config
 
@@ -15,18 +15,17 @@ The site at vicenda.app: the landing page, the docs and the download for Vicenda
 
 ## Content Guidelines
 
-- All website content is in **English**
-- The app is described as: "A native macOS mail client shaped like a conversation"
-- **The thesis is about SHAPE, not about sorting.** Every mail client claims it
-  sorts better; Vicenda's difference sits upstream of that — it stops treating
-  mail as a list. Machines become channels, people become threads, and a
-  recognised machine message is drawn as a card instead of rendered as
-  somebody's HTML. That is checkable in one screenshot, which is why it is the
-  pitch.
-- **Only describe what the app ships**, and check the app's code rather than this list. Built: the stream, the embed cards and their identity gate, Gmail read+write, the IMAP tier, the block-everything reader, one hue per account, and the first-run wizard (consent over the app with no browser; IMAP credentials proved before an account is written). NOT built, and not to appear anywhere: sending, archive and delete over IMAP, the notch, the menu bar.
-- **Download links go to `/download`**, never to a versioned asset URL. The
-  route resolves the newest `.dmg` at request time, so nothing on this site
-  carries a version number that can go stale.
+- All website content is in **English**.
+- **What Vicenda is**: a morning report for mail, on the Mac. "Vicenda turns a morning of mail into a few decisions." It is **not a mail client**: it reads and sorts, writes and sends nothing. Never call it a client, an inbox, or "shaped like a conversation" (the old app).
+- **The thesis is the decision count.** Mail is messages, not conversations: in the owner's own mail about 97% comes from machines and fewer than one message a day needs a reply. Vicenda sorts by KIND (a sender plus what it sends: bulk or transactional, and a subject fragment for the latter), learns a rule from each "from now on", and lays the morning out as To do, In brief, New and Already decided, with the Overview beside them. Say the owner's figures as his own mail, never as a statistic about everyone's.
+- **The site speaks to anyone**: Vicenda is a personal project, free.
+- **No download link anywhere until the next version** (above), and no version number in copy.
+- **No cloud AI**: never name Claude or any cloud AI, and never imply one. The model runs on the Mac: Apple Intelligence on macOS 26, or a model downloaded once from Settings (the sizes are in the app's `ModelCatalog.swift`).
+- **Only describe what the app's code does**, and check the code (the app repo, `VicendaCore/Report/*`, `Vicenda/Shell/*`), never this list or the brief alone. As of the rewrite (Vicenda `feat/report-core`):
+  - **Built**: every account over IMAP with TLS (Gmail with an app password and 2-Step Verification); one report for every account, a hue and a monogram per account, the Together / By account switch; the sorting table (drag, buttons, Later until 08:00 the next day); In brief lines; New kinds with "from now on", the coverage line and this account / every account; Already decided batches with senders left out and one confirmation, never a starred message; the Overview's six cards; the model on the device; the reader that blocks every remote resource; Gravatar, off by default; the update check, which can be turned off.
+  - **Not built, and not to be described as working**: any decision reaching the server (every account is "local only for now": binning is a record in Vicenda, the mailbox is untouched); sending any unsubscribe (the "Bin and unsubscribe" tray records the wish); composing, replying or sending mail; a 30-day Trash of Vicenda's own.
+  - **Say it honestly or leave it out**: decisions are recorded in Vicenda, and carrying them to the server is still to come.
+- **Pictures of the app use invented data only**: the homepage's diagrams are HTML with made-up senders on `.example` domains, and any future screenshot is shot in Demo Mode.
 
 ### No infrastructure leaks in user-facing copy
 

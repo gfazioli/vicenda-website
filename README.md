@@ -1,9 +1,9 @@
 <h1 align="center">Vicenda</h1>
 
 <p align="center">
-  <strong>Your mail is not a list.</strong><br/>
-  A native macOS mail client shaped like a conversation. The machines that write to you
-  get channels, the people get threads, and nothing ever leaves your Mac.
+  <strong>Stop noticing your email.</strong><br/>
+  A Mac app that turns a morning of mail into a few decisions. It sorts every account
+  by kind, with rules it learns as you go, and runs entirely on your Mac.
 </p>
 
 <p align="center">
@@ -27,8 +27,9 @@ private.
 
 It also serves the **Sparkle appcast** at
 [`/appcast.xml`](https://vicenda.app/appcast.xml), which every installed copy
-polls for updates, and the release `.dmg` files from this repository's GitHub
-Releases.
+polls for updates, and the release `.dmg` files and the local model
+(`models-v1`) from this repository's GitHub Releases. The site links no
+download until the next version (`AGENTS.md`).
 
 `/download` resolves the newest `.dmg` from the Releases API at request time,
 exactly as the two sibling sites do, so the public URL carries no version and
@@ -43,39 +44,15 @@ ship a fix without emailing everybody a new link.
 
 ## What Vicenda is
 
-A reading and triage tool first; composing is secondary and sending is not
-built yet. It exists because seven mailboxes across Gmail, a PEC and a work
-account had no client that could answer four questions at a glance:
+A **morning report for mail**, not a mail client. It reads every account over
+IMAP, sorts the mail by kind with rules it learns as you go, and lays the
+morning out as four sections (To do, In brief, New, Already decided) with an
+Overview beside them. Its model runs on the Mac. It exists because seven
+mailboxes, where about 97% of the mail comes from machines, needed a few
+decisions a morning rather than a client.
 
-1. which of the accounts did this land in
-2. what needs a reply, as against what is bulk
-3. how to stay fast across all of them
-4. how to keep one taxonomy across providers
-
-**What is built today** — the site may describe these, and nothing else:
-
-- **A stream, not an inbox.** Machine senders become channels; people become
-  conversations. An account rail filters rather than navigates.
-- **Recognised machine mail becomes a card.** Twelve rules across five provider
-  packs bind named fields — an amount, a card, an item, an order — and draw
-  them. If a mandatory field cannot be bound the rule declines and the message
-  stays mail: a half-filled card looks authoritative, which is worse than none.
-- **The identity gate.** A card is allowed to look authoritative only when the
-  receiving server vouched for the sender. Otherwise it renders dashed, prints
-  the raw `From` in full and carries **no buttons at all**.
-- **Gmail, read and write.** History sync, arrival ingestion, read-state
-  alignment, archive and trash through a queue that survives a silent revert.
-- **IMAP**, per-folder cursors and arrival ingestion, with writes limited to
-  `UID STORE ±FLAGS.SILENT (\Seen)` and an intention log so a local read is not
-  reverted by a server that was never told.
-- **The reader blocks everything remote** before the first pixel, so opening a
-  message does not tell the sender you opened it. If the blocker cannot arm,
-  the HTML is withheld rather than shown — it fails closed.
-- **Colour means one thing.** Eight account hues at a single lightness and
-  chroma; nothing else in the app may spend hue.
-
-**Not built** — do not put these on the site: in-app OAuth consent, sending,
-archive and delete over IMAP, the notch, the menu bar.
+What the site may say about it, and what it may not, is in `AGENTS.md`
+(Content Guidelines): only what the app's code does today.
 
 ## Design decisions worth not re-deriving
 
@@ -90,23 +67,15 @@ where the line wraps and a scaled wrap would read as a rendering fault.
 
 **The colours are the app's, computed rather than picked.** The eight account
 hues in `theme.ts` come from `Palette.swift` — OKLCH `L=0.72, C=0.13`, 45° apart
-— and the chrome ramp from `Tokens.swift`. That is deliberate: a palette
-invented here would disagree with every screenshot placed on top of it.
+— and so do the logo's night ground, its blues and the six section colours, as
+`--vic-*` tokens in `theme/global.css`. That is deliberate: a palette invented
+here would disagree with every picture of the app placed on top of it.
 
 **A server component may not hand a function to a Mantine client component.**
 `component={Link}` fails at *prerender*, not at typecheck, with an unhelpful
 "element type is invalid". The template's precedent is a thin server page
 exporting `metadata` and delegating to a `'use client'` component — see
 `app/page.tsx` and `components/Welcome/Welcome.tsx`.
-
-## Still inherited from FinderGit
-
-This site was bootstrapped verbatim from `findergit-website` so the re-skin
-would read as a diff. These have not been dealt with yet:
-
-- every page under `app/docs/` still documents FinderGit
-- `app/api/ai-commit/` is FinderGit's proxy and has no business here
-- `public/` still carries FinderGit's icons, screenshots and OG images
 
 ## Local development
 
