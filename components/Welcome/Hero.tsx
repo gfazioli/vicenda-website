@@ -1,10 +1,8 @@
-'use client';
-
-import { Scene } from '@gfazioli/mantine-scene';
 import { TextAnimate } from '@gfazioli/mantine-text-animate';
 import { IconArrowDown } from '@tabler/icons-react';
 import { Button, Container, Text, Title } from '@mantine/core';
 import { SortingTable } from '../SortingTable/SortingTable';
+import { HeroGrain } from './HeroGrain';
 import config from '@/config';
 import classes from './Hero.module.css';
 
@@ -65,9 +63,7 @@ const floor = config.app.minMacOS.replace(/\.0$/, '');
 export function Hero() {
   return (
     <section id="overview" className={classes.hero} aria-labelledby="hero-title">
-      <Scene reducedMotion="auto">
-        <Scene.Noise opacity={0.03} grain={0.8} octaves={2} />
-      </Scene>
+      <HeroGrain />
 
       <Container size="xl" className={classes.inner}>
         <div className={classes.grid}>

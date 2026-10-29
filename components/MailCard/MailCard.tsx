@@ -8,7 +8,7 @@ import {
   IconMoon,
   IconTrash,
 } from '@tabler/icons-react';
-import { ACCOUNT_INK, ACCOUNT_RING } from '@/theme';
+import { ACCOUNT_INK, ACCOUNT_RING } from '@/theme/ring';
 import classes from './MailCard.module.css';
 
 /**

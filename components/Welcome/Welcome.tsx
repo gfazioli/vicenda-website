@@ -1,5 +1,3 @@
-'use client';
-
 import { TextAnimate } from '@gfazioli/mantine-text-animate';
 import { Box, Container, Stack, Title } from '@mantine/core';
 import { DiscordCallToAction } from '../Discord/DiscordCallToAction';

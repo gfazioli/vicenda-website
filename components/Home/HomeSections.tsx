@@ -1,5 +1,3 @@
-'use client';
-
 import { type ComponentType, Fragment, type ReactNode } from 'react';
 import {
   IconArchiveOff,
@@ -12,15 +10,8 @@ import { Container, SimpleGrid, Stack, Text, Title } from '@mantine/core';
 import { Reveal } from '../Motion/Reveal';
 import { SectionHeading } from '../SectionHeading/SectionHeading';
 import { SectionRule } from '../SectionRule/SectionRule';
-import {
-  AccountList,
-  BriefList,
-  DecidedBatches,
-  MailShare,
-  NewRule,
-  OverviewCards,
-  TrayLegend,
-} from './Diagrams';
+import { AccountList, BriefList, DecidedBatches, MailShare, NewRule, TrayLegend } from './Diagrams';
+import { OverviewCards } from './OverviewCards';
 import classes from './HomeSections.module.css';
 
 /**

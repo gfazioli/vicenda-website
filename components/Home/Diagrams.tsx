@@ -1,17 +1,9 @@
-'use client';
-
-import type { CSSProperties } from 'react';
 import {
-  IconAlignLeft,
   IconArrowRight,
   IconCheck,
   IconChevronDown,
   IconCircleCheckFilled,
   IconHandGrab,
-  IconInbox,
-  IconListDetails,
-  IconSparkles,
-  IconUsers,
 } from '@tabler/icons-react';
 import {
   AccountTile,
@@ -24,10 +16,7 @@ import {
   ToolChip,
   mailCardClasses as card,
 } from '../MailCard/MailCard';
-import { revealItem, revealScope } from '../Motion/Reveal';
-import { useReveal } from '../Motion/useReveal';
 import {
-  type OverviewKey,
   accounts,
   brief,
   coverage,
@@ -36,7 +25,6 @@ import {
   ghost,
   newKind,
   localOnly,
-  overview,
 } from './home-data';
 import { keep, letGo } from '../SortingTable/table-data';
 import classes from './Diagrams.module.css';
@@ -50,17 +38,35 @@ import classes from './Diagrams.module.css';
 
 /** "About 97 in 100 from machines": a hundred squares, the last three lit. */
 export function MailShare() {
+  // One pattern of squares and the three lit ones over it, instead of a
+  // hundred elements: a cell is 10 units with a gap of 2, as the page drew
+  // 32px cells 6px apart.
+  const lit = [17, 18, 19];
   return (
     <div
       className={classes.share}
       role="img"
       aria-label="A hundred squares, one per message: ninety-seven sent by machines, three the rest."
     >
-      <div className={classes.shareGrid}>
-        {Array.from({ length: 100 }, (_, i) => (
-          <span key={i} className={classes.shareCell} data-person={i >= 97 ? '' : undefined} />
+      <svg className={classes.shareGrid} viewBox="0 0 238 58" aria-hidden="true">
+        <defs>
+          <pattern id="mail-share-cell" width="12" height="12" patternUnits="userSpaceOnUse">
+            <rect width="10" height="10" rx="1" className={classes.shareCell} />
+          </pattern>
+        </defs>
+        <rect width="238" height="58" fill="url(#mail-share-cell)" />
+        {lit.map((column) => (
+          <rect
+            key={column}
+            x={column * 12}
+            y={48}
+            width="10"
+            height="10"
+            rx="1"
+            className={classes.shareLit}
+          />
         ))}
-      </div>
+      </svg>
       <div className={classes.shareLegend}>
         <span>
           <span className={classes.shareSwatch} />
@@ -244,52 +250,6 @@ export function DecidedBatches() {
           </div>
         </CardShell>
       ))}
-    </div>
-  );
-}
-
-const OVERVIEW_ICONS: Record<OverviewKey, typeof IconSparkles> = {
-  todo: IconCircleCheckFilled,
-  brief: IconAlignLeft,
-  new: IconSparkles,
-  decided: IconInbox,
-  accounts: IconUsers,
-  rules: IconListDetails,
-};
-
-/**
- * The Overview's six cards, each in its section's vivid colour
- * (`Palette.Section`, `VividGlass`). They land as cards do on the sibling
- * sites (`Reveal`'s morph, one after another), once, on the way into view.
- */
-export function OverviewCards() {
-  const reveal = useReveal<HTMLDivElement>();
-  const scope = revealScope(reveal);
-  return (
-    <div
-      ref={reveal.ref}
-      {...scope}
-      className={`${scope.className} ${classes.overview}`}
-      role="img"
-      aria-label="The Overview's six cards: To do, 2 need you; In brief, 4 lines to read; New, 3 kinds in 8 mails; Already decided, 23 in one confirmation; Accounts, 3, all local only; Rules, 41, 4 learned today."
-    >
-      {overview.map((figure, i) => {
-        const Icon = OVERVIEW_ICONS[figure.key];
-        const item = revealItem('morph', i * 70);
-        return (
-          <div
-            key={figure.key}
-            {...item}
-            className={`${item.className} ${classes.vivid}`}
-            style={{ ...item.style, '--tint': `var(--vic-${figure.key})` } as CSSProperties}
-          >
-            <Icon size={18} aria-hidden="true" />
-            <span className={classes.vividValue}>{figure.value}</span>
-            <span className={classes.vividTitle}>{figure.title}</span>
-            <span className={classes.vividCaption}>{figure.caption}</span>
-          </div>
-        );
-      })}
     </div>
   );
 }
