@@ -15,8 +15,13 @@
 }
 
 .title {
+  font-size: rem(32px);
   letter-spacing: -0.02em;
   text-wrap: balance;
+
+  @media (min-width: $mantine-breakpoint-sm) {
+    font-size: rem(42px);
+  }
 }
 
 .lead {

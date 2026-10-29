@@ -211,7 +211,7 @@ function OnYourMac() {
             <span className={classes.promiseIcon} aria-hidden="true">
               <PromiseIcon size={20} stroke={1.7} />
             </span>
-            <Title order={3} fz={19} fw={600} lh={1.3}>
+            <Title order={3} ff="text" fz={19} fw={600} lh={1.3}>
               {title}
             </Title>
             <Text c="dimmed" fz={16} lh={1.6}>

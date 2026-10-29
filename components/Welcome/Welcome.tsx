@@ -39,8 +39,8 @@ export function Welcome() {
       */}
       <Band id="faq">
         <Stack gap="lg" maw={760}>
-          <Title order={2} fz={{ base: 32, sm: 42 }} fw={400}>
-            <span className="display">Frequently asked questions</span>
+          <Title order={2} fz={{ base: 32, sm: 42 }}>
+            Frequently asked questions
           </Title>
           <FAQ />
         </Stack>
@@ -54,12 +54,10 @@ export function Welcome() {
         goes quiet, and quiet is the win.
       */}
       <Container size="lg" py={{ base: 80, sm: 136 }}>
-        <Title order={2} fz={{ base: 34, sm: 56 }} fw={400} ta="center" lh={1.1}>
-          <span className="display" style={{ fontStyle: 'italic' }}>
-            <TextAnimate inherit animation="fade" by="word" trigger="inView" duration={0.8}>
-              A few decisions. Then quiet.
-            </TextAnimate>
-          </span>
+        <Title order={2} fz={{ base: 34, sm: 56 }} ta="center" lh={1.1} fs="italic">
+          <TextAnimate inherit animation="fade" by="word" trigger="inView" duration={0.8}>
+            A few decisions. Then quiet.
+          </TextAnimate>
         </Title>
       </Container>
     </Box>

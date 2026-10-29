@@ -21,7 +21,7 @@ import { Button, Stack, Text, Title } from '@mantine/core';
 export function NewsletterCallToAction() {
   return (
     <Stack gap="xs" align="center">
-      <Title order={2} size="h3" ta="center" className="display" fw={500}>
+      <Title order={2} size="h3" ta="center" fw={500}>
         Get release updates
       </Title>
       <Text c="dimmed" ta="center" size="sm" maw={420}>
