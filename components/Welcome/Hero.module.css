@@ -1,0 +1,87 @@
+/*
+ * The hero's ground is the app's night (`Hero.tsx` says where each value comes
+ * from). It starts at y=0, behind the product bar: the bar's dock is sticky
+ * and still takes its height in the flow, so the hero takes it back with a
+ * negative margin and pads it in again.
+ *
+ * The layers, top first: a feather into the page's own navy at the foot, so
+ * the hero ends in no line; the two cobalt lights, each fading linearly to
+ * its radius as the app's do; and the three stops along the diagonal, at the
+ * angle of a hero about twice as wide as it is tall.
+ */
+.hero {
+  position: relative;
+  overflow: hidden;
+  margin-top: calc(-1 * var(--vic-bar-height, rem(48px)));
+  padding-top: calc(var(--vic-bar-height, rem(48px)) + rem(40px));
+  padding-bottom: rem(56px);
+  background:
+    linear-gradient(to bottom, transparent 70%, var(--vic-ground)),
+    radial-gradient(circle rem(520px) at 85% 15%, rgb(0 71 176 / 42%), transparent),
+    radial-gradient(circle rem(480px) at 20% 95%, rgb(0 71 176 / 29%), transparent),
+    linear-gradient(117deg, var(--vic-ground), var(--vic-ground-mid), var(--vic-ground-deep));
+
+  @media (min-width: $mantine-breakpoint-sm) {
+    padding-top: calc(var(--vic-bar-height, rem(48px)) + rem(72px));
+    padding-bottom: rem(96px);
+  }
+}
+
+/* Above the Scene's grain. */
+.inner {
+  position: relative;
+}
+
+/*
+ * One column until 75em, where the copy takes five parts and the table seven:
+ * the table needs a tray either side of the hand, and below that width its
+ * column would squeeze the cards. Stacked, it sits under the copy at the width
+ * it reads best at.
+ */
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: rem(48px);
+  align-items: center;
+
+  @media (min-width: 75em) {
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: rem(56px);
+  }
+}
+
+.copy {
+  display: flex;
+  flex-direction: column;
+  gap: rem(24px);
+  max-width: rem(600px);
+}
+
+.meta {
+  color: var(--mantine-color-dimmed);
+  font-size: rem(14px);
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* The logo's ice: brighter than the dimmed text, below the headline's white. */
+.lede {
+  max-width: rem(540px);
+  color: var(--vic-ice);
+  font-size: rem(18px);
+  line-height: 1.55;
+
+  @media (min-width: $mantine-breakpoint-sm) {
+    font-size: rem(21px);
+  }
+}
+
+.stage {
+  width: 100%;
+  max-width: rem(760px);
+  justify-self: center;
+
+  @media (min-width: 75em) {
+    max-width: none;
+  }
+}
