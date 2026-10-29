@@ -200,7 +200,7 @@ const PROMISES: { icon: Icon; title: string; body: string }[] = [
   },
   {
     icon: IconServerOff,
-    title: 'No server ever holds a message.',
+    title: 'No server of ours ever sees a message.',
     body: 'Mail comes from your provider straight to your Mac, over an encrypted connection. No account to create, no telemetry.',
   },
   {
