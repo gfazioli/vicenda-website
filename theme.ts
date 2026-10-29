@@ -26,35 +26,10 @@ import { createTheme } from '@mantine/core';
  * value (the ring and its inks) is here.
  */
 
-/**
- * The account ring, in slot order: OKLCH L=0.72, C=0.13, 45° apart, converted
- * to sRGB. Hue means "which mailbox" and nothing else.
- */
-export const ACCOUNT_RING = [
-  '#EB827B',
-  '#D8953D',
-  '#A2AE44',
-  '#4CBD88',
-  '#00BBCB',
-  '#60AAF3',
-  '#AB93ED',
-  '#DA83BE',
-] as const;
-
-/**
- * The monogram's ink on each ring hue (`Palette.monogramInk`: the same hue at
- * L=0.18, C=0.03), so a tile and its letters are always one family.
- */
-export const ACCOUNT_INK = [
-  '#1D0C0B',
-  '#1A0F03',
-  '#111304',
-  '#05160D',
-  '#001518',
-  '#07121E',
-  '#130F1D',
-  '#1A0C16',
-] as const;
+// The ring and its inks live in `theme/ring.ts`, which is not a client module,
+// so a server component can read them as values; re-exported here for the
+// components that import them with the theme.
+export { ACCOUNT_INK, ACCOUNT_RING } from './theme/ring';
 
 export const theme = createTheme({
   primaryColor: 'vicenda',

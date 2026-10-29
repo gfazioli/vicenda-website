@@ -22,24 +22,19 @@
 }
 
 .shareGrid {
-  display: grid;
-  grid-template-columns: repeat(20, minmax(0, 1fr));
-  gap: rem(6px);
-
-  @media (max-width: $mantine-breakpoint-sm) {
-    gap: rem(3px);
-  }
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .shareCell {
-  aspect-ratio: 1;
-  border-radius: rem(3px);
-  background: color-mix(in srgb, var(--vic-ice) 14%, transparent);
+  fill: color-mix(in srgb, var(--vic-ice) 14%, transparent);
 }
 
-.shareCell[data-person] {
-  background: var(--vic-sky);
-  box-shadow: 0 0 rem(14px) color-mix(in srgb, var(--vic-sky) 55%, transparent);
+/* In the SVG's own units: a cell is 10, so a 3-unit glow is about 10px. */
+.shareLit {
+  fill: var(--vic-sky);
+  filter: drop-shadow(0 0 3px color-mix(in srgb, var(--vic-sky) 55%, transparent));
 }
 
 .shareLegend {
