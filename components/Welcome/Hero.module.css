@@ -84,10 +84,16 @@
   }
 }
 
-/* `position`, because the envelope (`components/Mascot`) stands under the
-   table, in the box `HeroGuide` lays over it. */
+/*
+ * `position`, because the envelope (`components/Mascot`) stands under the
+ * table, in the box `HeroGuide` lays over it. `isolation`, so the table's own
+ * stacking (its cards at z-index 15 to 30) stays inside it: on a phone the
+ * envelope in the corner of the window (z-index 10) walked behind the cards,
+ * its bubble showing between two of them (measured at 390 x 844).
+ */
 .stage {
   position: relative;
+  isolation: isolate;
   width: 100%;
   max-width: rem(760px);
   justify-self: center;
