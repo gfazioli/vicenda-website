@@ -6,6 +6,7 @@ import {
   IconDeviceDesktop,
   IconGift,
   IconInfoCircle,
+  IconMail,
   IconShieldLock,
   type Icon,
 } from '@tabler/icons-react';
@@ -135,11 +136,17 @@ export const faqItems: { value: string; question: string; answer: ReactNode }[] 
 
 /*
  * A small icon on the questions a visitor most likely came with (user,
- * 2026-09-23: on the most important ones, not on every one). Keyed by the
- * item's `value`, so the list the JSON-LD mirrors stays exactly as it is.
+ * 2026-09-23: on the most important ones, not on every one), five of them as on
+ * every sibling site. findergit.app, netfox.app and lancetta.app each mark
+ * five: what it is, privacy and the price on all three, the Mac it needs on
+ * two, and the question their product turns on. Here that question is whether
+ * it replaces your mail app. The rest carry none, by that rule rather than by
+ * omission. Keyed by the item's `value`, so the list
+ * the JSON-LD mirrors stays exactly as it is.
  */
 const faqIcons: Partial<Record<string, Icon>> = {
   what: IconInfoCircle,
+  client: IconMail,
   privacy: IconShieldLock,
   mac: IconDeviceDesktop,
   price: IconGift,
