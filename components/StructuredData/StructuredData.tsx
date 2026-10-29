@@ -71,7 +71,9 @@ export function SoftwareApplicationJsonLd() {
         // config's downloadUrl is already absolute, and gluing SITE in front
         // of it published "https://vicenda.apphttps://github.com/…".
         softwareVersion: config.app.version,
-        image: `${SITE}/opengraph-image.jpeg`,
+        // The file is `app/opengraph-image.png`, which Next serves at this
+        // path. This said `.jpeg`, a URL that answered 404.
+        image: `${SITE}/opengraph-image.png`,
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
         publisher: { '@id': `${SITE}/#organization` },
       }}
