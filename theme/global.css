@@ -247,10 +247,7 @@ html {
 }
 
 * {
-  --marquee-fade-edge-color: var(--vic-ground);
-
   @mixin dark {
-    --marquee-fade-edge-color: var(--vic-ground);
     --mantine-color-body: var(--vic-ground);
   }
 }

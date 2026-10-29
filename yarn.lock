@@ -2377,30 +2377,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@gfazioli/mantine-marquee@npm:^4.1.4":
-  version: 4.1.4
-  resolution: "@gfazioli/mantine-marquee@npm:4.1.4"
-  peerDependencies:
-    "@mantine/core": ">=9.0.0"
-    "@mantine/hooks": ">=9.0.0"
-    react: ^18.x || ^19.x
-    react-dom: ^18.x || ^19.x
-  checksum: 10c0/4307e925f6c01667a3434b0d2763140f19bac790f663738cacc679d5c1d01ec03402759f9cf103d10f29f6e8ce65e34a4f23a4a2c79e42bd158bfd41f0f02e99
-  languageName: node
-  linkType: hard
-
-"@gfazioli/mantine-reflection@npm:^3.0.8":
-  version: 3.0.8
-  resolution: "@gfazioli/mantine-reflection@npm:3.0.8"
-  peerDependencies:
-    "@mantine/core": ">=9.0.0"
-    "@mantine/hooks": ">=9.0.0"
-    react: ^18.x || ^19.x
-    react-dom: ^18.x || ^19.x
-  checksum: 10c0/86bcdf39ab5ec8cdf0f1c3977143fffe5bbbeca42da1aeec7c53298367169bb22e5eebd0049f05dfcab9aa0a3ac98db415fa2618cafa8c1782abd7b70e74edd5
-  languageName: node
-  linkType: hard
-
 "@gfazioli/mantine-scene@npm:^2.2.8":
   version: 2.2.8
   resolution: "@gfazioli/mantine-scene@npm:2.2.8"
@@ -11804,8 +11780,6 @@ __metadata:
   resolution: "mantine-next-nextra-template@workspace:."
   dependencies:
     "@babel/core": "npm:^7.29.7"
-    "@gfazioli/mantine-marquee": "npm:^4.1.4"
-    "@gfazioli/mantine-reflection": "npm:^3.0.8"
     "@gfazioli/mantine-scene": "npm:^2.2.8"
     "@gfazioli/mantine-text-animate": "npm:^4.0.8"
     "@mantine/core": "npm:^9.5.2"
@@ -11827,7 +11801,6 @@ __metadata:
     "@types/react-dom": "npm:19.2.7"
     "@vercel/analytics": "npm:^1.6.1"
     babel-loader: "npm:^10.1.1"
-    cobe: "npm:^2.0.1"
     jest: "npm:^30.4.2"
     jest-environment-jsdom: "npm:^30.4.1"
     next: "npm:16.4.3"
