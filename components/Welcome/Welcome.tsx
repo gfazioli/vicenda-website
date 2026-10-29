@@ -4,7 +4,7 @@ import { TextAnimate } from '@gfazioli/mantine-text-animate';
 import { Box, Container, Stack, Title } from '@mantine/core';
 import { DiscordCallToAction } from '../Discord/DiscordCallToAction';
 import { FAQ } from '../FAQ/FAQ';
-import { HomeSections } from '../Home/HomeSections';
+import { Band, HomeSections } from '../Home/HomeSections';
 import { SectionRule } from '../SectionRule/SectionRule';
 import { Hero } from './Hero';
 
@@ -37,19 +37,14 @@ export function Welcome() {
         alone, where Google expects one. Before the closing line, so the page
         still ends on it.
       */}
-      <Container
-        id="faq"
-        size="lg"
-        py={{ base: 72, sm: 112 }}
-        style={{ scrollMarginTop: 'calc(var(--vic-bar-height, 48px) + 8px)' }}
-      >
+      <Band id="faq">
         <Stack gap="lg" maw={760}>
           <Title order={2} fz={{ base: 32, sm: 42 }} fw={400}>
             <span className="display">Frequently asked questions</span>
           </Title>
           <FAQ />
         </Stack>
-      </Container>
+      </Band>
 
       {/* ---- Community: the Discord server, for what the FAQ did not answer */}
       <DiscordCallToAction />

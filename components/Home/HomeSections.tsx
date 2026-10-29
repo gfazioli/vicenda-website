@@ -1,6 +1,6 @@
 'use client';
 
-import type { ReactNode } from 'react';
+import { type ComponentType, Fragment, type ReactNode } from 'react';
 import {
   IconArchiveOff,
   IconCpu,
@@ -32,143 +32,119 @@ import classes from './HomeSections.module.css';
  * these sections describe has none yet.
  *
  * EVERY CLAIM IS THE APP'S CODE, not its plan: the file each one rests on is
- * named beside it below. Where the code has not landed something yet (a
+ * named beside it in `SECTIONS`. Where the code has not landed something yet (a
  * decision reaching the server of a Gmail account), the copy says so or says
  * nothing.
  */
+/** One section: its heading, and the diagram that shows it. */
+interface Section {
+  /** The anchor the bar links to, where it has one. */
+  id?: string;
+  eyebrow: string;
+  title: string;
+  lead: string;
+  /** The diagram's column, no wider than it reads at; none for a full grid. */
+  width?: number;
+  Diagram: ComponentType;
+  /** The diagram reveals its own parts, so it is not wrapped in a `Reveal`. */
+  ownReveal?: boolean;
+}
+
+const SECTIONS: Section[] = [
+  {
+    // The figures are the owner's own mail (the brief's Gate 0, measured on
+    // the local store: about 97% bulk, about one a day needing a reply), said
+    // as his, not as a statistic about everyone's.
+    id: 'how-it-works',
+    eyebrow: 'The problem',
+    title: 'Mail is messages, not conversations.',
+    lead: 'Vicenda began with one person’s seven mailboxes, where about 97 messages in 100 come from machines and fewer than one a day needs a reply. Reading each as a conversation is the work it takes away.',
+    width: 760,
+    Diagram: MailShare,
+  },
+  {
+    // `SortingTable.swift`: drag, buttons or a tray click record one
+    // decision; Later until 08:00 the next day (`ReportDecision.swift`).
+    eyebrow: 'Today',
+    title: 'Sort it the way you sort the post.',
+    lead: 'To do and New arrive as a hand of cards: two face up, the rest stacked beneath. Drag a card into a tray or answer with its buttons, and the next one rises. Later puts a mail back in the hand at eight the next morning.',
+    width: 980,
+    Diagram: TrayLegend,
+  },
+  {
+    // `BriefRow`, `MorningReportModel`: the line, and the mail's fate.
+    eyebrow: 'In brief',
+    title: 'One line, and the mail can go.',
+    lead: 'The news, a rate, a post’s numbers, an alert: each informational mail becomes one line in the report, and the mail itself goes to the Bin, or waits until tomorrow when it is the day’s news.',
+    width: 820,
+    Diagram: BriefList,
+  },
+  {
+    // `NewCard`, `FromNowOnControls`, `RuleCoverage.line` in `KindRule.swift`.
+    eyebrow: 'New',
+    title: 'One kind at a time. Then, from now on.',
+    lead: 'A kind is a sender plus what it sends: a shop’s newsletters and its receipts are two kinds. Vicenda proposes an answer, and with “from now on” checked your yes becomes a rule. The card says what that rule will cover: widen it to everything from the sender, and keep it to this account or give it to every account.',
+    width: 720,
+    Diagram: NewRule,
+  },
+  {
+    // `DecidedSection`, `BatchCard`; the starred guard is the report's.
+    eyebrow: 'Already decided',
+    title: 'One confirmation for what you already know.',
+    lead: 'Mail your rules already cover is gathered into batches, each handled the way its rule says. Leave a sender out with a click, open the list to check, then confirm them all at once. A starred message never goes into a batch.',
+    width: 760,
+    Diagram: DecidedBatches,
+  },
+  {
+    // `OverviewModel.swift`: the six figures and their captions.
+    eyebrow: 'Overview',
+    title: 'The whole morning, in six cards.',
+    lead: 'What needs you, what is left to read, what is new, what is already decided, and beside them your accounts and the rules you have taught. Each in its own colour, as in the app.',
+    width: 900,
+    Diagram: OverviewCards,
+    ownReveal: true,
+  },
+  {
+    // The account wizard, `AccountFacts.transport`, the Together / By
+    // account switch.
+    eyebrow: 'Every account',
+    title: 'Every account, one report.',
+    lead: 'Any mailbox that speaks IMAP, Gmail included: Gmail through an app password, which Google lets you make once 2-Step Verification is on. Each account wears its own hue and monogram, and By account splits the report when you want them apart.',
+    width: 680,
+    Diagram: AccountList,
+  },
+  {
+    eyebrow: 'On your Mac',
+    title: 'It all happens here.',
+    lead: 'Vicenda keeps your mail, your rules and your decisions on your Mac, and runs no server of its own.',
+    Diagram: OnYourMac,
+    ownReveal: true,
+  },
+];
+
 export function HomeSections() {
-  return (
-    <>
-      <SectionRule />
-
-      {/*
-        The problem. The figures are the owner's own mail (the brief's Gate 0,
-        measured on the local store: about 97% bulk, about one a day needing a
-        reply), said as his, not as a statistic about everyone's.
-      */}
-      <Band id="how-it-works">
-        <SectionHeading
-          eyebrow="The problem"
-          title="Mail is messages, not conversations."
-          lead="Vicenda began with one person’s seven mailboxes, where about 97 messages in 100 come from machines and fewer than one a day needs a reply. Reading each as a conversation is the work it takes away."
-        />
-        <Stage width={760}>
-          <Reveal variant="rise">
-            <MailShare />
-          </Reveal>
-        </Stage>
-      </Band>
-
-      <SectionRule />
-
-      {/* `SortingTable.swift`: drag, buttons or a tray click record one decision. */}
-      <Band>
-        <SectionHeading
-          eyebrow="Today"
-          title="Sort it the way you sort the post."
-          lead="To do and New arrive as a hand of cards: two face up, the rest stacked beneath. Drag a card into a tray or answer with its buttons, and the next one rises. Later puts a mail back in the hand at eight the next morning."
-        />
-        <Stage width={980}>
-          <Reveal variant="rise">
-            <TrayLegend />
-          </Reveal>
-        </Stage>
-      </Band>
-
-      <SectionRule />
-
-      {/* `BriefRow`, `MorningReportModel`: the line, and the mail's fate. */}
-      <Band>
-        <SectionHeading
-          eyebrow="In brief"
-          title="One line, and the mail can go."
-          lead="The news, a rate, a post’s numbers, an alert: each informational mail becomes one line in the report, and the mail itself goes to the Bin, or waits until tomorrow when it is the day’s news."
-        />
-        <Stage width={820}>
-          <Reveal variant="rise">
-            <BriefList />
-          </Reveal>
-        </Stage>
-      </Band>
-
-      <SectionRule />
-
-      {/* `NewCard`, `FromNowOnControls`, `RuleCoverage.line` in `KindRule.swift`. */}
-      <Band>
-        <SectionHeading
-          eyebrow="New"
-          title="One kind at a time. Then, from now on."
-          lead="A kind is a sender plus what it sends: a shop’s newsletters and its receipts are two kinds. Vicenda proposes an answer, and with “from now on” checked your yes becomes a rule. The card says what that rule will cover: widen it to everything from the sender, and keep it to this account or give it to every account."
-        />
-        <Stage width={720}>
-          <Reveal variant="rise">
-            <NewRule />
-          </Reveal>
-        </Stage>
-      </Band>
-
-      <SectionRule />
-
-      {/* `DecidedSection`, `BatchCard`; the starred guard is the report's. */}
-      <Band>
-        <SectionHeading
-          eyebrow="Already decided"
-          title="One confirmation for what you already know."
-          lead="Mail your rules already cover is gathered into batches, each handled the way its rule says. Leave a sender out with a click, open the list to check, then confirm them all at once. A starred message never goes into a batch."
-        />
-        <Stage width={760}>
-          <Reveal variant="rise">
-            <DecidedBatches />
-          </Reveal>
-        </Stage>
-      </Band>
-
-      <SectionRule />
-
-      {/* `OverviewModel.swift`: the six figures and their captions. */}
-      <Band>
-        <SectionHeading
-          eyebrow="Overview"
-          title="The whole morning, in six cards."
-          lead="What needs you, what is left to read, what is new, what is already decided, and beside them your accounts and the rules you have taught. Each in its own colour, as in the app."
-        />
-        <Stage width={900}>
-          <OverviewCards />
-        </Stage>
-      </Band>
-
-      <SectionRule />
-
-      {/* The account wizard, `AccountFacts.transport`, the By account switch. */}
-      <Band>
-        <SectionHeading
-          eyebrow="Every account"
-          title="Every account, one report."
-          lead="Any mailbox that speaks IMAP, Gmail included: Gmail through an app password, which Google lets you make once 2-Step Verification is on. Each account wears its own hue and monogram, and By account splits the report when you want them apart."
-        />
-        <Stage width={680}>
-          <Reveal variant="rise">
-            <AccountList />
-          </Reveal>
-        </Stage>
-      </Band>
-
-      <SectionRule />
-
-      <Band>
-        <SectionHeading
-          eyebrow="On your Mac"
-          title="It all happens here."
-          lead="Vicenda keeps your mail, your rules and your decisions on your Mac, and runs no server of its own."
-        />
-        <OnYourMac />
-      </Band>
-    </>
-  );
+  return SECTIONS.map(({ id, eyebrow, title, lead, width, Diagram, ownReveal }) => {
+    const diagram = ownReveal ? (
+      <Diagram />
+    ) : (
+      <Reveal variant="rise">
+        <Diagram />
+      </Reveal>
+    );
+    return (
+      <Fragment key={eyebrow}>
+        <SectionRule />
+        <Band id={id}>
+          <SectionHeading eyebrow={eyebrow} title={title} lead={lead} />
+          {width ? <Stage width={width}>{diagram}</Stage> : diagram}
+        </Band>
+      </Fragment>
+    );
+  });
 }
 
 /** A section of the page: its anchor, its air, and the column it reads in. */
-function Band({ id, children }: { id?: string; children: ReactNode }) {
+export function Band({ id, children }: { id?: string; children: ReactNode }) {
   return (
     <Container id={id} size="lg" className={classes.band}>
       {children}
