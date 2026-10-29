@@ -73,7 +73,7 @@
   }
 
   .vic-menubar .nextra-search kbd {
-    border-color: rgb(255 255 255 / 16%);
+    border-color: var(--vic-hair-16);
     background-color: rgb(255 255 255 / 8%);
     color: rgb(255 255 255 / 70%);
   }

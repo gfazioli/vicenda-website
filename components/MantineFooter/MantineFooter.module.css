@@ -5,18 +5,16 @@
  * the sponsor wall as a card whose edges do the separating; the colophon and
  * sharing on one line.
  *
- * The site is dark only: "deeper" is the night ground (`--vic-ground`,
- * #09112F) taken a step toward black, so the footer stays the app's navy
- * rather than turning grey; the card is white at 4% and every edge white
- * at 10%.
+ * The site is dark only: "deeper" is the night ground taken a step toward
+ * black (`--vic-footer`), so the footer stays the app's navy rather than
+ * turning grey; the card is white at 4% and every edge the card's 10%
+ * hairline.
  */
 .contentFooter {
-  --vi-footer: #050b22;
-  --vi-card: rgb(255 255 255 / 4%);
-  --vi-rule: rgb(255 255 255 / 10%);
+  --vic-footer-card: rgb(255 255 255 / 4%);
 
   padding-top: 96px;
-  background: linear-gradient(to bottom, transparent 0, var(--vi-footer) 140px);
+  background: linear-gradient(to bottom, transparent 0, var(--vic-footer) 140px);
 }
 
 .footer {
@@ -60,9 +58,9 @@
   gap: rem(32px);
   margin-top: rem(56px);
   padding: rem(24px) rem(28px);
-  border: 1px solid var(--vi-rule);
+  border: 1px solid var(--vic-hair-10);
   border-radius: var(--mantine-radius-lg);
-  background: var(--vi-card);
+  background: var(--vic-footer-card);
 
   @media (max-width: $mantine-breakpoint-sm) {
     grid-template-columns: minmax(0, 1fr);
@@ -95,7 +93,7 @@
 }
 
 .sponsorSlot {
-  border: 1px dashed var(--vi-rule);
+  border: 1px dashed var(--vic-hair-10);
   background-color: transparent;
   color: var(--mantine-color-dimmed);
 }

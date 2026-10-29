@@ -19,6 +19,11 @@ html {
    * on every element: custom properties inherit, so one declaration reaches
    * the whole page.
    *
+   * A colour Mantine's palettes already hold is an ALIAS of Mantine's
+   * variable, so its hex lives once, in `theme.ts` (findergit.app's pattern):
+   * the logo's blues are the `vicenda` ladder and the ground and its inks the
+   * `dark` ramp. Only what neither palette holds is written here.
+   *
    * The LOGO: `--vic-ground` is the window's night ground at its first stop,
    * the page's colour; `--vic-ground-mid` and `--vic-ground-deep` are the
    * other two, for the places that draw the whole diagonal. `--vic-cobalt` is
@@ -27,14 +32,23 @@ html {
    * (8:1 on the ground, against the sky's own 5.1:1). `--vic-ice` is the
    * envelope's pearl.
    */
-  --vic-ground: #09112f;
+  --vic-ground: var(--mantine-color-dark-9);
   --vic-ground-mid: #061340;
   --vic-ground-deep: #04164e;
-  --vic-cobalt: #0047b0;
-  --vic-royal: #0067e1;
-  --vic-sky: #0086fb;
-  --vic-sky-ink: #6ab2ff;
-  --vic-ice: #ccd9ec;
+  --vic-cobalt: var(--mantine-color-vicenda-8);
+  --vic-royal: var(--mantine-color-vicenda-6);
+  --vic-sky: var(--mantine-color-vicenda-5);
+  --vic-sky-ink: var(--mantine-color-vicenda-3);
+  --vic-ice: var(--mantine-color-dark-1);
+
+  /*
+   * Navies off the logo's ramp, each a step from the card's: the product
+   * bar's lit top edge, an open menu's plate (a step above the card it hangs
+   * over), and the footer's ground (the page's, a step toward black).
+   */
+  --vic-bar-top: #13296a;
+  --vic-menu: #1b2c5c;
+  --vic-footer: #050b22;
 
   /*
    * A mail card (`Palette.cardFill`, `Glass` in the app): one opaque fill
@@ -43,36 +57,32 @@ html {
    * band runs, and 22px on the right (`CardCorner`, `DashboardCard.radius`).
    */
   --vic-card: #10275f;
-  --vic-card-ink: #e6ecf6;
-  --vic-card-caption: rgb(230 236 246 / 72%);
-  --vic-card-faint: rgb(230 236 246 / 50%);
+  --vic-card-ink: var(--mantine-color-dark-0);
+  --vic-card-caption: color-mix(in srgb, var(--vic-card-ink) 72%, transparent);
+  --vic-card-faint: color-mix(in srgb, var(--vic-card-ink) 50%, transparent);
   --vic-hair-10: rgb(255 255 255 / 10%);
   --vic-hair-16: rgb(255 255 255 / 16%);
   --vic-hair-24: rgb(255 255 255 / 24%);
-  --vic-line: rgb(204 217 236 / 10%);
-  --vic-line-strong: rgb(204 217 236 / 18%);
+  --vic-line-strong: color-mix(in srgb, var(--vic-ice) 18%, transparent);
   /* Captions straight on the ground: white at `Palette.groundCaptionAlpha`. */
   --vic-ground-caption: rgb(255 255 255 / 66%);
 
   /*
    * The report's SECTIONS (`Palette.Section`): the vivid fill, OKLCH L 0.58,
    * C 0.18 at the section's hue with the chroma clamped into sRGB as the app
-   * clamps it, and the ink a section's mark is drawn in on the ground
-   * (`Palette.sectionInk`, L 0.84, C 0.10). Never an account's colour: they
-   * clear every slot of the ring by 0.32 or more.
+   * clamps it, read by the Overview's cards as `var(--vic-<key>)`; and the ink
+   * a section's mark is drawn in on the ground (`Palette.sectionInk`, L 0.84,
+   * C 0.10), for the two marks the page draws. Never an account's colour:
+   * they clear every slot of the ring by 0.32 or more.
    */
   --vic-todo: #4472e3;
   --vic-todo-ink: #b2caff;
   --vic-brief: #008d82;
-  --vic-brief-ink: #77e0d3;
   --vic-new: #309210;
   --vic-new-ink: #a8db9d;
   --vic-decided: #8c5ad3;
-  --vic-decided-ink: #d4bdff;
   --vic-accounts: #0087ab;
-  --vic-accounts-ink: #7dd9fc;
   --vic-rules: #b747a4;
-  --vic-rules-ink: #f4b2e5;
 
   /*
    * -- Springs --
