@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { type CSSProperties, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { setMenu } from 'nextra-theme-docs';
@@ -12,7 +12,8 @@ import {
   IconHeartFilled,
   IconMenu2,
 } from '@tabler/icons-react';
-import { discordLinkProps } from '../Discord/discord';
+import { DISCORD_BLURPLE, discordLinkProps } from '../Discord/discord';
+import { COFFEE_INK, COFFEE_URL, SPONSOR_URL, externalLinkProps } from '../Support/support';
 import { Logo } from '../Logo/Logo';
 import { isSamePageHashInMobileNav } from './mobile-nav-hash';
 import { currentPageMenu, menus, productSections } from './sections';
@@ -27,11 +28,8 @@ import classes from './MenuBarHeader.module.css';
  * and rounded at the two bottom corners, so it reads as an object the page
  * hangs from rather than as a strip of chrome.
  *
- * Lancetta's centre item (its live reading and the panel it opens) is that
- * app's own and stays there; so does its Download pill. No download is offered
- * anywhere on this site until the next version (owner, 2026-10-29), so the
- * right side holds the search and the three status items the old navbar had:
- * Discord, Sponsor and the coffee.
+ * The right side holds the search and three status items. No download is
+ * offered anywhere on this site until the next version (owner, 2026-10-29).
  *
  * It REPLACES Nextra's navbar on every page (`app/layout.tsx` passes it into
  * the `navbar` slot, as lancetta.app does), which means two things Nextra's own
@@ -39,6 +37,43 @@ import classes from './MenuBarHeader.module.css';
  * search, and the hamburger that opens the sidebar on a phone. `setMenu` is the
  * same store Nextra's own button writes, so the sidebar it opens is Nextra's.
  */
+/**
+ * The status items, in the old navbar's order and colours: Discord's own
+ * blurple first (the community's home since 2026-10-08), then GitHub Sponsors
+ * and the coffee. External, each in a new tab.
+ */
+const statusItems: {
+  label: string;
+  href: string;
+  Icon: typeof IconCoffee;
+  size: number;
+  className?: string;
+  style?: CSSProperties;
+}[] = [
+  {
+    label: 'Join us on Discord',
+    href: discordLinkProps.href,
+    Icon: IconBrandDiscordFilled,
+    size: 16,
+    style: { backgroundColor: DISCORD_BLURPLE },
+  },
+  {
+    label: 'Sponsor',
+    href: SPONSOR_URL,
+    Icon: IconHeartFilled,
+    size: 14,
+    className: classes.sponsor,
+  },
+  {
+    label: 'Buy me a coffee',
+    href: COFFEE_URL,
+    Icon: IconCoffee,
+    size: 15,
+    className: classes.coffee,
+    style: { color: COFFEE_INK },
+  },
+];
+
 export function MenuBarHeader() {
   const pathname = usePathname();
   const onHome = pathname === '/';
@@ -128,43 +163,19 @@ export function MenuBarHeader() {
           <div className={classes.search}>
             <Search />
           </div>
-          {/*
-            The three status items the old navbar carried, in its order and
-            its colours: Discord's own blurple first (the community's home
-            since 2026-10-08), then GitHub Sponsors and the coffee. External,
-            each in a new tab.
-          */}
-          <Tooltip label="Join us on Discord" withArrow>
-            <a
-              {...discordLinkProps}
-              className={`${classes.item} ${classes.discord}`}
-              aria-label="Join us on Discord"
-            >
-              <IconBrandDiscordFilled size={16} />
-            </a>
-          </Tooltip>
-          <Tooltip label="Sponsor" withArrow>
-            <a
-              href="https://github.com/sponsors/gfazioli"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`${classes.item} ${classes.sponsor}`}
-              aria-label="Sponsor"
-            >
-              <IconHeartFilled size={14} />
-            </a>
-          </Tooltip>
-          <Tooltip label="Buy me a coffee" withArrow>
-            <a
-              href="https://donate.stripe.com/fZu4gy4Tn3b1dgudGx0co00"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`${classes.item} ${classes.coffee}`}
-              aria-label="Buy me a coffee"
-            >
-              <IconCoffee size={15} />
-            </a>
-          </Tooltip>
+          {statusItems.map(({ label, href, Icon, size, className, style }) => (
+            <Tooltip key={label} label={label} withArrow>
+              <a
+                href={href}
+                {...externalLinkProps}
+                className={`${classes.item} ${className ?? ''}`}
+                style={style}
+                aria-label={label}
+              >
+                <Icon size={size} />
+              </a>
+            </Tooltip>
+          ))}
           {/*
             Nextra's own hamburger lived in the navbar this component replaced.
             `setMenu` is the store it wrote, so the sidebar that opens is

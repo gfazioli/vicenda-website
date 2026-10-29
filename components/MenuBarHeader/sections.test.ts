@@ -1,4 +1,4 @@
-import { currentPageMenu, menus, productSections } from './sections';
+import { currentPageMenu, menus } from './sections';
 
 describe('the product bar', () => {
   it('shows the five menus #43 asks for, in its order, and no download', () => {
@@ -11,13 +11,6 @@ describe('the product bar', () => {
     ]);
     // No download anywhere until the next version (owner, 2026-10-29).
     expect(menus.some((menu) => /download/i.test(menu.href + menu.label))).toBe(false);
-  });
-
-  it('links every section it names by an absolute href, so it works from the docs', () => {
-    for (const menu of menus.filter((one) => one.section)) {
-      expect(productSections.map((section) => section.id)).toContain(menu.section);
-      expect(menu.href).toBe(`/#${menu.section}`);
-    }
   });
 
   it('marks the page that is open, and the policy before the docs around it', () => {

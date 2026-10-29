@@ -174,7 +174,8 @@
 
 /*
  * A status item: a round button as tall as the search's input, in the colour
- * the old navbar gave it.
+ * the old navbar gave it (Discord's is `DISCORD_BLURPLE`, set beside it;
+ * white on it is 4.6:1).
  */
 .item {
   display: inline-flex;
@@ -192,11 +193,6 @@
   transform: translateY(-1px);
 }
 
-/* Discord's own blurple: white on it is 4.6:1. */
-.discord {
-  background-color: #5865f2;
-}
-
 /* The old navbar's gradient variant, pink to grape. */
 .sponsor {
   background: linear-gradient(
@@ -206,10 +202,9 @@
   );
 }
 
-/* Dark ink on the yellow: white on it is 1.9:1. */
+/* The yellow; its dark ink is `COFFEE_INK`, set beside the item. */
 .coffee {
   background-color: var(--mantine-color-yellow-filled);
-  color: #3b2600;
 }
 
 .burger {
