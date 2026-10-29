@@ -10,11 +10,6 @@ export default {
     type: 'page',
     title: 'Documentation',
   },
-  download: {
-    type: 'page',
-    title: 'Download',
-    href: '/download',
-  },
   // The home page's FAQ, as the sibling sites link their Features grid. An
   // absolute anchor, so it also works from inside the docs.
   faq: {

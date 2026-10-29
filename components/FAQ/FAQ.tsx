@@ -35,21 +35,10 @@ export const faqItems: { value: string; question: string; answer: ReactNode }[] 
   {
     value: 'download',
     question: 'How do I get it?',
-    answer: (
-      <Text size="sm">
-        Vicenda is a free download for macOS, signed and notarised by Apple. There is no App Store
-        listing and no account to create.{' '}
-        {/*
-          A plain anchor, not a next/link: `/download` is a route handler that
-          302s to the DMG on GitHub, not a page, so the client router has
-          nothing to prefetch or to fetch as RSC there.
-        */}
-        <Anchor href="/download" size="sm">
-          Download it
-        </Anchor>
-        .
-      </Text>
-    ),
+    // No link until the next version (owner, 2026-10-29): the app is being
+    // rebuilt, and 0.3.0 is not what this site will describe.
+    answer:
+      'Vicenda is free, for macOS, with no App Store listing and no account to create. The next version is being rebuilt from the ground up, and the download comes back when it is ready.',
   },
   {
     value: 'macos',

@@ -1,5 +1,5 @@
 import { IconMail } from '@tabler/icons-react';
-import { Anchor, Button, Stack, Text, Title } from '@mantine/core';
+import { Button, Stack, Text, Title } from '@mantine/core';
 
 /**
  * The shared newsletter call-to-action (heading + blurb + Subscribe button),
@@ -38,13 +38,6 @@ export function NewsletterCallToAction() {
       >
         Subscribe for updates
       </Button>
-      <Text c="dimmed" ta="center" size="xs">
-        Just want the app?{' '}
-        <Anchor href="/download" size="xs">
-          Download for macOS
-        </Anchor>
-        .
-      </Text>
     </Stack>
   );
 }

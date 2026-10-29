@@ -1,11 +1,5 @@
 export const highlights = [
   {
-    key: 'download',
-    title: 'Download',
-    // `/download` resolves the newest .dmg at request time — see the route.
-    href: '/download',
-  },
-  {
     key: 'release-notes',
     title: 'Release Notes',
     href: '/docs/release-notes',

@@ -5,13 +5,7 @@ import Link from 'next/link';
 import { Reflection } from '@gfazioli/mantine-reflection';
 import { Scene } from '@gfazioli/mantine-scene';
 import { TextAnimate } from '@gfazioli/mantine-text-animate';
-import {
-  IconCards,
-  IconDownload,
-  IconEyeOff,
-  IconMessages,
-  IconPalette,
-} from '@tabler/icons-react';
+import { IconCards, IconEyeOff, IconMessages, IconPalette } from '@tabler/icons-react';
 import {
   Badge,
   Box,
@@ -209,17 +203,14 @@ export function Welcome({ cadence = fallbackReleaseCadence() }: { cadence?: Cade
                   to you get channels. The people get threads. Nothing ever leaves your Mac.
                 </Text>
 
+                {/*
+                  No Download button until the next version (owner,
+                  2026-10-29): the app is becoming a morning report, and 0.3.0
+                  is the mail client this page still describes. /download and
+                  the appcast stay up, for the copies already installed.
+                */}
                 <Group gap="sm" mt="xs">
-                  <Button
-                    component="a"
-                    href="/download"
-                    size="md"
-                    radius="xl"
-                    leftSection={<IconDownload size={16} />}
-                  >
-                    Download for macOS
-                  </Button>
-                  <Button component={Link} href="/docs" size="md" radius="xl" variant="default">
+                  <Button component={Link} href="/docs" size="md" radius="xl">
                     See how it works
                   </Button>
                 </Group>
@@ -457,21 +448,9 @@ export function Welcome({ cadence = fallbackReleaseCadence() }: { cadence?: Cade
             telemetry, and no roadmap it owes anybody.
           </Text>
           <Text c="dimmed" fz={{ base: 16, sm: 18 }} lh={1.6}>
-            If that sounds like your inbox too, it is a free download and it needs nothing from you
-            — no account, no sign-up. It updates itself when there is a build worth your time, and
-            you can turn that off.
+            The next version is being rebuilt from the ground up, and it will be a free download
+            again when it is ready.
           </Text>
-          <Group mt="sm">
-            <Button
-              component="a"
-              href="/download"
-              size="md"
-              radius="xl"
-              leftSection={<IconDownload size={16} />}
-            >
-              Download for macOS
-            </Button>
-          </Group>
         </Stack>
       </Container>
 
