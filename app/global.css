@@ -9,8 +9,16 @@
  * In this case we're going to fix a glitch with the text size in the code blocks. 
  */
 @layer overwrite {
+  /*
+   * ONE anchor offset for the whole site: the bar's height and a breath. Nextra
+   * sets `scroll-padding-top: var(--nextra-navbar-height)` for its headings;
+   * this replaces it, so the home page's sections no longer add a
+   * `scroll-margin-top` of their own on top (a page loaded on /#faq landed
+   * 104px down, a click on the bar's FAQ 56px).
+   */
   html {
     scroll-behavior: smooth;
+    scroll-padding-top: calc(var(--nextra-navbar-height) + 8px);
   }
 
   /*
