@@ -55,9 +55,11 @@ html {
   --vic-ground-caption: rgb(255 255 255 / 66%);
 
   /*
-   * The report's SECTIONS (`Palette.Section`): the vivid fill, and the ink a
-   * section's mark is drawn in on the ground. Never an account's colour: at
-   * L 0.58, C 0.18 they clear every slot of the ring by 0.32 or more.
+   * The report's SECTIONS (`Palette.Section`): the vivid fill, OKLCH L 0.58,
+   * C 0.18 at the section's hue with the chroma clamped into sRGB as the app
+   * clamps it, and the ink a section's mark is drawn in on the ground
+   * (`Palette.sectionInk`, L 0.84, C 0.10). Never an account's colour: they
+   * clear every slot of the ring by 0.32 or more.
    */
   --vic-todo: #4472e3;
   --vic-todo-ink: #b2caff;

@@ -18,7 +18,10 @@ import { createTheme } from '@mantine/core';
  *   and the Overview, saturated enough never to be read as an account.
  *
  * The site is dark only (`app/layout.tsx`), so these are the app's NIGHT
- * values.
+ * values. The logo's and the sections' colours live once, as `--vic-*` tokens
+ * in `theme/global.css`, which is where the page reads them; this file keeps
+ * what a component needs as a value (the ring and its inks) and Mantine's own
+ * ramps.
  */
 
 /**
@@ -50,46 +53,6 @@ export const ACCOUNT_INK = [
   '#130F1D',
   '#1A0C16',
 ] as const;
-
-/** The logo's colours (`Palette.Logo`), sampled from the app icon by area. */
-export const LOGO = {
-  /** The envelope's pearl. */
-  ice: '#CCD9EC',
-  /** The V's royal: the app's accent by day, and a filled button's ground. */
-  royal: '#0067E1',
-  /** The V's brighter sky: the accent by night, where royal sinks. */
-  sky: '#0086FB',
-  /** The night's light (`Palette.Logo.glow(dark: true)`, at 0.42). */
-  cobalt: '#0047B0',
-} as const;
-
-/**
- * The window's ground by night (`Palette.Logo.ground(dark: true)`): three
- * stops along the top-left to bottom-right diagonal, the deep navy pulled
- * toward the chrome's rail so text keeps its contrast.
- */
-export const GROUND = ['#09112F', '#061340', '#04164E'] as const;
-
-/**
- * The one fill every mail card shares by night (`Palette.cardFill`): the
- * logo's navy a step lighter than the ground. The account is the band alone.
- */
-export const CARD_FILL = '#10275F';
-
-/**
- * The report's sections (`Palette.Section`): OKLCH L=0.58, C=0.18 at each
- * section's hue, chroma clamped into sRGB as the app clamps it. `ink` is the
- * section as a mark on the night ground (`Palette.sectionInk`, L=0.84,
- * C=0.10), which is what a heading's icon or a tray's symbol is drawn in.
- */
-export const SECTION = {
-  toDo: { vivid: '#4472E3', ink: '#B2CAFF' },
-  brief: { vivid: '#008D82', ink: '#77E0D3' },
-  new: { vivid: '#309210', ink: '#A8DB9D' },
-  decided: { vivid: '#8C5AD3', ink: '#D4BDFF' },
-  accounts: { vivid: '#0087AB', ink: '#7DD9FC' },
-  rules: { vivid: '#B747A4', ink: '#F4B2E5' },
-} as const;
 
 export const theme = createTheme({
   primaryColor: 'vicenda',
