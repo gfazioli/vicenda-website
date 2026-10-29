@@ -6,7 +6,7 @@
  * They are public claims, so each line says what the app does today (the
  * "Built" list in AGENTS.md, checked against the section it stands for), in
  * the page's own words where it can; the figures are the page's invented
- * morning, never a statistic. The owner's own mail is said as his
+ * morning, never a statistic. The owner's own mail is said as the owner's
  * ("the mailboxes I began with"), as the section under the hero says it.
  *
  * If a release changes what one of these says, change it here in the same
