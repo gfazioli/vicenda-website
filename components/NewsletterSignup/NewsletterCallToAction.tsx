@@ -11,8 +11,9 @@ import { Button, Stack, Text, Title } from '@mantine/core';
  * nothing here collects an address, so there is nothing here to run.
  *
  * This used to be a download prompt, from the days when the site said "no
- * newsletter and no list". There is a list now, for release news only, and
- * the download keeps its own button in the hero and the honest paragraph.
+ * newsletter and no list". There is a list now, for release news only. The
+ * site offers no download until the next version (owner, 2026-10-29); when it
+ * comes back, it has its own button in the hero and the honest paragraph.
  *
  * An h2 drawn at h3's size: in the footer of a page with no h2 of its own
  * (Legal, the FAQ), an h3 here followed the h1 with a level skipped.
