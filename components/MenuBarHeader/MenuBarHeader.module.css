@@ -38,7 +38,7 @@
   border: 1px solid var(--vic-hair-10);
   border-top: 0;
   border-radius: 0 0 rem(16px) rem(16px);
-  background: linear-gradient(180deg, #13296a 0%, var(--vic-card) 100%);
+  background: linear-gradient(180deg, var(--vic-bar-top) 0%, var(--vic-card) 100%);
   box-shadow:
     0 1px 0 rgb(255 255 255 / 6%) inset,
     0 18px 40px -22px rgb(0 4 20 / 80%),

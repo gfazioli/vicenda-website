@@ -18,10 +18,12 @@ import { createTheme } from '@mantine/core';
  *   and the Overview, saturated enough never to be read as an account.
  *
  * The site is dark only (`app/layout.tsx`), so these are the app's NIGHT
- * values. The logo's and the sections' colours live once, as `--vic-*` tokens
- * in `theme/global.css`, which is where the page reads them; this file keeps
- * what a component needs as a value (the ring and its inks) and Mantine's own
- * ramps.
+ * values. Each hex lives once. The logo's blues and the night ground's ramp
+ * are here, as Mantine's `vicenda` and `dark` palettes, and the page reads
+ * them through `--vic-*` aliases of Mantine's variables (`theme/global.css`);
+ * what no palette holds (the ground's other two stops, the card, the
+ * sections' colours) is written there, once; and what a component needs as a
+ * value (the ring and its inks) is here.
  */
 
 /**

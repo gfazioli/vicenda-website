@@ -44,12 +44,12 @@
 .shareCell {
   aspect-ratio: 1;
   border-radius: rem(3px);
-  background: rgb(204 217 236 / 14%);
+  background: color-mix(in srgb, var(--vic-ice) 14%, transparent);
 }
 
 .shareCell[data-person] {
   background: var(--vic-sky);
-  box-shadow: 0 0 rem(14px) rgb(0 134 251 / 55%);
+  box-shadow: 0 0 rem(14px) color-mix(in srgb, var(--vic-sky) 55%, transparent);
 }
 
 .shareLegend {
@@ -70,7 +70,7 @@
   width: rem(12px);
   height: rem(12px);
   border-radius: rem(3px);
-  background: rgb(204 217 236 / 14%);
+  background: color-mix(in srgb, var(--vic-ice) 14%, transparent);
 }
 
 .shareSwatch[data-person] {
@@ -308,7 +308,7 @@
   padding: rem(5px);
   border: 1px solid var(--vic-hair-16);
   border-radius: rem(10px);
-  background: #1b2c5c;
+  background: var(--vic-menu);
   box-shadow: 0 rem(14px) rem(30px) rgb(0 0 0 / 50%);
   font-size: rem(12.5px);
 
@@ -437,7 +437,7 @@
   gap: rem(2px);
   min-height: rem(150px);
   padding: rem(16px) rem(18px);
-  border: 1px solid rgb(255 255 255 / 16%);
+  border: 1px solid var(--vic-hair-16);
   border-radius: rem(22px);
   background: linear-gradient(
     180deg,

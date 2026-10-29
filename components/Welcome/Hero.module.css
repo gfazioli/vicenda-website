@@ -17,8 +17,16 @@
   padding-bottom: rem(56px);
   background:
     linear-gradient(to bottom, transparent 70%, var(--vic-ground)),
-    radial-gradient(circle rem(520px) at 85% 15%, rgb(0 71 176 / 42%), transparent),
-    radial-gradient(circle rem(480px) at 20% 95%, rgb(0 71 176 / 29%), transparent),
+    radial-gradient(
+      circle rem(520px) at 85% 15%,
+      color-mix(in srgb, var(--vic-cobalt) 42%, transparent),
+      transparent
+    ),
+    radial-gradient(
+      circle rem(480px) at 20% 95%,
+      color-mix(in srgb, var(--vic-cobalt) 29%, transparent),
+      transparent
+    ),
     linear-gradient(117deg, var(--vic-ground), var(--vic-ground-mid), var(--vic-ground-deep));
 
   @media (min-width: $mantine-breakpoint-sm) {
