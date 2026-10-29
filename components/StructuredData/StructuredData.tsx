@@ -115,7 +115,7 @@ export const FAQ_ENTRIES: { question: string; answer: string }[] = [
   {
     question: 'Which Mac do I need?',
     answer:
-      'macOS 15 or later, on Apple silicon. Vicenda needs one model, and it runs on your Mac: on macOS 26 that is Apple Intelligence, with nothing to download; otherwise you download a model once, from Settings: 2.3 GB for a Mac with 16 GB of memory, or 0.9 GB for one with 8 GB.',
+      'macOS 15 or later, on Apple silicon. Vicenda needs one model, and it runs on your Mac: Apple Intelligence, with nothing to download, on macOS 26 when it is available and turned on; otherwise you download a model once, from Settings: 2.3 GB for a Mac with 16 GB of memory, or 0.9 GB for one with 8 GB.',
   },
   {
     question: 'What happens to mail I bin?',
@@ -125,7 +125,7 @@ export const FAQ_ENTRIES: { question: string; answer: string }[] = [
   {
     question: 'Can I reply, or write a new mail?',
     answer:
-      'Not in Vicenda: it has no composer and sends nothing. Fewer than one message a day needs an answer, so reply in the mail app you already use.',
+      'Not in Vicenda: it has no composer and sends nothing. Reply in the mail app you already use; in its maker’s mail, that is fewer than one message a day.',
   },
   {
     question: 'What does it cost?',

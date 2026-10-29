@@ -45,8 +45,8 @@ unread**, and only if you turn that on in Settings; it is off until you do.
 ## The model works on the device
 
 Vicenda needs one model, to write a mail's one line in the report, and it runs
-on your Mac: **Apple Intelligence** on macOS 26 and later, or a **model you
-download once** from Settings. No message, and
+on your Mac: **Apple Intelligence**, on macOS 26 and later where it is available
+and turned on, or a **model you download once** from Settings. No message, and
 nothing about one, is sent anywhere to do it, and no message is used to train
 anything.
 
@@ -94,7 +94,11 @@ browser, not inside Vicenda.
 ## Removing your data
 
 Removing an account in Vicenda deletes its password from the Keychain and its
-mail from the local database, and changes nothing on the server. Deleting the `~/.vicenda-dump/` folder removes everything at once. A
+mail from the local database, and changes nothing on the server. Deleting the
+`~/.vicenda-dump/` folder removes the database, with your mail, rules and
+decisions, but **not the passwords**, which live in the Keychain: remove each
+account in Vicenda first, or delete the items named `com.gfazioli.Vicenda.imap`
+in Keychain Access. A
 downloaded model stays in `~/Library/Application Support/Vicenda/Models`, and
 sender photos in the app's cache, until you delete them.
 

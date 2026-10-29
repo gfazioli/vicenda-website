@@ -45,7 +45,7 @@ const SECTIONS: Section[] = [
   {
     // The figures are the owner's own mail (the brief's Gate 0, measured on
     // the local store: about 97% bulk, about one a day needing a reply), said
-    // as his, not as a statistic about everyone's.
+    // as the owner's, not as a statistic about everyone's.
     id: 'how-it-works',
     eyebrow: 'The problem',
     title: 'Mail is messages, not conversations.',
@@ -169,7 +169,7 @@ const PROMISES: { icon: Icon; title: string; body: string }[] = [
   {
     icon: IconCpu,
     title: 'The model runs on the Mac.',
-    body: 'Vicenda needs one model, and it runs here: Apple Intelligence, built into macOS 26, or a model you download once from Settings. It reads your mail where it already is, and nowhere else.',
+    body: 'Vicenda needs one model, and it runs here: Apple Intelligence, on macOS 26 where it is available and turned on, or a model you download once from Settings. It reads your mail where it already is, and nowhere else.',
   },
   {
     icon: IconServerOff,
