@@ -187,8 +187,9 @@ function Stage({ width, children }: { width: number; children: ReactNode }) {
 
 /*
  * Each promise, and the code that keeps it (Vicenda, feat/report-core):
- * - the model: `ModelCatalog.swift` (Apple Intelligence built into macOS 26;
- *   a download from Settings, checked against a hash built into the app);
+ * - the model: one is required (Vicenda#155: Apple Intelligence when the Mac
+ *   has it, else a banner to choose one in Settings); `ModelCatalog.swift`
+ *   (built into macOS 26, or a download checked against a hash in the app);
  * - no server: `ImapConnection.swift` (TLS to the provider, port 993), and
  *   no analytics, crash reporting or cloud AI anywhere in the code;
  * - the mailbox left as it is: `reportDecisionsTravel` is false for every
@@ -201,7 +202,7 @@ const PROMISES: { icon: Icon; title: string; body: string }[] = [
   {
     icon: IconCpu,
     title: 'The model runs on the Mac.',
-    body: 'Apple Intelligence, built into macOS 26, or a model you download once from Settings. It reads your mail where it already is, and nowhere else.',
+    body: 'Vicenda needs one model, and it runs here: Apple Intelligence, built into macOS 26, or a model you download once from Settings. It reads your mail where it already is, and nowhere else.',
   },
   {
     icon: IconServerOff,

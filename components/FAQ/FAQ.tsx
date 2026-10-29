@@ -76,11 +76,12 @@ export const faqItems: { value: string; question: string; answer: ReactNode }[] 
   {
     value: 'mac',
     question: 'Which Mac do I need?',
-    // `MACOSX_DEPLOYMENT_TARGET = 15.0`; `ModelCatalog.swift`: Apple
+    // `MACOSX_DEPLOYMENT_TARGET = 15.0`; one model required (Vicenda#155:
+    // Apple Intelligence when available, else Settings); `ModelCatalog.swift`: Apple
     // Intelligence on macOS 26, or a download of 2,263,022,529 bytes (16 GB
     // of memory) or 868,628,559 bytes (8 GB); MLX needs Apple silicon.
     answer:
-      'macOS 15 or later, on Apple silicon, which the model needs. On macOS 26 Vicenda can use Apple Intelligence, with nothing to download. Otherwise you download a model once, from Settings: 2.3 GB for a Mac with 16 GB of memory, or 0.9 GB for one with 8 GB.',
+      'macOS 15 or later, on Apple silicon. Vicenda needs one model, and it runs on your Mac: on macOS 26 that is Apple Intelligence, with nothing to download; otherwise you download a model once, from Settings: 2.3 GB for a Mac with 16 GB of memory, or 0.9 GB for one with 8 GB.',
   },
   {
     value: 'bin',
