@@ -66,9 +66,10 @@ export function SoftwareApplicationJsonLd() {
         applicationCategory: 'CommunicationApplication',
         operatingSystem: `macOS ${config.app.minMacOS}+`,
         url: `${SITE}/`,
-        // The site's own `/download`, which resolves the newest `.dmg` at
-        // request time. Never point this at an asset that does not exist.
-        downloadUrl: `${SITE}${config.app.downloadUrl}`,
+        // No downloadUrl while the site offers no download (owner,
+        // 2026-10-29). When it comes back, it is `${SITE}/download`: the
+        // config's downloadUrl is already absolute, and gluing SITE in front
+        // of it published "https://vicenda.apphttps://github.com/…".
         softwareVersion: config.app.version,
         image: `${SITE}/opengraph-image.jpeg`,
         offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
@@ -92,7 +93,7 @@ export const FAQ_ENTRIES: { question: string; answer: string }[] = [
   {
     question: 'How do I get it?',
     answer:
-      'Vicenda is a free download for macOS, signed and notarised by Apple. There is no App Store listing and no account to create.',
+      'Vicenda is free, for macOS, with no App Store listing and no account to create. The next version is being rebuilt from the ground up, and the download comes back when it is ready.',
   },
   {
     question: 'What macOS version do I need?',
