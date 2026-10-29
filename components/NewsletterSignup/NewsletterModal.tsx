@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { Modal } from '@mantine/core';
 import { readLocalStorageValue, useDisclosure } from '@mantine/hooks';
 import { NewsletterCallToAction } from './NewsletterCallToAction';
+import { DISMISSED_KEY, PROMPT_OPEN_ATTRIBUTE } from './prompt-open';
 
 /**
  * Scroll-triggered newsletter prompt.
@@ -14,13 +15,6 @@ import { NewsletterCallToAction } from './NewsletterCallToAction';
  * in the root layout.
  */
 const SCROLL_TRIGGER_PX = 1200;
-
-/**
- * Stored as the JSON `true` once the visitor closes the prompt. A new key on
- * purpose: the download prompt this replaced had its own, and a visitor who
- * dismissed THAT should still see the newsletter once.
- */
-export const DISMISSED_KEY = 'vicenda-newsletter-prompt-dismissed';
 
 const isDismissed = () => readLocalStorageValue({ key: DISMISSED_KEY, defaultValue: false });
 
@@ -64,6 +58,16 @@ export function NewsletterModal() {
     scrolled();
     return stop;
   }, [open]);
+
+  // Says on <html> that the prompt is open, for the envelope in the corner,
+  // which steps aside until it has gone (`prompt-open.ts`).
+  useEffect(() => {
+    if (!opened) {
+      return undefined;
+    }
+    document.documentElement.setAttribute(PROMPT_OPEN_ATTRIBUTE, 'open');
+    return () => document.documentElement.removeAttribute(PROMPT_OPEN_ATTRIBUTE);
+  }, [opened]);
 
   const handleClose = () => {
     try {
