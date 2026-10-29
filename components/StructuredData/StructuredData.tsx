@@ -90,7 +90,12 @@ export const FAQ_ENTRIES: { question: string; answer: string }[] = [
   {
     question: 'What is Vicenda?',
     answer:
-      'A native macOS mail client shaped like a conversation. The machines that write to you become channels you visit, the people you correspond with become threads that empty, and a recognised machine message — an invoice, a security advisory — is drawn as a card with named fields instead of being rendered as the sender\u2019s HTML.',
+      'A Mac app that turns a morning of mail into a few decisions. It reads every account you give it, sorts the mail by kind with rules it learns as you go, and lays the morning out as one report: what needs you, what can be read in a line, what is new, and what is already decided.',
+  },
+  {
+    question: 'Does it replace my mail app?',
+    answer:
+      'No. It reads and sorts your mail, but it does not write or send any, and it is not trying to replace the app you reply in. Keep that app for the rare message that needs an answer: a mail address you click in a message opens there.',
   },
   {
     question: 'How do I get it?',
@@ -98,38 +103,44 @@ export const FAQ_ENTRIES: { question: string; answer: string }[] = [
       'Vicenda is free, for macOS, with no App Store listing and no account to create. The next version is being rebuilt from the ground up, and the download comes back when it is ready.',
   },
   {
-    question: 'What macOS version do I need?',
-    answer: 'macOS 15 or later.',
+    question: 'Which accounts can it read?',
+    answer:
+      'Any mailbox that speaks IMAP over an encrypted connection, Gmail included: Gmail needs an app password, which Google lets you make once 2-Step Verification is on. Every account lands in the same report, each with its own colour and monogram.',
   },
   {
-    question: 'Which mailboxes does it support?',
+    question: 'Does my mail leave my Mac?',
     answer:
-      'Gmail, through Google\u2019s API, and any account reachable over IMAP. Reading works on both. Marking read and unread works on both. Archive and delete work on Gmail accounts where you have turned writing on, and are not built for IMAP yet.',
+      'No. It comes from your provider straight to your Mac and stays there: Vicenda runs no server, sends no telemetry, and its model works on the device. Opening a message loads nothing from the internet, because every remote image and tracker in it is blocked.',
   },
   {
-    question: 'Can I send mail with it?',
+    question: 'Which Mac do I need?',
     answer:
-      'Not yet. Vicenda is a reading and triage tool first — composing is secondary and sending is not built. The composer writes a local draft and says so rather than offering a button that quietly does nothing.',
+      'macOS 15 or later, on Apple silicon, which the model needs. On macOS 26 Vicenda can use Apple Intelligence, with nothing to download. Otherwise you download a model once, from Settings: 2.3 GB for a Mac with 16 GB of memory, or 0.9 GB for one with 8 GB.',
   },
   {
-    question: 'Where does my mail go?',
+    question: 'What happens to mail I bin?',
     answer:
-      'Nowhere. Vicenda runs no server — not for sync, not for search — and your mail is read from the provider straight to your Mac. It also blocks every remote resource before a message is rendered, so opening an email does not tell the sender you opened it.',
+      'Today, binning is a decision recorded in Vicenda, on your Mac: the mail leaves the report, and your mailbox on the server stays as it is. Carrying decisions to the server comes next, and there a binned mail will go to your provider\u2019s Trash, not be deleted.',
+  },
+  {
+    question: 'Can I reply, or write a new mail?',
+    answer:
+      'Not in Vicenda: it has no composer and sends nothing. Fewer than one message a day needs an answer, so reply in the mail app you already use.',
   },
   {
     question: 'What does it cost?',
     answer:
-      'Nothing, and there is no pricing page to visit later. Vicenda is one person\u2019s mail client, opened to a few people. If it turns out to be useful to you, sponsoring the work is welcome and buys you nothing extra.',
+      'Nothing, and there is no pricing page to visit later: Vicenda is a personal project. If it is useful to you, sponsoring the work is welcome and buys you nothing extra.',
   },
   {
-    question: 'Does it use AI?',
+    question: 'Who makes it? Is it open source?',
     answer:
-      'Only if you ask it to, and only on your Mac. An optional local model can build a card for a machine message no template covers — a download you choose in Settings, run entirely on your Mac, never sent anywhere. It needs an Apple silicon Mac, and Vicenda is complete without it.',
+      'One person: Giovambattista Fazioli, who publishes as Undolog. The app is free but its source is not public; the source of this website is.',
   },
   {
     question: 'Does it update itself?',
     answer:
-      'Yes. Vicenda checks for updates on its own and installs them when you say so, the same way FinderGit and Netfox do. You can turn the check off in Settings.',
+      'Yes. Vicenda checks for updates on its own and installs them when you say so. You can turn the check off in Settings.',
   },
   {
     question: 'Is there a Vicenda community?',
