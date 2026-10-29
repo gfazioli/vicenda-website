@@ -10,35 +10,10 @@
  * says what the app says.
  */
 
-/** An account as a card draws it: its monogram, and its slot on the ring. */
-export interface Account {
-  monogram: string;
-  /** Index into `ACCOUNT_RING` and `ACCOUNT_INK` in `theme.ts`. */
-  slot: number;
-}
+import type { Account, FaceCard, ToolIcon } from '../MailCard/MailCard';
 
 export const GF: Account = { monogram: 'GF', slot: 0 };
 export const JF: Account = { monogram: 'JF', slot: 3 };
-
-export type ToolIcon = 'bin' | 'later' | 'archive';
-
-export interface Tool {
-  label: string;
-  icon: ToolIcon;
-  /** The first of a card's tools is its proposal, filled in the accent. */
-  primary?: boolean;
-}
-
-/** A face-up card: a New kind, one mail standing for it. */
-export interface FaceCard {
-  account: Account;
-  sender: string;
-  /** What the kind is, beside the sender. */
-  note: string;
-  time: string;
-  subject: string;
-  tools: Tool[];
-}
 
 /** A card in the deck: only its bottom strip shows. */
 export interface DeckCard {
@@ -98,13 +73,11 @@ export const deck: DeckCard[] = [
  */
 export const more = '+7 in the hand';
 
-export type TrayIcon = 'bin' | 'unsubscribe' | 'later' | 'archive' | 'todo';
-
 export interface Tray {
   title: string;
   /** The title on a phone, where a tray is a small tile. */
   short?: string;
-  icon: TrayIcon;
+  icon: ToolIcon;
 }
 
 /** On the left, what lets mail go (`Tray.letGo`). The Bin is first. */

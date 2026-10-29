@@ -1,22 +1,9 @@
 'use client';
 
-import type { CSSProperties } from 'react';
-import {
-  IconArchive,
-  IconBellOff,
-  IconCheck,
-  IconCircleCheck,
-  IconMoon,
-  IconTrash,
-} from '@tabler/icons-react';
+import { MailCard, Peek, TOOL_ICONS } from '../MailCard/MailCard';
 import { useReveal } from '../Motion/useReveal';
 import {
-  type Account,
-  type DeckCard,
-  type FaceCard,
-  type ToolIcon,
   type Tray,
-  type TrayIcon,
   dealt,
   deck,
   description,
@@ -26,7 +13,6 @@ import {
   more,
   rising,
 } from './table-data';
-import { ACCOUNT_INK, ACCOUNT_RING } from '@/theme';
 import classes from './SortingTable.module.css';
 
 /**
@@ -92,17 +78,17 @@ export function SortingTable() {
         </p>
         <div className={classes.pile}>
           <div className={`${classes.slot} ${classes.leaving}`}>
-            <Card card={leaving} pressFirst />
+            <MailCard card={leaving} pressClassName={classes.press} />
           </div>
           <div className={`${classes.slot} ${classes.rising}`}>
-            <Card card={rising} />
+            <MailCard card={rising} />
           </div>
           <div className={`${classes.slot} ${classes.dealt}`}>
-            <Card card={dealt} />
+            <MailCard card={dealt} />
           </div>
           <div className={classes.deck}>
             {deck.map((card, depth) => (
-              <Peek key={card.sender} card={card} depth={depth} />
+              <Peek key={card.sender} {...card} depth={depth} />
             ))}
             <p className={classes.more}>{more}</p>
           </div>
@@ -121,87 +107,6 @@ export function SortingTable() {
   );
 }
 
-/** The account's hue and its monogram's ink, as custom properties. */
-function accountStyle(account: Account) {
-  return {
-    '--band': ACCOUNT_RING[account.slot],
-    '--mono': ACCOUNT_INK[account.slot],
-  } as CSSProperties;
-}
-
-const TOOL_ICONS: Record<ToolIcon, typeof IconTrash> = {
-  bin: IconTrash,
-  later: IconMoon,
-  archive: IconArchive,
-};
-
-/** A face-up card: its title zone, then its tools in a strip of their own. */
-function Card({ card, pressFirst = false }: { card: FaceCard; pressFirst?: boolean }) {
-  return (
-    <div className={classes.card} style={accountStyle(card.account)}>
-      <div className={classes.cardBody}>
-        <div className={classes.titleRow}>
-          <span className={classes.tile}>{card.account.monogram}</span>
-          <span className={classes.sender}>{card.sender}</span>
-          <span className={classes.note}>{card.note}</span>
-          <span className={classes.time}>{card.time}</span>
-        </div>
-        <p className={classes.subject}>{card.subject}</p>
-      </div>
-      <div className={classes.cardFoot}>
-        <span className={classes.tools}>
-          {card.tools.map((tool, i) => {
-            const Icon = TOOL_ICONS[tool.icon];
-            return (
-              <span
-                key={tool.label}
-                className={`${classes.tool} ${pressFirst && i === 0 ? classes.press : ''}`}
-                data-primary={tool.primary ? '' : undefined}
-              >
-                <Icon size={13} stroke={2} aria-hidden="true" />
-                {tool.label}
-              </span>
-            );
-          })}
-        </span>
-        {/*
-          "from now on", checked: what a New card's yes does in the app
-          (`FromNowOnControls`, on by default) -- the answer becomes a rule
-          for the kind.
-        */}
-        <span className={classes.fromNow}>
-          <span className={classes.check} aria-hidden="true">
-            <IconCheck size={9} stroke={3.5} />
-          </span>
-          from now on
-        </span>
-      </div>
-    </div>
-  );
-}
-
-/** A card in the deck: only its bottom strip shows, a little narrower the deeper. */
-function Peek({ card, depth }: { card: DeckCard; depth: number }) {
-  return (
-    <div
-      className={classes.peek}
-      style={{ ...accountStyle(card.account), '--depth': depth } as CSSProperties}
-    >
-      <span className={`${classes.tile} ${classes.tileSmall}`}>{card.account.monogram}</span>
-      <span className={classes.peekSender}>{card.sender}</span>
-      <span className={classes.peekSubject}>{card.subject}</span>
-    </div>
-  );
-}
-
-const TRAY_ICONS: Record<TrayIcon, typeof IconTrash> = {
-  bin: IconTrash,
-  unsubscribe: IconBellOff,
-  later: IconMoon,
-  archive: IconArchive,
-  todo: IconCircleCheck,
-};
-
 /**
  * A tray: its symbol, its name and its tally. `lands` is the Bin, which the
  * top card goes into: its count is a window over a 0 that leaves and a 1 that
@@ -218,7 +123,7 @@ function TrayView({
   lands?: boolean;
   proposedAtEnd?: boolean;
 }) {
-  const Icon = TRAY_ICONS[tray.icon];
+  const Icon = TOOL_ICONS[tray.icon];
   const ring = lands ? classes.ringLeaves : proposedAtEnd ? classes.ringArrives : '';
   return (
     <div className={`${classes.tray} ${ring} ${lands ? classes.lands : ''}`} data-icon={tray.icon}>
