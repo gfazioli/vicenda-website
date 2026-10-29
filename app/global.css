@@ -13,7 +13,16 @@
     scroll-behavior: smooth;
   }
 
+  /*
+   * The bar's height, in ONE place. Nextra lays its sidebar, its table of
+   * contents and every sticky heading out against `--nextra-navbar-height`,
+   * and the bar those offsets are measured from is now ours
+   * (`MenuBarHeader`), so the value is ours too; `--vic-bar-height` is the
+   * name the site's own components read it by.
+   */
   :root {
+    --vic-bar-height: 48px;
+    --nextra-navbar-height: var(--vic-bar-height);
     --x-color-nextra-bg: var(--mantine-color-gray-1);
 
     &:where(.dark) {
@@ -36,6 +45,37 @@
 
   .x\:text-primary-800 {
     color: var(--mantine-color-white) !important;
+  }
+
+  /*
+   * The search box lives in the bar now, so its chrome follows the bar's: a
+   * 30px input in a 48px bar, on the bar's navy. Nextra's own input is 41px
+   * tall, which inside this bar reads as an input that has burst its
+   * container. Scoped to the bar: the same component renders in Nextra's
+   * mobile sidebar, where the page's own styles are right.
+   */
+  .vic-menubar .nextra-search {
+    color: rgb(255 255 255 / 92%);
+  }
+
+  .vic-menubar .nextra-search input {
+    height: 30px;
+    padding-block: 0;
+    border-color: rgb(255 255 255 / 14%);
+    border-radius: 8px;
+    background-color: rgb(255 255 255 / 7%);
+    color: #fff;
+    font-size: 13px;
+  }
+
+  .vic-menubar .nextra-search input::placeholder {
+    color: rgb(255 255 255 / 50%);
+  }
+
+  .vic-menubar .nextra-search kbd {
+    border-color: rgb(255 255 255 / 16%);
+    background-color: rgb(255 255 255 / 8%);
+    color: rgb(255 255 255 / 70%);
   }
 
   nav.nextra-toc {
