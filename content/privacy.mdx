@@ -66,9 +66,10 @@ anybody but your own provider.
   Settings: the app asks vicenda.app whether a new version exists. The request
   carries your IP address and the app's version.
 - **Gravatar**, off unless you switch on "Ask Gravatar for the photo": the app
-  sends `gravatar.com` a hash of a sender's address to ask for a photo. The
+  sends `gravatar.com` a hash of a sender's address to ask for a photo, and,
+  for the pictures on your own accounts, a hash of your own addresses. The
   address itself does not travel, but the hash identifies it, so Gravatar learns
-  that this Mac corresponds with that person. The Mac's own address book, on by
+  that this Mac corresponds with that person, and which addresses are yours. The Mac's own address book, on by
   default, is the other source of photos, and nothing leaves the Mac for it.
 - **The About window** shows a sponsor's picture, which is loaded from GitHub.
 
