@@ -42,6 +42,13 @@ html {
   --vic-ice: var(--mantine-color-dark-1);
 
   /*
+   * The morning gold of the envelope's sun (`components/Mascot/sprite.ts`):
+   * the mascot's own accent, on its rings, its bubbles' rim and their Next.
+   * Nowhere else on the page, so the gold stays the envelope's.
+   */
+  --vic-sun: #ffc24a;
+
+  /*
    * Navies off the logo's ramp, each a step from the card's: the product
    * bar's lit top edge, an open menu's plate (a step above the card it hangs
    * over), and the footer's ground (the page's, a step toward black).
