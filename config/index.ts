@@ -1,23 +1,21 @@
 export default {
   metadata: {
     title: {
-      // 58 characters — within the 50-60 OG sweet spot.
-      // "Native macOS" + "Git Intelligence" both pull weight in
-      // the click decision: the first frames the platform, the
-      // second the differentiator over a plain file browser.
-      // 56 characters. "Mail client" says the category in two words and
-      // "not a list" is the whole differentiator — the two things that decide
-      // a click, in the order they decide it.
-      default: 'Vicenda — A Mac mail client that is not a list',
+      // The hero's headline. Vicenda is not a mail client any more (it is a
+      // morning report that sorts the mail), so the category the old title
+      // named is gone with it; the promise is what decides the click.
+      default: 'Vicenda — Stop noticing your email',
       template: '%s | Vicenda',
     },
+    // The hero's lede, one "it" shorter: 148 characters, under the 160 a
+    // result shows. No "mail client", and no AI vendor: it all runs on the Mac.
     description:
-      'A native macOS mail client shaped like a conversation. The machines that write to you get channels, the people get threads, and nothing ever leaves your Mac.',
+      'Vicenda turns a morning of mail into a few decisions. It sorts every account by kind, with rules it learns as you go, and runs entirely on your Mac.',
     metadataBase: new URL('https://vicenda.app/'),
     keywords: [
       'Vicenda',
       'macOS',
-      'mail client',
+      'morning report',
       'email',
       'Gmail',
       'IMAP',
