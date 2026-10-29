@@ -241,158 +241,7 @@
   margin-top: var(--card-gap);
 }
 
-/*
- * A mail card (`MailChrome`): one opaque navy for every account, the account
- * as the border, thick on the left. CSS draws a `border-left` on a rounded box
- * the way the app's `BandShape` draws its band: the inner corners are the outer
- * radius less the border, so at 3px on the left they are square, and the band
- * curves round into the thin top, right and bottom edges.
- */
-.card {
-  position: relative;
-  overflow: hidden;
-  border: 1.5px solid var(--band);
-  border-left-width: rem(12px);
-  border-radius: rem(3px) rem(22px) rem(22px) rem(3px);
-  background: var(--vic-card);
-  box-shadow: 0 3px 16px rgb(0 0 0 / 32%);
-}
-
-.cardBody {
-  display: flex;
-  flex-direction: column;
-  gap: rem(5px);
-  padding: rem(13px) rem(18px) rem(12px) rem(14px);
-}
-
-.titleRow {
-  display: flex;
-  align-items: center;
-  gap: rem(7px);
-  min-width: 0;
-  white-space: nowrap;
-}
-
-/* `AccountTile`: the monogram on its hue, in the hue's own dark ink. */
-.tile {
-  display: inline-flex;
-  flex: none;
-  align-items: center;
-  justify-content: center;
-  width: rem(18px);
-  height: rem(18px);
-  border-radius: rem(5px);
-  background: var(--band);
-  color: var(--mono);
-  font-family: ui-rounded, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  font-size: rem(8.5px);
-  font-weight: 700;
-  letter-spacing: 0;
-}
-
-.tileSmall {
-  width: rem(15px);
-  height: rem(15px);
-  border-radius: rem(4px);
-  font-size: rem(7px);
-}
-
-.sender {
-  flex: none;
-  color: var(--vic-card-caption);
-  font-size: rem(12.5px);
-  font-weight: 600;
-}
-
-.note {
-  overflow: hidden;
-  min-width: 0;
-  color: var(--vic-card-faint);
-  font-size: rem(12px);
-  text-overflow: ellipsis;
-}
-
-.time {
-  margin-inline-start: auto;
-  padding-inline-start: rem(8px);
-  color: var(--vic-card-faint);
-  font-size: rem(12px);
-  font-variant-numeric: tabular-nums;
-}
-
-/* The title: one line, as a card in the hand shows it. */
-.subject {
-  overflow: hidden;
-  margin: 0;
-  color: var(--vic-card-ink);
-  font-size: rem(15px);
-  font-weight: 600;
-  line-height: 1.3;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* The tools, in a strip of their own at the foot, set apart by a hairline. */
-.cardFoot {
-  display: flex;
-  align-items: center;
-  gap: rem(10px);
-  padding: rem(9px) rem(16px) rem(9px) rem(14px);
-  border-top: 1px solid var(--vic-hair-10);
-  background: rgb(255 255 255 / 5%);
-  white-space: nowrap;
-}
-
-.tools {
-  display: flex;
-  gap: rem(6px);
-  min-width: 0;
-}
-
-/* `ToolButtonStyle`: the first filled in the royal, the rest bordered. */
-.tool {
-  display: inline-flex;
-  flex: none;
-  align-items: center;
-  gap: rem(4px);
-  height: rem(26px);
-  padding-inline: rem(10px) rem(11px);
-  border: 1px solid var(--vic-hair-24);
-  border-radius: 999px;
-  color: var(--vic-card-ink);
-  font-size: rem(12px);
-  font-weight: 500;
-}
-
-.tool[data-primary] {
-  border-color: transparent;
-  background: var(--vic-royal);
-  color: #fff;
-  font-weight: 600;
-}
-
-.fromNow {
-  display: inline-flex;
-  flex: none;
-  align-items: center;
-  gap: rem(5px);
-  margin-inline-start: auto;
-  color: var(--vic-card-caption);
-  font-size: rem(12px);
-}
-
-.check {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: rem(13px);
-  height: rem(13px);
-  border-radius: rem(3.5px);
-  background: var(--vic-royal);
-  color: #fff;
-}
-
-/* ---- The deck (`Deck`, `Peek`) ----------------------------------------- */
+/* ---- The deck (`Deck`): its peeks are `MailCard`'s `Peek` --------------- */
 
 .deck {
   position: relative;
@@ -400,44 +249,6 @@
   display: flex;
   flex-direction: column;
   margin-top: calc(-1 * var(--peek-hidden));
-}
-
-.peek {
-  position: relative;
-  z-index: calc(10 - var(--depth));
-  display: flex;
-  align-items: flex-end;
-  gap: rem(7px);
-  height: var(--peek-h);
-  margin-inline: calc(var(--depth) * rem(14px) + rem(14px));
-  padding: 0 rem(14px) rem(5px) rem(10px);
-  overflow: hidden;
-  border: 1.5px solid var(--band);
-  border-left-width: rem(12px);
-  border-radius: rem(3px) rem(18px) rem(18px) rem(3px);
-  background: var(--vic-card);
-  box-shadow: 0 6px 8px rgb(0 0 0 / 35%);
-  opacity: calc(1 - var(--depth) * 0.16);
-  white-space: nowrap;
-}
-
-.peek + .peek {
-  margin-top: calc(-1 * var(--peek-hidden));
-}
-
-.peekSender {
-  flex: none;
-  color: var(--vic-card-ink);
-  font-size: rem(12px);
-  font-weight: 600;
-}
-
-.peekSubject {
-  overflow: hidden;
-  min-width: 0;
-  color: var(--vic-card-caption);
-  font-size: rem(12px);
-  text-overflow: ellipsis;
 }
 
 .more {
@@ -511,10 +322,6 @@
 
   .short {
     display: inline;
-  }
-
-  .note {
-    display: none;
   }
 }
 
