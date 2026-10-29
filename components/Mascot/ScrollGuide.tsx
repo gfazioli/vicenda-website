@@ -148,6 +148,8 @@ export function ScrollGuide() {
   const [card, setCard] = useState<HTMLElement | null>(null);
   // The envelope's box, in whichever place it is.
   const box = useRef<HTMLDivElement>(null);
+  // The envelope's own button in the corner, which stays when its bubble folds.
+  const walker = useRef<HTMLButtonElement>(null);
   // Where the reader opened the bubble: half a window of scroll away, it folds.
   const openedAt = useRef(0);
   // What the page says about where the envelope belongs.
@@ -202,6 +204,22 @@ export function ScrollGuide() {
     target?.focus({ preventScroll: true });
   }, []);
 
+  /**
+   * Folds the bubble the envelope did not leave with: on its timer, or once
+   * the reader has scrolled on. The keyboard on Next or Dismiss would drop to
+   * the page as the bubble unmounts, so it goes to the envelope's own button,
+   * which stays (Codex, round 1 of #47; `handFocusBack` is for when the
+   * envelope itself goes).
+   */
+  const fold = useCallback(() => {
+    const el = box.current;
+    const focused = document.activeElement;
+    if (el?.contains(focused) && focused !== walker.current) {
+      walker.current?.focus({ preventScroll: true });
+    }
+    setBubble('closed');
+  }, [setBubble]);
+
   const ping = useCallback(() => setPings((count) => count + 1), []);
 
   /** Once it stands in the corner with the hero's table in view, it says the morning. */
@@ -227,7 +245,7 @@ export function ScrollGuide() {
           setBubble('hero');
           later(() => {
             if (bubbleNow.current === 'hero') {
-              setBubble('closed');
+              fold();
             }
           }, HERO_FOLD_MS);
         }
@@ -238,7 +256,7 @@ export function ScrollGuide() {
         later(open, SNIFF_MS);
       }
     },
-    [later, ping, setBubble]
+    [fold, later, ping, setBubble]
   );
 
   /** Moves the envelope to where it belongs: out of where it is first, then in. */
@@ -329,7 +347,7 @@ export function ScrollGuide() {
       page.reached = visible || bottom <= 0;
       page.heroRoom = roomBeside(row) >= MIN_BUBBLE_PX;
       if (!visible && bubbleNow.current === 'hero') {
-        setBubble('closed');
+        fold();
       }
       sync();
     };
@@ -368,7 +386,7 @@ export function ScrollGuide() {
       window.removeEventListener('scroll', scrolled);
       window.removeEventListener('resize', resized);
     };
-  }, [sync, setBubble]);
+  }, [sync, fold]);
 
   // The footer's Support card.
   useEffect(() => {
@@ -418,7 +436,7 @@ export function ScrollGuide() {
         bubbleNow.current === 'asked' &&
         Math.abs(window.scrollY - openedAt.current) > window.innerHeight / 2
       ) {
-        setBubble('closed');
+        fold();
       }
     };
     window.addEventListener('scroll', scrolled, { passive: true });
@@ -426,7 +444,7 @@ export function ScrollGuide() {
       window.clearTimeout(still);
       window.removeEventListener('scroll', scrolled);
     };
-  }, [setBubble]);
+  }, [fold]);
 
   // Dismissed here, or under the table: it goes from everywhere.
   useEffect(() => onGuideDismissed(sync), [sync]);
@@ -524,6 +542,7 @@ export function ScrollGuide() {
       inert={phase === 'leaving'}
     >
       <button
+        ref={walker}
         type="button"
         className={classes.walker}
         aria-label={bubble === 'closed' ? 'Show a line' : 'Show another line'}
