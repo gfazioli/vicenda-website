@@ -1,0 +1,553 @@
+/*
+ * The diagrams under the hero (`Diagrams.tsx`). The cards are `MailCard`'s;
+ * this sheet lays them out and draws what only a diagram has. Nothing here
+ * moves except the Overview's cards, through `Motion.module.css`.
+ */
+
+.faint {
+  color: var(--vic-card-faint);
+}
+
+.caption {
+  margin: 0 0 rem(10px);
+  padding-inline-start: rem(4px);
+  color: var(--vic-ground-caption);
+  font-size: rem(11px);
+  font-weight: 600;
+  letter-spacing: rem(1px);
+  text-transform: uppercase;
+}
+
+.groundNote {
+  color: var(--vic-ground-caption);
+  font-size: rem(12.5px);
+}
+
+/* ---- The share: a hundred squares --------------------------------------- */
+
+.share {
+  display: flex;
+  flex-direction: column;
+  gap: rem(18px);
+}
+
+.shareGrid {
+  display: grid;
+  grid-template-columns: repeat(20, minmax(0, 1fr));
+  gap: rem(6px);
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    gap: rem(3px);
+  }
+}
+
+.shareCell {
+  aspect-ratio: 1;
+  border-radius: rem(3px);
+  background: rgb(204 217 236 / 14%);
+}
+
+.shareCell[data-person] {
+  background: var(--vic-sky);
+  box-shadow: 0 0 rem(14px) rgb(0 134 251 / 55%);
+}
+
+.shareLegend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: rem(8px) rem(24px);
+  color: var(--vic-ground-caption);
+  font-size: rem(13px);
+}
+
+.shareLegend > span {
+  display: inline-flex;
+  align-items: center;
+  gap: rem(8px);
+}
+
+.shareSwatch {
+  width: rem(12px);
+  height: rem(12px);
+  border-radius: rem(3px);
+  background: rgb(204 217 236 / 14%);
+}
+
+.shareSwatch[data-person] {
+  background: var(--vic-sky);
+}
+
+/* ---- Today: the trays and a card on its way ---------------------------- */
+
+.legend {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: rem(28px);
+  align-items: start;
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    grid-template-columns: minmax(0, 1fr);
+    gap: rem(20px);
+  }
+}
+
+.legendSide {
+  display: flex;
+  flex-direction: column;
+  gap: rem(10px);
+}
+
+.legendSide .caption {
+  margin-bottom: 0;
+}
+
+/* `TrayFace`: dashed on the ground; lit, solid and a little larger under a card. */
+.tray {
+  display: flex;
+  flex-direction: column;
+  gap: rem(3px);
+  padding: rem(10px) rem(12px);
+  border: 1px dashed var(--vic-hair-16);
+  border-radius: rem(14px);
+  background: rgb(255 255 255 / 5%);
+}
+
+.tray[data-target] {
+  border-style: solid;
+  border-color: var(--vic-hair-24);
+  background: rgb(255 255 255 / 13%);
+  transform: scale(1.04);
+}
+
+.trayHead {
+  display: flex;
+  align-items: center;
+  gap: rem(7px);
+  color: var(--vic-card-ink);
+  font-size: rem(13px);
+  font-weight: 600;
+}
+
+.trayHead svg {
+  flex: none;
+  color: var(--vic-ice);
+}
+
+.traySub {
+  color: var(--vic-ground-caption);
+  font-size: rem(11.5px);
+}
+
+.ghostStage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: rem(18px);
+  padding-top: rem(34px);
+}
+
+/* `TableGhost`: compact, a little see-through, tilted, with its shadow. */
+.ghost {
+  width: min(100%, rem(340px));
+  opacity: 0.94;
+  transform: rotate(-2deg);
+  filter: drop-shadow(0 rem(10px) rem(18px) rgb(0 0 0 / 45%));
+}
+
+.ghostSubject {
+  margin: 0;
+  color: var(--vic-card-ink);
+  font-size: rem(14px);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+/* Where it will land, said on the card, as the tray under it is hidden. */
+.landing {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  gap: rem(4px);
+  padding: rem(2px) rem(8px);
+  border-radius: 999px;
+  background: var(--vic-royal);
+  color: #fff;
+  font-size: rem(12px);
+  font-weight: 600;
+}
+
+.ghostNote {
+  display: inline-flex;
+  align-items: center;
+  gap: rem(6px);
+  margin: 0;
+  color: var(--vic-ground-caption);
+  font-size: rem(12.5px);
+}
+
+/* ---- In brief ------------------------------------------------------------ */
+
+/* "Done reading: …" is a sentence: on a narrow card it wraps inside its pill. */
+.wrapTool {
+  flex: 0 1 auto;
+  min-width: 0;
+  height: auto;
+  min-height: rem(26px);
+  padding-block: rem(4px);
+  white-space: normal;
+}
+
+.briefRow {
+  display: grid;
+  grid-template-columns: rem(190px) minmax(0, 1fr) auto;
+  gap: rem(14px);
+  align-items: baseline;
+  padding: rem(11px) rem(18px) rem(11px) rem(16px);
+  border-bottom: 1px solid var(--vic-hair-10);
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    grid-template-columns: minmax(0, 1fr) auto;
+    row-gap: rem(4px);
+  }
+}
+
+.briefSource {
+  display: inline-flex;
+  align-items: center;
+  gap: rem(8px);
+  min-width: 0;
+  color: var(--vic-card-caption);
+  font-size: rem(11.5px);
+  white-space: nowrap;
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    grid-column: 1 / -1;
+  }
+}
+
+.briefLine {
+  color: var(--vic-card-ink);
+  font-size: rem(13.5px);
+}
+
+.briefFate {
+  color: var(--vic-card-faint);
+  font-size: rem(11.5px);
+  white-space: nowrap;
+}
+
+/* ---- New and its rule ----------------------------------------------------- */
+
+/* Room under the card for its open menu, which hangs over the card's foot. */
+.newRule {
+  position: relative;
+  padding-bottom: rem(52px);
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    padding-bottom: 0;
+  }
+}
+
+.preview {
+  display: flex;
+  flex-direction: column;
+  gap: rem(2px);
+  margin-top: rem(3px);
+  color: var(--vic-card-caption);
+  font-size: rem(12.5px);
+}
+
+.preview > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The tools, then the rule's line under them: `ToolRow` wrapped, the end kept right. */
+.footStack {
+  flex-direction: column;
+  align-items: stretch;
+  gap: rem(10px);
+  white-space: normal;
+}
+
+.ruleRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: rem(8px) rem(10px);
+}
+
+.ruleRow > span:first-child {
+  margin-inline-start: 0;
+}
+
+.menuButton {
+  display: inline-flex;
+  align-items: center;
+  gap: rem(4px);
+  min-width: 0;
+  color: var(--vic-card-ink);
+  font-size: rem(12px);
+}
+
+.menuButton[data-open] {
+  padding: rem(1px) rem(6px);
+  border-radius: rem(5px);
+  background: rgb(255 255 255 / 12%);
+}
+
+/* The coverage menu, open: a macOS menu, the chosen line ticked. */
+.menu {
+  position: absolute;
+  bottom: 0;
+  left: clamp(rem(16px), 18%, rem(150px));
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  padding: rem(5px);
+  border: 1px solid var(--vic-hair-16);
+  border-radius: rem(10px);
+  background: #1b2c5c;
+  box-shadow: 0 rem(14px) rem(30px) rgb(0 0 0 / 50%);
+  font-size: rem(12.5px);
+
+  /* On a phone the rule's line wraps, so the menu follows the card instead. */
+  @media (max-width: $mantine-breakpoint-sm) {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    margin: rem(-8px) rem(10px) 0 rem(28px);
+  }
+}
+
+.menuItem {
+  display: flex;
+  align-items: center;
+  gap: rem(6px);
+  padding: rem(4px) rem(10px) rem(4px) rem(4px);
+  border-radius: rem(6px);
+  color: var(--vic-card-ink);
+  overflow-wrap: anywhere;
+}
+
+.menuItem:first-child {
+  background: var(--vic-royal);
+  color: #fff;
+}
+
+.menuTick {
+  display: inline-flex;
+  flex: none;
+  width: rem(14px);
+}
+
+/* ---- Already decided ------------------------------------------------------ */
+
+.decided {
+  display: flex;
+  flex-direction: column;
+  gap: rem(14px);
+}
+
+.decidedHead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: rem(8px) rem(12px);
+}
+
+.batchTitle {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: rem(4px) rem(8px);
+}
+
+.batchName {
+  color: var(--vic-card-ink);
+  font-size: rem(15px);
+  font-weight: 600;
+}
+
+.batchSub {
+  color: var(--vic-card-caption);
+  font-size: rem(12.5px);
+}
+
+.senders {
+  display: flex;
+  flex-wrap: wrap;
+  gap: rem(6px);
+  margin-block: rem(6px) rem(2px);
+}
+
+.senderChip {
+  display: inline-flex;
+  align-items: center;
+  gap: rem(4px);
+  padding: rem(3px) rem(8px);
+  border: 1px solid rgb(255 255 255 / 12%);
+  border-radius: rem(6px);
+  background: rgb(255 255 255 / 12%);
+  color: var(--vic-card-ink);
+  font-size: rem(12.5px);
+}
+
+/* Left out: struck through, its edge dashed, no fill. It stays in the inbox. */
+.senderChip[data-out] {
+  border-style: dashed;
+  background: transparent;
+  color: var(--vic-card-faint);
+  text-decoration: line-through;
+}
+
+.batchHint {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: rem(8px) rem(12px);
+  margin-top: rem(4px);
+  color: var(--vic-card-caption);
+  font-size: rem(12px);
+}
+
+/* ---- Overview: six vivid cards -------------------------------------------- */
+
+.overview {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: rem(16px);
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: rem(12px);
+  }
+}
+
+/*
+ * `VividGlass`: the section's colour under the glass, 62% at the top and
+ * three quarters of that at the bottom (`Palette.vividShare`, `vividFade`),
+ * with white ink, which the app measures on it.
+ */
+.vivid {
+  display: flex;
+  flex-direction: column;
+  gap: rem(2px);
+  min-height: rem(150px);
+  padding: rem(16px) rem(18px);
+  border: 1px solid rgb(255 255 255 / 16%);
+  border-radius: rem(22px);
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--tint) 62%, var(--vic-ground)),
+    color-mix(in srgb, var(--tint) 45%, var(--vic-ground))
+  );
+  box-shadow: 0 rem(10px) rem(26px) rgb(0 0 0 / 30%);
+  color: #fff;
+}
+
+.vividValue {
+  margin-top: auto;
+  font-size: rem(38px);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+}
+
+.vividTitle {
+  font-size: rem(15px);
+  font-weight: 600;
+}
+
+.vividCaption {
+  color: rgb(255 255 255 / 82%);
+  font-size: rem(12.5px);
+}
+
+/* ---- Every account ---------------------------------------------------------- */
+
+.accounts {
+  display: flex;
+  flex-direction: column;
+  gap: rem(10px);
+}
+
+/* `Segmented`: two segments in a capsule, the chosen one lit. */
+.segmented {
+  display: flex;
+  align-self: flex-end;
+  gap: rem(2px);
+  padding: rem(2px);
+  border: 1px solid var(--vic-hair-16);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 5%);
+  color: var(--vic-card-caption);
+  font-size: rem(12px);
+}
+
+.segmented > span {
+  padding: rem(3px) rem(12px);
+  border-radius: 999px;
+}
+
+.segmented > span[data-on] {
+  background: rgb(255 255 255 / 16%);
+  color: #fff;
+  font-weight: 600;
+}
+
+.accountRow {
+  display: flex;
+  align-items: center;
+  gap: rem(14px);
+  padding: rem(12px) rem(16px);
+  border: 1px solid var(--vic-hair-10);
+  border-radius: rem(16px);
+  background: rgb(255 255 255 / 4%);
+}
+
+.accountText {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: rem(2px);
+  min-width: 0;
+}
+
+.accountAddress {
+  overflow: hidden;
+  color: var(--vic-card-ink);
+  font-size: rem(14px);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.accountStatus {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: rem(4px) rem(8px);
+  color: var(--vic-card-caption);
+  font-size: rem(12px);
+}
+
+.badge {
+  padding: 0 rem(6px);
+  border: 1px solid var(--vic-hair-24);
+  border-radius: rem(5px);
+  font-size: rem(11px);
+}
+
+.accountMail {
+  color: var(--vic-card-faint);
+  font-size: rem(12px);
+  text-align: right;
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    display: none;
+  }
+}
