@@ -1,66 +1,27 @@
 'use client';
 
-import Image from 'next/image';
-import Link from 'next/link';
-import { Reflection } from '@gfazioli/mantine-reflection';
-import { Scene } from '@gfazioli/mantine-scene';
 import { TextAnimate } from '@gfazioli/mantine-text-animate';
 import { IconCards, IconEyeOff, IconMessages, IconPalette } from '@tabler/icons-react';
-import {
-  Badge,
-  Box,
-  Button,
-  Container,
-  Grid,
-  Group,
-  SimpleGrid,
-  Stack,
-  Text,
-  ThemeIcon,
-  Title,
-} from '@mantine/core';
+import { Box, Container, SimpleGrid, Stack, Text, ThemeIcon, Title } from '@mantine/core';
 import { DiscordCallToAction } from '../Discord/DiscordCallToAction';
 import { FAQ } from '../FAQ/FAQ';
+import { Hero } from './Hero';
 import { Shot } from './Shot';
-import {
-  fallbackReleaseCadence,
-  type ReleaseCadence as Cadence,
-} from '@/components/ReleaseCadence/release-cadence';
-import { ReleaseCadence } from '@/components/ReleaseCadence/ReleaseCadence';
-import config from '@/config';
 import { ACCOUNT_RING } from '@/theme';
 
 /**
  * The home page.
  *
- * ## The thesis, and why it is this one
- *
- * Every mail client's pitch is that it sorts better. Vicenda's difference sits
- * upstream of sorting: **it stops treating mail as a list**. Machines become
- * channels, people become threads, and a recognised machine message is drawn as
- * a card instead of rendered as somebody's HTML. That is a claim about SHAPE,
- * which is the only kind a reader can check in one screenshot — and it is true
- * of the app today rather than aspirational.
+ * The hero is `Hero.tsx`, written for the morning report. Everything under
+ * it still describes the mail client, and is rewritten section by section in
+ * the next steps of #43.
  *
  * ## Why nothing here loops
  *
- * Every `Scene` layer is mounted with `animate={false}` and both `TextAnimate`
- * calls are single-pass.
- *
- * **`trigger="mount"` does not fire** — measured, not assumed: the headline
- * rendered its words at opacity zero and stayed there, so the most important
- * line on the page was invisible while `curl` happily showed it in the markup.
- * `inView` fires immediately for anything above the fold and works. (The
- * second bug hiding behind the first: `TextAnimate` is a Mantine `Text`
- * underneath, so without `inherit` it applies Text's own default size and
- * silently overrides the `Title` around it — a 76px headline drawn at 14px.) The app's brief forbids perpetual
- * animation because it pins a core keeping the compositor committing every
- * frame; a marketing page is not an app, but it is somebody's battery, and the
- * brand is restraint. `Scene` also honours `reducedMotion`.
- *
- * The one layer with a technical rather than aesthetic reason is `SceneNoise`:
- * a wide dark radial gradient **bands** on an 8-bit display, and grain is the
- * standard fix. It is at 3% and doing real work.
+ * The closing line's `TextAnimate` is single-pass, as the hero's headline is
+ * (`Hero.tsx` has the two lessons that animation taught: `trigger="inView"`,
+ * and `inherit`). A marketing page is not an app, but it is somebody's
+ * battery, and the brand is restraint.
  */
 
 const PILLARS = [
@@ -94,232 +55,11 @@ const PILLARS = [
  */
 const HALF = '(max-width: 62em) 100vw, 540px';
 
-/**
- * `cadence` defaults so the component still renders in a test or a story with
- * no server fetch behind it. The default is the CONFIG-derived fallback rather
- * than a hand-written object, so what renders offline is the same shape the
- * live failure path produces.
- */
-export function Welcome({ cadence = fallbackReleaseCadence() }: { cadence?: Cadence }) {
+export function Welcome() {
   return (
     <Box style={{ position: 'relative' }}>
-      {/*
-        THE GROUND, scoped to the hero rather than fullscreen.
-
-        `fullscreen` would put the scene at `z-index: -1` under a body that
-        `theme/global.css` paints opaque in dark mode, and under whatever
-        backgrounds Nextra's layout wrappers carry — a stack this file does not
-        own and cannot check from here. Mounted inside a `position: relative`
-        section it fills that section and nothing else, which is the same
-        picture with none of the argument.
-
-        Three static layers: a radial wash in the icon's own blue, a soft glow
-        behind the mark, and grain over both. The gradient is anchored where
-        the icon sits so the light appears to come off it.
-      */}
-      <Box style={{ position: 'relative', overflow: 'hidden' }}>
-        <Scene reducedMotion="auto">
-          <Scene.Gradient
-            type="radial"
-            position="72% 12%"
-            from="vicenda.6"
-            to="dark.9"
-            fromOpacity={0.38}
-            toOpacity={0}
-            animate={false}
-          />
-          <Scene.Glow
-            color="vicenda"
-            shade={5}
-            top="4%"
-            left="64%"
-            size={640}
-            blur={180}
-            opacity={0.22}
-            animate={false}
-          />
-          {/*
-            NOT decoration. A wide dark radial gradient BANDS on an 8-bit
-            display; grain is the standard fix, and 3% is enough to break the
-            steps without reading as texture.
-          */}
-          <Scene.Noise opacity={0.03} grain={0.8} octaves={2} />
-        </Scene>
-
-        {/* ---- Hero ---------------------------------------------------- */}
-        <Container size="lg" py={{ base: 56, sm: 104 }} style={{ position: 'relative' }}>
-          <Grid gap={{ base: 40, md: 64 }} align="center">
-            <Grid.Col span={{ base: 12, md: 7 }}>
-              <Stack gap="xl">
-                <Group gap="xs">
-                  <Badge variant="light" radius="sm" size="sm">
-                    Free
-                  </Badge>
-                  {/*
-                    ONE TEMPLATE LITERAL, not JSX text with interpolations.
-                    Both sibling sites shipped a missing space for months where
-                    an interpolation met a following separator across a wrapped
-                    JSX chunk, and the idiomatic {' '} fix does not survive
-                    oxfmt. A string is out of reach of both.
-
-                    "Universal" is measured, not assumed: `lipo -archs` on the
-                    shipped 0.2.0 bundle reports `x86_64 arm64`. Only the
-                    OPTIONAL local model requires Apple silicon, and that
-                    belongs on the docs page rather than in a hero meta line.
-                  */}
-                  <Text size="sm" c="dimmed">
-                    {`v${config.app.version} · macOS ${config.app.minMacOS} or later · Universal · signed and notarised`}
-                  </Text>
-                </Group>
-
-                <Title order={1} fz={{ base: 44, sm: 76 }} fw={400} lh={1.02}>
-                  <span className="display-hero">
-                    {/*
-                    One pass on mount, by word. `loop` exists and is not used:
-                    a headline that keeps re-animating is a headline you cannot
-                    finish reading.
-                  */}
-                    {/*
-                    `inherit` is load-bearing. TextAnimate is a Mantine `Text`
-                    underneath, so without it the component applies Text's own
-                    default size and SILENTLY overrides the Title around it —
-                    a 76px headline rendered at 14px, which on a dark ground
-                    read as no headline at all.
-                  */}
-                    <TextAnimate
-                      inherit
-                      animation="blurUp"
-                      by="word"
-                      trigger="inView"
-                      duration={0.7}
-                    >
-                      Your mail is not a list.
-                    </TextAnimate>
-                  </span>
-                </Title>
-
-                <Text fz={{ base: 18, sm: 21 }} c="dimmed" maw={560} lh={1.55}>
-                  Vicenda is a Mac mail client shaped like a conversation. The machines that write
-                  to you get channels. The people get threads. Nothing ever leaves your Mac.
-                </Text>
-
-                {/*
-                  No Download button until the next version (owner,
-                  2026-10-29): the app is becoming a morning report, and 0.3.0
-                  is the mail client this page still describes. /download and
-                  the appcast stay up, for the copies already installed.
-                */}
-                <Group gap="sm" mt="xs">
-                  <Button component={Link} href="/docs" size="md" radius="xl">
-                    See how it works
-                  </Button>
-                </Group>
-
-                {/*
-                  How recently, and how often — the question the meta line
-                  above cannot answer. It carries no version of its own: the
-                  line above already prints one, and two versions 40px apart
-                  is one more place for them to disagree.
-                */}
-                <Group mt={-4}>
-                  <ReleaseCadence cadence={cadence} />
-                </Group>
-
-                {/*
-                THE ACCOUNT RING, the app's own and nobody else's: eight hues at
-                one lightness, 45° apart on an OKLCH circle. The site opens with
-                it rather than with a logo, because it is the single graphic
-                device the product already has.
-              */}
-                <Stack gap={6} mt="md">
-                  <Group gap={6} aria-hidden>
-                    {ACCOUNT_RING.map((hue) => (
-                      <Box key={hue} w={26} h={4} style={{ background: hue, borderRadius: 2 }} />
-                    ))}
-                  </Group>
-                  <Text size="xs" c="dimmed">
-                    One hue per mailbox. Seven accounts, one glance.
-                  </Text>
-                </Stack>
-              </Stack>
-            </Grid.Col>
-
-            <Grid.Col span={{ base: 12, md: 5 }}>
-              {/*
-              The mark at its full 512, with a reflection under it. An app icon
-              standing on a dark plane is the most honest hero image a Mac app
-              has: it is the thing you will actually see in the Dock.
-            */}
-              {/*
-              `isolation: isolate` is load-bearing, not tidiness. The reflected
-              copy is painted at `z-index: -2`, so without a stacking context
-              of its own here it goes BEHIND the Scene layers underneath and
-              disappears — the icon simply floats. Isolating clamps that -2 to
-              this box, which puts it above the ground and below the icon.
-            */}
-              <Box
-                style={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  // The root only ever needs to be as tall as the icon.
-                  // (This was tried as the fix for the detached reflection and
-                  // was NOT it — measurement showed the root already hugging the
-                  // image at 235px. Kept because it is correct, not because it
-                  // solved anything.)
-                  alignItems: 'flex-start',
-                  position: 'relative',
-                  isolation: 'isolate',
-                }}
-              >
-                {/*
-                MEASURED, after three wrong answers — the baseline gap, the
-                flex stretch, and the transform origin.
-                
-                The copy sits at `top: 100%` and is transformed
-                `scaleY(-1) scaleY(stretch)`. Flipping about the DEFAULT centre
-                origin maps the box onto itself, so any stretch below 1 shrinks
-                it toward its middle and the mirror detaches by half the height
-                it lost — 48 points on a 235px icon at 0.55. Moving the origin
-                to the top does not fix it: the flip then goes UPWARD over the
-                icon (measured: 146 points of overlap). No origin gives
-                "flush below and squashed", because the squash is the gap.
-                
-                So it does not squash. A full-height mirror, faded by the mask
-                and held down by opacity, which is what a reflection on a dark
-                plane looks like anyway.
-              */}
-                <Reflection
-                  reflectionDistance={0}
-                  reflectionStretch={1}
-                  reflectionOpacity={0.1}
-                  reflectionBlur={9}
-                  reflectionStart={0}
-                  reflectionEnd={45}
-                  shadow={false}
-                  disableChildren
-                >
-                  <Image
-                    src="/icon-512x512.png"
-                    alt="The Vicenda app icon"
-                    width={512}
-                    height={512}
-                    // The largest paint on a laptop (measured at 1440 and 1280
-                    // wide; on a phone it is the paragraph), so it is fetched at
-                    // once and ahead of other images. `priority` did that too,
-                    // and is deprecated in Next 16.
-                    loading="eager"
-                    fetchPriority="high"
-                    sizes="(max-width: 62em) 60vw, 380px"
-                    // `block`, so the inline baseline adds no descender gap
-                    // of its own under the image.
-                    style={{ display: 'block', width: '100%', maxWidth: 380, height: 'auto' }}
-                  />
-                </Reflection>
-              </Box>
-            </Grid.Col>
-          </Grid>
-        </Container>
-      </Box>
+      {/* ---- Hero: the claim, and the sorting table -------------------- */}
+      <Hero />
 
       {/* ---- What it looks like -------------------------------------- */}
       {/*
@@ -332,7 +72,17 @@ export function Welcome({ cadence = fallbackReleaseCadence() }: { cadence?: Cade
         shapes are real. See `scripts/uiverify` in the workspace and the
         Demo Mode notes in the app.
       */}
-      <Container size="lg" py={{ base: 24, sm: 40 }}>
+      {/*
+        `how-it-works` is the hero's button and the bar's second menu. It sits
+        here, on the first section under the hero, until the rewrite (#43)
+        brings the section of its own.
+      */}
+      <Container
+        id="how-it-works"
+        size="lg"
+        py={{ base: 24, sm: 40 }}
+        style={{ scrollMarginTop: 64 }}
+      >
         <Stack gap={10}>
           <Shot
             src="/screenshot-today.png"

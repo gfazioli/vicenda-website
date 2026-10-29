@@ -1,0 +1,764 @@
+/*
+ * The sorting table, drawn as the app draws it (`SortingTable.swift`,
+ * `MailChrome`, `TrayFace`), and its one pass (`SortingTable.tsx` says what
+ * plays when).
+ *
+ * THE LAYOUT IS THE END STATE. Every rule outside the motion block below is
+ * what the table looks like after the pass: that is the served HTML, Reduce
+ * Motion and paper. The keyframes name only where a piece starts and end on
+ * these rules; they fill only `backwards`, so once ended nothing of them is
+ * left (`SortingTable.css.test.ts`).
+ *
+ * THE TRIP TO THE BIN IS COMPUTED, NOT MEASURED. The top card's travel is a
+ * translate from its own place to the Bin's centre, written in this sheet's
+ * own lengths: `%` in a translate is the card's own size, and every other
+ * term (the column gap, the tray's width and height, the captions) is a
+ * variable below with a fixed value. So the trip is right at every width the
+ * layout has, with no script measuring anything, and a change to one of these
+ * lengths moves the Bin and the trip together.
+ */
+.table {
+  /* Above the trays and the hand: "LET GO", "NEW", "KEEP UNDER A LABEL". */
+  --cap-h: rem(28px);
+  --col-gap: rem(16px);
+  --tray-w: rem(168px);
+  --tray-h: rem(54px);
+  --tray-gap: rem(10px);
+  --card-gap: rem(12px);
+  /* The deck (`Deck` in the app): a peek is 48 tall and shows 26 of it. */
+  --peek-h: rem(48px);
+  --peek-hidden: rem(22px);
+  /*
+   * From the top card's centre to the Bin's: left by half the card, the gap
+   * and half a tray; down by half a tray, up by half the card. The Bin is the
+   * first tray, level with the top card under the same height of caption.
+   */
+  --to-bin-x: calc(-50% - var(--col-gap) - var(--tray-w) / 2);
+  --to-bin-y: calc(var(--tray-h) / 2 - 50%);
+
+  position: relative;
+  display: grid;
+  grid-template-columns: var(--tray-w) minmax(0, 1fr) var(--tray-w);
+  column-gap: var(--col-gap);
+  align-items: start;
+  width: 100%;
+  color: var(--vic-card-ink);
+  font-size: rem(12.5px);
+  line-height: 1.3;
+  /* No text selection or drag out of a picture of a screen. */
+  user-select: none;
+
+  /*
+   * Narrower trays only where the table shares the hero with the copy and
+   * the window is not wide: from 75em, where the two columns start, to 87.5em.
+   * Stacked under the copy, it has room for the full width.
+   */
+  @media (min-width: 75em) and (max-width: 87.49em) {
+    --tray-w: rem(150px);
+  }
+}
+
+.caption {
+  display: flex;
+  align-items: flex-start;
+  gap: rem(7px);
+  height: var(--cap-h);
+  margin: 0;
+  padding-inline-start: rem(4px);
+  color: var(--vic-ground-caption);
+  font-size: rem(11px);
+  font-weight: 600;
+  letter-spacing: rem(1px);
+  line-height: rem(16px);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* The New section's own colour, as its heading's mark in the app. */
+.sectionDot {
+  flex: none;
+  width: rem(8px);
+  height: rem(8px);
+  margin-top: rem(4px);
+  border-radius: 50%;
+  background: var(--vic-new);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--vic-new-ink) 35%, transparent);
+}
+
+.side,
+.hand {
+  min-width: 0;
+}
+
+.trays {
+  display: flex;
+  flex-direction: column;
+  gap: var(--tray-gap);
+}
+
+/* ---- A tray (`TrayFace`): on the ground, dashed ------------------------ */
+
+.tray {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: rem(7px);
+  height: var(--tray-h);
+  padding: rem(8px) rem(10px) rem(8px) rem(12px);
+  border: 1px dashed var(--vic-hair-16);
+  border-radius: rem(14px);
+  background: rgb(255 255 255 / 5%);
+  font-size: rem(12.5px);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+/*
+ * The proposal: a thin, steady ring in the accent, on the tray the top card's
+ * first tool names. Drawn on a layer of its own so it can come and go by
+ * opacity; at rest it is on the tray the NEXT card proposes.
+ */
+.tray::before,
+.tray::after {
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  content: '';
+  opacity: 0;
+}
+
+.tray::before {
+  border: 1.5px solid var(--vic-royal);
+}
+
+.ringArrives::before {
+  opacity: 1;
+}
+
+/* A card over the tray: brighter, with a plain solid edge. Off at rest. */
+.tray::after {
+  border: 1px solid var(--vic-hair-24);
+  background: rgb(255 255 255 / 13%);
+}
+
+/* Above the lit layer, which washes the tray rather than the words on it. */
+.trayIcon {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  flex: none;
+  color: var(--vic-ice);
+}
+
+.tray[data-icon='todo'] .trayIcon {
+  color: var(--vic-todo-ink);
+}
+
+/* It may take two lines: "Bin and unsubscribe" in a tray this narrow. */
+.trayTitle {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  overflow: hidden;
+  min-width: 0;
+}
+
+.short {
+  display: none;
+}
+
+/* The tally, as the app writes it: a small capsule of tabular figures. */
+.count {
+  position: relative;
+  z-index: 1;
+  display: inline-grid;
+  flex: none;
+  overflow: hidden;
+  min-width: rem(20px);
+  height: rem(17px);
+  padding-inline: rem(6px);
+  border-radius: 999px;
+  background: rgb(255 255 255 / 12%);
+  font-size: rem(11.5px);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  line-height: rem(17px);
+  text-align: center;
+}
+
+.count > span {
+  grid-area: 1 / 1;
+}
+
+/* At rest the Bin holds one card: the 0 has gone up and out. */
+.countWas {
+  opacity: 0;
+  transform: translateY(-100%);
+}
+
+/* ---- The hand ---------------------------------------------------------- */
+
+.pile {
+  position: relative;
+}
+
+.slot {
+  position: relative;
+  border-radius: rem(3px) rem(22px) rem(22px) rem(3px);
+}
+
+/*
+ * The top card at rest is IN THE BIN: drawn at the Bin's centre, small, and
+ * gone. Absolute, at the top of the pile, so the layout is the hand without
+ * it.
+ */
+.leaving {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 30;
+  opacity: 0;
+  transform: translate3d(var(--to-bin-x), var(--to-bin-y), 0) rotate(-4deg) scale(0.3);
+}
+
+/* The shadow of a lifted card, its own layer so it moves by opacity alone. */
+.leaving::before {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 rem(22px) rem(40px) rem(-10px) rgb(0 0 0 / 60%);
+  pointer-events: none;
+  content: '';
+  opacity: 0;
+}
+
+.rising {
+  z-index: 20;
+}
+
+.dealt {
+  z-index: 15;
+  margin-top: var(--card-gap);
+}
+
+/*
+ * A mail card (`MailChrome`): one opaque navy for every account, the account
+ * as the border, thick on the left. CSS draws a `border-left` on a rounded box
+ * the way the app's `BandShape` draws its band: the inner corners are the outer
+ * radius less the border, so at 3px on the left they are square, and the band
+ * curves round into the thin top, right and bottom edges.
+ */
+.card {
+  position: relative;
+  overflow: hidden;
+  border: 1.5px solid var(--band);
+  border-left-width: rem(12px);
+  border-radius: rem(3px) rem(22px) rem(22px) rem(3px);
+  background: var(--vic-card);
+  box-shadow: 0 3px 16px rgb(0 0 0 / 32%);
+}
+
+.cardBody {
+  display: flex;
+  flex-direction: column;
+  gap: rem(5px);
+  padding: rem(13px) rem(18px) rem(12px) rem(14px);
+}
+
+.titleRow {
+  display: flex;
+  align-items: center;
+  gap: rem(7px);
+  min-width: 0;
+  white-space: nowrap;
+}
+
+/* `AccountTile`: the monogram on its hue, in the hue's own dark ink. */
+.tile {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: rem(18px);
+  height: rem(18px);
+  border-radius: rem(5px);
+  background: var(--band);
+  color: var(--mono);
+  font-family: ui-rounded, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-size: rem(8.5px);
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.tileSmall {
+  width: rem(15px);
+  height: rem(15px);
+  border-radius: rem(4px);
+  font-size: rem(7px);
+}
+
+.sender {
+  flex: none;
+  color: var(--vic-card-caption);
+  font-size: rem(12.5px);
+  font-weight: 600;
+}
+
+.note {
+  overflow: hidden;
+  min-width: 0;
+  color: var(--vic-card-faint);
+  font-size: rem(12px);
+  text-overflow: ellipsis;
+}
+
+.time {
+  margin-inline-start: auto;
+  padding-inline-start: rem(8px);
+  color: var(--vic-card-faint);
+  font-size: rem(12px);
+  font-variant-numeric: tabular-nums;
+}
+
+/* The title: one line, as a card in the hand shows it. */
+.subject {
+  overflow: hidden;
+  margin: 0;
+  color: var(--vic-card-ink);
+  font-size: rem(15px);
+  font-weight: 600;
+  line-height: 1.3;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* The tools, in a strip of their own at the foot, set apart by a hairline. */
+.cardFoot {
+  display: flex;
+  align-items: center;
+  gap: rem(10px);
+  padding: rem(9px) rem(16px) rem(9px) rem(14px);
+  border-top: 1px solid var(--vic-hair-10);
+  background: rgb(255 255 255 / 5%);
+  white-space: nowrap;
+}
+
+.tools {
+  display: flex;
+  gap: rem(6px);
+  min-width: 0;
+}
+
+/* `ToolButtonStyle`: the first filled in the royal, the rest bordered. */
+.tool {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: rem(4px);
+  height: rem(26px);
+  padding-inline: rem(10px) rem(11px);
+  border: 1px solid var(--vic-hair-24);
+  border-radius: 999px;
+  color: var(--vic-card-ink);
+  font-size: rem(12px);
+  font-weight: 500;
+}
+
+.tool[data-primary] {
+  border-color: transparent;
+  background: var(--vic-royal);
+  color: #fff;
+  font-weight: 600;
+}
+
+.fromNow {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  gap: rem(5px);
+  margin-inline-start: auto;
+  color: var(--vic-card-caption);
+  font-size: rem(12px);
+}
+
+.check {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: rem(13px);
+  height: rem(13px);
+  border-radius: rem(3.5px);
+  background: var(--vic-royal);
+  color: #fff;
+}
+
+/* ---- The deck (`Deck`, `Peek`) ----------------------------------------- */
+
+.deck {
+  position: relative;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  margin-top: calc(-1 * var(--peek-hidden));
+}
+
+.peek {
+  position: relative;
+  z-index: calc(10 - var(--depth));
+  display: flex;
+  align-items: flex-end;
+  gap: rem(7px);
+  height: var(--peek-h);
+  margin-inline: calc(var(--depth) * rem(14px) + rem(14px));
+  padding: 0 rem(14px) rem(5px) rem(10px);
+  overflow: hidden;
+  border: 1.5px solid var(--band);
+  border-left-width: rem(12px);
+  border-radius: rem(3px) rem(18px) rem(18px) rem(3px);
+  background: var(--vic-card);
+  box-shadow: 0 6px 8px rgb(0 0 0 / 35%);
+  opacity: calc(1 - var(--depth) * 0.16);
+  white-space: nowrap;
+}
+
+.peek + .peek {
+  margin-top: calc(-1 * var(--peek-hidden));
+}
+
+.peekSender {
+  flex: none;
+  color: var(--vic-card-ink);
+  font-size: rem(12px);
+  font-weight: 600;
+}
+
+.peekSubject {
+  overflow: hidden;
+  min-width: 0;
+  color: var(--vic-card-caption);
+  font-size: rem(12px);
+  text-overflow: ellipsis;
+}
+
+.more {
+  align-self: flex-end;
+  margin: rem(6px) rem(10px) 0 0;
+  color: var(--vic-ground-caption);
+  font-size: rem(12px);
+}
+
+/*
+ * ---- A phone ------------------------------------------------------------
+ *
+ * The app folds its trays into rows when the window has no gutters for them
+ * (`TrayRow`); here each side becomes a row of three tiles, the let-go row
+ * above the hand and the keep row below it. Equal columns, so the Bin's
+ * centre is still a length this sheet knows: a sixth of the row less its
+ * gaps, and the row is as wide as the card.
+ */
+@media (max-width: 47.99em) {
+  .table {
+    --tile-gap: rem(8px);
+    --row-gap: rem(16px);
+    /*
+     * From the top card's centre to the Bin tile's: to the first column's
+     * centre, and up past the hand's caption, the row gap and half a tile.
+     */
+    --to-bin-x: calc((100% - 2 * var(--tile-gap)) / 6 - 50%);
+    --to-bin-y: calc(-50% - var(--cap-h) - var(--row-gap) - var(--tray-h) / 2);
+
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--row-gap);
+  }
+
+  .trays {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: var(--tile-gap);
+  }
+
+  /* A tile: the symbol and the tally on top, the name under them. */
+  .tray {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto auto;
+    align-content: center;
+    row-gap: rem(4px);
+    column-gap: 0;
+    padding: rem(7px) rem(8px) rem(7px) rem(10px);
+    border-radius: rem(12px);
+    font-size: rem(12px);
+  }
+
+  .trayIcon {
+    grid-area: 1 / 1;
+  }
+
+  .count {
+    grid-area: 1 / 3;
+  }
+
+  .trayTitle {
+    display: block;
+    grid-area: 2 / 1 / 3 / 4;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .full {
+    display: none;
+  }
+
+  .short {
+    display: inline;
+  }
+
+  .note {
+    display: none;
+  }
+}
+
+/*
+ * ---- The one pass -------------------------------------------------------
+ *
+ * Only on a screen and without Reduce Motion; otherwise the table is simply
+ * at rest. `--t0` is when the pass starts: at REST, by CSS alone from the
+ * first paint, after a hold long enough to read the table; once a script has
+ * armed it (off screen at mount) and it comes into view, soon after.
+ *
+ * Opacity and transform only (`SortingTable.css.test.ts` holds it).
+ */
+@media screen and (prefers-reduced-motion: no-preference) {
+  .table {
+    --t0: 1100ms;
+  }
+
+  .table[data-revealed] {
+    --t0: 350ms;
+  }
+
+  /* The top card's "Bin" is pressed... */
+  .press {
+    animation: table-press 260ms ease-out calc(var(--t0) - 80ms) backwards;
+  }
+
+  /* ...the card lifts, travels into the Bin and goes. */
+  .leaving {
+    animation: table-leave 1300ms linear calc(var(--t0) + 180ms) backwards;
+  }
+
+  .leaving::before {
+    animation: table-lift 1300ms linear calc(var(--t0) + 180ms) backwards;
+  }
+
+  /* The Bin takes it: lit a moment, a little bump, the ring goes... */
+  .lands {
+    animation: table-bump 420ms ease-out calc(var(--t0) + 1180ms) backwards;
+  }
+
+  .lands::after {
+    animation: table-lit 760ms ease-out calc(var(--t0) + 1150ms) backwards;
+  }
+
+  .ringLeaves::before {
+    animation: table-ring-off 260ms ease-out calc(var(--t0) + 1180ms) backwards;
+  }
+
+  /* ...and its count ticks from 0 to 1. */
+  .countWas {
+    animation: table-count-out 340ms cubic-bezier(0.4, 0, 0.2, 1) calc(var(--t0) + 1200ms) backwards;
+  }
+
+  .countNow {
+    animation: table-count-in var(--vic-spring-soft-duration) var(--vic-spring-soft)
+      calc(var(--t0) + 1240ms) backwards;
+  }
+
+  /* The next card rises into the top place, on the app's sort spring... */
+  .rising {
+    animation: table-rise var(--vic-spring-sort-duration) var(--vic-spring-sort)
+      calc(var(--t0) + 820ms) backwards;
+  }
+
+  /* ...the deck deals the one under it... */
+  .dealt {
+    animation-name: table-fade-in, table-deal;
+    animation-duration: 420ms, var(--vic-spring-sort-duration);
+    animation-timing-function: ease-out, var(--vic-spring-sort);
+    animation-delay: calc(var(--t0) + 880ms);
+    animation-fill-mode: backwards;
+  }
+
+  /* ...and the invoice's proposal rings its own tray. */
+  .ringArrives::before {
+    animation: table-ring-on 320ms ease-out calc(var(--t0) + 1650ms) backwards;
+  }
+
+  /*
+   * Armed and not yet revealed: the first pose, held where nobody sees it,
+   * with no animation of its own until the table comes into view.
+   */
+  .table[data-armed]:not([data-revealed]) .press,
+  .table[data-armed]:not([data-revealed]) .lands,
+  .table[data-armed]:not([data-revealed]) .lands::after {
+    animation: none;
+  }
+
+  .table[data-armed]:not([data-revealed]) .leaving {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .table[data-armed]:not([data-revealed]) .leaving::before {
+    animation: none;
+    opacity: 0;
+  }
+
+  .table[data-armed]:not([data-revealed]) .ringLeaves::before {
+    animation: none;
+    opacity: 1;
+  }
+
+  .table[data-armed]:not([data-revealed]) .ringArrives::before {
+    animation: none;
+    opacity: 0;
+  }
+
+  .table[data-armed]:not([data-revealed]) .countWas {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
+  .table[data-armed]:not([data-revealed]) .countNow {
+    animation: none;
+    opacity: 0;
+    transform: translateY(100%);
+  }
+
+  .table[data-armed]:not([data-revealed]) .rising {
+    animation: none;
+    transform: translate3d(0, calc(100% + var(--card-gap)), 0);
+  }
+
+  .table[data-armed]:not([data-revealed]) .dealt {
+    animation: none;
+    opacity: 0;
+    transform: translate3d(0, rem(26px), 0) scale(0.96);
+  }
+}
+
+/*
+ * Each names where its piece STARTS (the same pose the armed rules above
+ * hold), and ends on the layout's own value.
+ */
+@keyframes table-press {
+  0% {
+    transform: none;
+  }
+
+  45% {
+    transform: scale(0.88);
+  }
+}
+
+/*
+ * The lift (a sixth of the run) is quick and eases out; the trip eases in and
+ * out to the Bin; the card fades only over the last fifth, as it goes in.
+ */
+@keyframes table-leave {
+  0% {
+    opacity: 1;
+    transform: none;
+    animation-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+  }
+
+  16% {
+    opacity: 1;
+    transform: translate3d(0, rem(-10px), 0) rotate(-1.5deg) scale(1.03);
+    animation-timing-function: cubic-bezier(0.55, 0, 0.3, 1);
+  }
+
+  80% {
+    opacity: 1;
+  }
+}
+
+@keyframes table-lift {
+  0% {
+    opacity: 0;
+  }
+
+  16% {
+    opacity: 1;
+  }
+
+  70% {
+    opacity: 1;
+  }
+}
+
+@keyframes table-bump {
+  0% {
+    transform: none;
+  }
+
+  45% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes table-lit {
+  0% {
+    opacity: 0;
+  }
+
+  25% {
+    opacity: 1;
+  }
+}
+
+@keyframes table-ring-off {
+  from {
+    opacity: 1;
+  }
+}
+
+@keyframes table-ring-on {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes table-count-out {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes table-count-in {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+}
+
+@keyframes table-rise {
+  from {
+    transform: translate3d(0, calc(100% + var(--card-gap)), 0);
+  }
+}
+
+@keyframes table-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes table-deal {
+  from {
+    transform: translate3d(0, rem(26px), 0) scale(0.96);
+  }
+}

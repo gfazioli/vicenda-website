@@ -1,26 +1,19 @@
 import type { Metadata } from 'next';
 import { SkipNavContent } from 'nextra/components';
-import { fetchReleaseCadence } from '@/components/ReleaseCadence/fetch-release-cadence';
 import { SoftwareApplicationJsonLd } from '@/components/StructuredData/StructuredData';
 import { Welcome } from '@/components/Welcome/Welcome';
 import config from '@/config';
 
-/**
- * Regenerated on a timer so the hero's release strip stays honest between
- * deploys. Without it the page is built once per release and its relative
- * freshness phrase ("Updated today") would freeze at whatever it said on
- * release day, which is precisely the failure the strip exists to avoid.
- *
- * Six hours, not the hour this used to be, because `formatFreshness` counts
- * WHOLE UTC DAYS: the value the rebuild exists to refresh cannot change more
- * than once a day, so an hourly regeneration was twenty-four times finer than
- * its own granularity. It is not free, either - each regeneration invalidates
- * the page in every CDN region holding it, and each of those regions then
- * re-reads a few hundred KB of HTML back out of the ISR store, which is the
- * meter this is aimed at. The trade is a bounded lag: the phrase can sit up to
- * six hours behind the UTC day boundary that would have changed it.
+/*
+ * No `revalidate`: the page is static. It was regenerated every six hours for
+ * the hero's release strip, whose freshness phrase ("Updated today") would
+ * otherwise freeze at whatever it said on release day. The strip is off the
+ * hero while the site offers no download (owner, 2026-10-29: it told how
+ * recently the OLD app shipped), and nothing else on the page changes between
+ * deploys, so a regeneration would rewrite the same HTML into every CDN region
+ * for nothing. When the strip comes back, so does the timer, and
+ * `home-revalidate.test.ts` holds the two together.
  */
-export const revalidate = 21600;
 
 /**
  * The home page names its own URL. The root layout's canonical is `./`, which
@@ -41,9 +34,7 @@ export const metadata: Metadata = {
   openGraph: { ...config.metadata.openGraph, url: '/' },
 };
 
-export default async function HomePage() {
-  const cadence = await fetchReleaseCadence();
-
+export default function HomePage() {
   // In a <main>: the docs pages get one from Nextra, the home page had none,
   // so its hero, claims and FAQ sat in no landmark at all (2026-09-29 audit).
   // Nextra's skip link is on every page, its target only in the MDX wrapper.
@@ -52,7 +43,7 @@ export default async function HomePage() {
       <SoftwareApplicationJsonLd />
       <SkipNavContent />
       <main>
-        <Welcome cadence={cadence} />
+        <Welcome />
       </main>
     </>
   );
