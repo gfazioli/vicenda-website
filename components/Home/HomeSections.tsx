@@ -144,7 +144,7 @@ export function HomeSections() {
         <SectionHeading
           eyebrow="Every account"
           title="Every account, one report."
-          lead="Any mailbox that speaks IMAP, Gmail included, through an app password, which Google gives you once 2-Step Verification is on. Each account wears its own hue and monogram, and By account splits the report when you want them apart."
+          lead="Any mailbox that speaks IMAP, Gmail included: Gmail through an app password, which Google lets you make once 2-Step Verification is on. Each account wears its own hue and monogram, and By account splits the report when you want them apart."
         />
         <Stage width={680}>
           <Reveal variant="rise">
