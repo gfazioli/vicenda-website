@@ -18,7 +18,7 @@ import { getPageMap } from 'nextra/page-map';
 import { ColorSchemeScript, mantineHtmlProps, MantineProvider } from '@mantine/core';
 // !! End of important imports !!
 
-import { MantineFooter, MantineNavBar } from '@/components';
+import { MantineFooter, MenuBarHeader } from '@/components';
 import { NewsletterModal } from '@/components/NewsletterSignup/NewsletterModal';
 import { WebsiteJsonLd } from '@/components/StructuredData/StructuredData';
 import config from '@/config';
@@ -53,7 +53,19 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const { nextraLayout, head } = config;
 
   return (
-    <html lang="en" dir="ltr" className={display.variable} {...mantineHtmlProps}>
+    // `data-scroll-behavior`: the stylesheet makes <html> scroll smoothly (for
+    // the page's own anchors), and without this attribute Next 16 keeps that
+    // on a route change too. lancetta.app, coming home from a docs page,
+    // mounted near the bottom and scrolled to the top for 1.5 s, past every
+    // section, firing each one-shot reveal out of sight. With it, Next jumps
+    // before any effect reads the scroll.
+    <html
+      lang="en"
+      dir="ltr"
+      data-scroll-behavior="smooth"
+      className={display.variable}
+      {...mantineHtmlProps}
+    >
       <Head>
         {/*
           Forced, not defaulted: the site is dark only, with no switch (user,
@@ -77,8 +89,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
       </Head>
       <body>
         <MantineProvider theme={theme} forceColorScheme="dark">
+          {/*
+            `navbar` is OUR bar, on every page, as on lancetta.app. Nextra
+            renders whatever is in this slot in place of its own <Navbar>, so
+            the default header is gone rather than hidden, which is why
+            `MenuBarHeader` carries the search and the hamburger that bar did.
+          */}
           <Layout
-            navbar={<MantineNavBar />}
+            navbar={<MenuBarHeader />}
             pageMap={pageMap}
             docsRepositoryBase={nextraLayout.docsRepositoryBase}
             footer={<MantineFooter year={new Date().getFullYear()} />}

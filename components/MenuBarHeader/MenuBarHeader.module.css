@@ -1,0 +1,252 @@
+/*
+ * The dock is the full-width strip the bar hangs in, and it paints NOTHING and
+ * has no padding: a sticky element still occupies its space in the flow, so
+ * every pixel of dock height would be a band of page above the hero's ground.
+ * The bar's own height is still in the flow; the hero cancels it with a
+ * negative top margin so its ground runs from y=0, behind the bar.
+ *
+ * It takes no pointer events either -- only the bar does -- or it would
+ * swallow clicks across the whole top of the page.
+ */
+.dock {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  pointer-events: none;
+}
+
+/*
+ * The bar: attached to the top edge, narrower than the page, rounded at the
+ * two BOTTOM corners only, so it reads as something the page hangs from.
+ *
+ * On lancetta.app it is the one dark object on a light page. Here the page is
+ * the night ground itself, so the bar is the CARD's navy (`--vic-card`, a step
+ * lighter than the ground), with a hairline of the logo's ice round it and a
+ * shadow under it: the same object, standing off a dark page instead of a
+ * light one. Opaque, with no backdrop blur: a blur under a sticky bar is paid
+ * for on every frame of every scroll.
+ */
+.bar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: rem(14px);
+  width: min(rem(1180px), calc(100% - rem(32px)));
+  height: var(--vic-bar-height, rem(48px));
+  margin-inline: auto;
+  padding-inline: rem(14px);
+  border: 1px solid var(--vic-hair-10);
+  border-top: 0;
+  border-radius: 0 0 rem(16px) rem(16px);
+  background: linear-gradient(180deg, #13296a 0%, var(--vic-card) 100%);
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 6%) inset,
+    0 18px 40px -22px rgb(0 4 20 / 80%),
+    0 2px 10px -4px rgb(0 4 20 / 50%);
+  color: rgb(255 255 255 / 92%);
+  pointer-events: auto;
+
+  /*
+   * The bar arrives with the hero rather than being there first, as a CSS
+   * ANIMATION and never as an attribute a script flips: lancetta.app's bar
+   * once opened at `opacity: 0` and waited for an effect, and a reader whose
+   * script never arrived got no header at all. An animation ends at its `to`
+   * state whether or not anything is listening.
+   *
+   * `forwards`, never `both`: `both` also applies the `from` keyframe BEFORE
+   * the animation runs, so an engine that has not started it holds the bar at
+   * `opacity: 0`. With `forwards` the resting style is the element's own.
+   */
+  animation: bar-arrive 620ms cubic-bezier(0.2, 0.7, 0.2, 1) forwards;
+}
+
+@keyframes bar-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(rem(-10px));
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (max-width: $mantine-breakpoint-sm) {
+  .bar {
+    width: 100%;
+    gap: rem(8px);
+    padding-inline: rem(10px);
+    border-inline: 0;
+    border-radius: 0;
+  }
+}
+
+/* The left column: the mark, then the menus, the way macOS reads. */
+.left {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: rem(14px);
+}
+
+.brand {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  padding-inline: rem(4px);
+  color: inherit;
+  text-decoration: none;
+}
+
+/*
+ * Hidden until 75em, where the hamburger takes over: between 768 and ~1100 the
+ * left column is narrower than the five menus need.
+ */
+.menus {
+  display: none;
+  align-items: center;
+  gap: rem(2px);
+
+  @media (min-width: 75em) {
+    display: flex;
+  }
+}
+
+/*
+ * A menu-bar item, down to the highlight: no underline, a rounded rect that
+ * appears under the pointer, and the same rect held open for the section the
+ * reader is in, or the page that is open.
+ */
+.menu {
+  display: inline-block;
+  padding: rem(5px) rem(10px);
+  border-radius: rem(7px);
+  color: rgb(255 255 255 / 76%);
+  font-size: rem(13px);
+  font-weight: 500;
+  white-space: nowrap;
+  text-decoration: none;
+  transition:
+    color 150ms ease,
+    background-color 150ms ease;
+}
+
+.menu:hover {
+  color: #fff;
+  background-color: rgb(255 255 255 / 10%);
+}
+
+.menu[aria-current] {
+  color: #fff;
+  background-color: rgb(255 255 255 / 14%);
+}
+
+.menu:focus-visible,
+.brand:focus-visible,
+.item:focus-visible,
+.burger:focus-visible {
+  outline: 2px solid var(--vic-sky);
+  outline-offset: 2px;
+}
+
+/* The right column: the search and the status items, pushed to the end. */
+.status {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: flex-end;
+  gap: rem(8px);
+}
+
+.search {
+  --nextra-search-width: 0;
+
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  margin-inline-end: rem(4px);
+
+  @media (max-width: 64em) {
+    display: none;
+  }
+}
+
+/*
+ * A status item: a round button as tall as the search's input, in the colour
+ * the old navbar gave it.
+ */
+.item {
+  display: inline-flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: rem(28px);
+  height: rem(28px);
+  border-radius: 999px;
+  color: #fff;
+  transition: transform 160ms ease;
+}
+
+.item:hover {
+  transform: translateY(-1px);
+}
+
+/* Discord's own blurple: white on it is 4.6:1. */
+.discord {
+  background-color: #5865f2;
+}
+
+/* The old navbar's gradient variant, pink to grape. */
+.sponsor {
+  background: linear-gradient(
+    45deg,
+    var(--mantine-color-pink-filled),
+    var(--mantine-color-grape-filled)
+  );
+}
+
+/* Dark ink on the yellow: white on it is 1.9:1. */
+.coffee {
+  background-color: var(--mantine-color-yellow-filled);
+  color: #3b2600;
+}
+
+.burger {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: rem(30px);
+  height: rem(30px);
+  padding: 0;
+  border: none;
+  border-radius: rem(7px);
+  background-color: transparent;
+  color: inherit;
+  cursor: pointer;
+  transition: background-color 150ms ease;
+}
+
+.burger:hover {
+  background-color: rgb(255 255 255 / 10%);
+}
+
+@media (max-width: 74.99em) {
+  .burger {
+    display: inline-flex;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bar,
+  .menu,
+  .item {
+    transition: none;
+  }
+
+  .bar {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}
