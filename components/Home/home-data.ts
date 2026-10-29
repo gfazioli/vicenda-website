@@ -6,34 +6,13 @@
  * batch titles, the Overview's captions, quoted from the app's code with the
  * file named beside each, so the diagram says what the app says.
  */
-import type { Account, ToolIcon } from '../MailCard/MailCard';
+import type { Account } from '../MailCard/MailCard';
 import { GF, JF } from '../SortingTable/table-data';
 
 /** A third account, for the diagrams that show more than two. */
 export const WK: Account = { monogram: 'WK', slot: 5 };
 
-/**
- * Today's trays (`Tray.title`, `Tray.sub` in `SortingModel.swift`). Only the
- * sub-lines that hold today are drawn: the app's Bin says "gone, recoverable
- * for 30 days" and its unsubscribe tray "and no more of this kind", but no
- * decision reaches a server yet (`reportDecisionsTravel` is false for every
- * account, `Overview.swift`) and no unsubscribe is sent (`UnsubscribeSender`
- * has no caller), so the site does not repeat either.
- */
-export const trayLegend: {
-  letGo: { title: string; sub?: string; icon: ToolIcon }[];
-  keep: { title: string; sub?: string; icon: ToolIcon }[];
-} = {
-  letGo: [
-    { title: 'Bin', icon: 'bin' },
-    { title: 'Bin and unsubscribe', icon: 'unsubscribe' },
-    { title: 'Later', sub: 'back in the hand tomorrow', icon: 'later' },
-  ],
-  keep: [
-    { title: 'Invoices 2026', icon: 'archive' },
-    { title: 'To do', sub: 'keep it in front of me', icon: 'todo' },
-  ],
-};
+/* Today's trays are the hero's own (`letGo` and `keep` in `SortingTable/table-data.ts`). */
 
 /** The card being dragged, as `TableGhost` draws it: where it will land, said on it. */
 export const ghost = {
@@ -74,7 +53,7 @@ export const brief = [
   },
 ];
 
-/** "Done reading: bin 7, keep Il Messaggero until tomorrow" (`MorningReportModel`). */
+/** "Done reading: bin 7, keep <the day's news> until tomorrow" (`MorningReportModel`). */
 export const doneReading = 'Done reading: bin 3, keep Morning Ledger until tomorrow';
 
 /** A New kind (`NewCard`): several mails of one kind, and its proposal. */
@@ -95,17 +74,39 @@ export const newKind = {
  * What a rule takes of the sender's mail (`RuleCoverage.line` in
  * `KindRule.swift`): the side the mail was on, or the whole sender.
  */
+const coverageOptions = [
+  'newsletter-style mail from updates@northwind.example',
+  'every mail from updates@northwind.example',
+];
+
 export const coverage = {
-  chosen: 'newsletter-style mail from updates@northwind.example',
-  options: [
-    'newsletter-style mail from updates@northwind.example',
-    'every mail from updates@northwind.example',
-  ],
+  options: coverageOptions,
+  /** The rule as proposed: the side the mail was on, the first line. */
+  chosen: coverageOptions[0],
   scope: 'on this account',
 };
 
+/** A sender's chip in a batch: its count, the label it goes under, or left out. */
+export interface BatchSender {
+  name: string;
+  count?: string;
+  note?: string;
+  out?: boolean;
+}
+
 /** Already decided (`batches` in `MorningReportModel`): two batches, one sender left out. */
-export const decided = {
+export const decided: {
+  confirmAll: string;
+  note: string;
+  batches: {
+    accounts: Account[];
+    title: string;
+    sub: string;
+    senders: BatchSender[];
+    showMail: string;
+    confirm: string;
+  }[];
+} = {
   confirmAll: 'Confirm all 22',
   note: '2 batches, 23 mails, each the way its rule says',
   batches: [
@@ -138,11 +139,12 @@ export const decided = {
   ],
 };
 
-export type OverviewKey = 'toDo' | 'brief' | 'new' | 'decided' | 'accounts' | 'rules';
+/** A card's key is its section's: its colour is `var(--vic-<key>)`. */
+export type OverviewKey = 'todo' | 'brief' | 'new' | 'decided' | 'accounts' | 'rules';
 
 /** The Overview's six cards (`OverviewModel.swift`): a figure, its title and caption. */
 export const overview: { key: OverviewKey; value: string; title: string; caption: string }[] = [
-  { key: 'toDo', value: '2', title: 'To do', caption: 'need you' },
+  { key: 'todo', value: '2', title: 'To do', caption: 'need you' },
   { key: 'brief', value: '4', title: 'In brief', caption: 'lines to read' },
   { key: 'new', value: '3', title: 'New', caption: 'kinds, in 8 mails' },
   { key: 'decided', value: '23', title: 'Already decided', caption: 'one confirmation' },
@@ -151,27 +153,30 @@ export const overview: { key: OverviewKey; value: string; title: string; caption
   { key: 'rules', value: '41', title: 'Rules', caption: '4 learned today' },
 ];
 
+/**
+ * Every account's badge today: no decision reaches a server yet
+ * (`reportDecisionsTravel` is false for every account), so each is local only.
+ */
+export const localOnly = 'local only for now';
+
 /** The accounts as the Overview lists them (`OverviewVM.AccountRow`). */
 export const accounts = [
   {
     account: GF,
     address: 'gf@fernway.example',
     transport: 'Gmail over IMAP',
-    badge: 'local only for now',
     status: '14 mails since last night',
   },
   {
     account: JF,
     address: 'jf@lumen.example',
     transport: 'IMAP',
-    badge: 'local only for now',
     status: '9 mails since last night',
   },
   {
     account: WK,
     address: 'desk@orbitworks.example',
     transport: 'IMAP',
-    badge: 'local only for now',
     status: '6 mails since last night',
   },
 ];

@@ -18,6 +18,8 @@ import {
   CardShell,
   CardTitle,
   FromNowOn,
+  type Tray,
+  TrayFace,
   TOOL_ICONS,
   ToolChip,
   mailCardClasses as card,
@@ -33,9 +35,10 @@ import {
   doneReading,
   ghost,
   newKind,
+  localOnly,
   overview,
-  trayLegend,
 } from './home-data';
+import { keep, letGo } from '../SortingTable/table-data';
 import classes from './Diagrams.module.css';
 
 /*
@@ -77,9 +80,9 @@ export function TrayLegend() {
     <div
       className={classes.legend}
       role="img"
-      aria-label="Today's trays. On the left, to let mail go: Bin; Bin and unsubscribe; Later, back in the hand tomorrow. On the right, to keep it: a label, or To do. A card is being dragged into Later."
+      aria-label="Today's trays. On the left, to let mail go: Bin; Bin and unsubscribe; Later, back in the hand tomorrow. On the right, to keep it: two labels, or To do. A card is being dragged into Later."
     >
-      <LegendSide title="Let go" trays={trayLegend.letGo} />
+      <LegendSide title="Let go" trays={letGo} />
       <div className={classes.ghostStage}>
         <div className={classes.ghost}>
           <CardShell accounts={[ghost.account]}>
@@ -89,10 +92,12 @@ export function TrayLegend() {
                 <span className={card.sender}>{ghost.sender}</span>
               </div>
               <p className={classes.ghostSubject}>{ghost.subject}</p>
-              <span className={classes.landing}>
-                <IconArrowRight size={12} stroke={2.4} aria-hidden="true" />
-                {ghost.landing}
-              </span>
+              <ToolChip
+                icon={IconArrowRight}
+                label={ghost.landing}
+                primary
+                className={classes.landing}
+              />
             </div>
           </CardShell>
         </div>
@@ -101,37 +106,18 @@ export function TrayLegend() {
           Drag a card, or answer with its buttons.
         </p>
       </div>
-      <LegendSide title="Keep" trays={trayLegend.keep} />
+      <LegendSide title="Keep" trays={keep} />
     </div>
   );
 }
 
-function LegendSide({
-  title,
-  trays,
-}: {
-  title: string;
-  trays: readonly { title: string; sub?: string; icon: keyof typeof TOOL_ICONS }[];
-}) {
+function LegendSide({ title, trays }: { title: string; trays: Tray[] }) {
   return (
     <div className={classes.legendSide}>
-      <p className={classes.caption}>{title}</p>
-      {trays.map((tray) => {
-        const Icon = TOOL_ICONS[tray.icon];
-        return (
-          <div
-            key={tray.title}
-            className={classes.tray}
-            data-target={tray.title === ghost.landing ? '' : undefined}
-          >
-            <span className={classes.trayHead}>
-              <Icon size={14} stroke={2} aria-hidden="true" />
-              {tray.title}
-            </span>
-            {tray.sub && <span className={classes.traySub}>{tray.sub}</span>}
-          </div>
-        );
-      })}
+      <p className={card.caption}>{title}</p>
+      {trays.map((tray) => (
+        <TrayFace key={tray.title} tray={tray} target={tray.title === ghost.landing} />
+      ))}
     </div>
   );
 }
@@ -155,10 +141,7 @@ export function BriefList() {
           </div>
         ))}
         <div className={card.foot}>
-          <span className={`${card.tool} ${classes.wrapTool}`} data-primary="">
-            <IconCheck size={13} stroke={2.4} aria-hidden="true" />
-            {doneReading}
-          </span>
+          <ToolChip icon={IconCheck} label={doneReading} primary className={classes.wrapTool} />
         </div>
       </CardShell>
     </div>
@@ -185,9 +168,9 @@ export function NewRule() {
         </div>
         <div className={`${card.foot} ${classes.footStack}`}>
           <span className={card.tools}>
-            <ToolChip tool={{ label: 'Bin and unsubscribe', icon: 'unsubscribe', primary: true }} />
-            <ToolChip tool={{ label: 'Bin', icon: 'bin' }} />
-            <ToolChip tool={{ label: 'Later', icon: 'later' }} />
+            <ToolChip icon={TOOL_ICONS.unsubscribe} label="Bin and unsubscribe" primary />
+            <ToolChip icon={TOOL_ICONS.bin} label="Bin" />
+            <ToolChip icon={TOOL_ICONS.later} label="Later" />
           </span>
           <span className={classes.ruleRow}>
             <FromNowOn />
@@ -225,10 +208,7 @@ export function DecidedBatches() {
       aria-label="Already decided: two batches of mail the rules already know, twenty-three mails in all, with one sender left out and a single Confirm all."
     >
       <div className={classes.decidedHead}>
-        <span className={card.tool} data-primary="">
-          <IconCircleCheckFilled size={13} aria-hidden="true" />
-          {decided.confirmAll}
-        </span>
+        <ToolChip icon={IconCircleCheckFilled} label={decided.confirmAll} primary />
         <span className={classes.groundNote}>{decided.note}</span>
       </div>
       {decided.batches.map((batch) => (
@@ -246,31 +226,21 @@ export function DecidedBatches() {
                 <span
                   key={sender.name}
                   className={classes.senderChip}
-                  data-out={'out' in sender && sender.out ? '' : undefined}
+                  data-out={sender.out ? '' : undefined}
                 >
                   {sender.name}
-                  {'count' in sender && sender.count && (
-                    <span className={classes.faint}>{sender.count}</span>
-                  )}
-                  {'note' in sender && sender.note && (
-                    <span className={classes.faint}>{sender.note}</span>
-                  )}
+                  {sender.count && <span className={classes.faint}>{sender.count}</span>}
+                  {sender.note && <span className={classes.faint}>{sender.note}</span>}
                 </span>
               ))}
             </div>
             <div className={classes.batchHint}>
               <span>Click a sender to leave it out: it stays in the inbox.</span>
-              <span className={card.tool}>
-                <IconChevronDown size={12} stroke={2.4} aria-hidden="true" />
-                {batch.showMail}
-              </span>
+              <ToolChip icon={IconChevronDown} label={batch.showMail} />
             </div>
           </div>
           <div className={card.foot}>
-            <span className={card.tool}>
-              <IconCheck size={13} stroke={2.4} aria-hidden="true" />
-              {batch.confirm}
-            </span>
+            <ToolChip icon={IconCheck} label={batch.confirm} />
           </div>
         </CardShell>
       ))}
@@ -279,7 +249,7 @@ export function DecidedBatches() {
 }
 
 const OVERVIEW_ICONS: Record<OverviewKey, typeof IconSparkles> = {
-  toDo: IconCircleCheckFilled,
+  todo: IconCircleCheckFilled,
   brief: IconAlignLeft,
   new: IconSparkles,
   decided: IconInbox,
@@ -311,9 +281,7 @@ export function OverviewCards() {
             key={figure.key}
             {...item}
             className={`${item.className} ${classes.vivid}`}
-            style={
-              { ...item.style, '--tint': `var(--vic-${sectionToken(figure.key)})` } as CSSProperties
-            }
+            style={{ ...item.style, '--tint': `var(--vic-${figure.key})` } as CSSProperties}
           >
             <Icon size={18} aria-hidden="true" />
             <span className={classes.vividValue}>{figure.value}</span>
@@ -324,10 +292,6 @@ export function OverviewCards() {
       })}
     </div>
   );
-}
-
-function sectionToken(key: OverviewKey) {
-  return key === 'toDo' ? 'todo' : key;
 }
 
 /** Every account in one report: its hue, its monogram, how it is read. */
@@ -350,7 +314,7 @@ export function AccountList() {
             <span className={classes.accountAddress}>{row.address}</span>
             <span className={classes.accountStatus}>
               {row.transport}
-              {row.badge && <span className={classes.badge}>{row.badge}</span>}
+              <span className={card.chip}>{localOnly}</span>
             </span>
           </span>
           <span className={classes.accountMail}>{row.status}</span>

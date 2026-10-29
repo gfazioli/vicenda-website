@@ -1,18 +1,8 @@
 'use client';
 
-import { MailCard, Peek, TOOL_ICONS } from '../MailCard/MailCard';
+import { MailCard, Peek, type Tray, TrayFace, mailCardClasses as card } from '../MailCard/MailCard';
 import { useReveal } from '../Motion/useReveal';
-import {
-  type Tray,
-  dealt,
-  deck,
-  description,
-  keep,
-  leaving,
-  letGo,
-  more,
-  rising,
-} from './table-data';
+import { dealt, deck, description, keep, leaving, letGo, more, rising } from './table-data';
 import classes from './SortingTable.module.css';
 
 /**
@@ -63,7 +53,7 @@ export function SortingTable() {
       aria-label={description}
     >
       <div className={classes.side} data-side="go">
-        <p className={classes.caption}>Let go</p>
+        <p className={`${card.caption} ${classes.capRow}`}>Let go</p>
         <div className={classes.trays}>
           {letGo.map((tray, i) => (
             <TrayView key={tray.title} tray={tray} lands={i === 0} />
@@ -72,7 +62,7 @@ export function SortingTable() {
       </div>
 
       <div className={classes.hand}>
-        <p className={classes.caption}>
+        <p className={`${card.caption} ${classes.capRow}`}>
           <span className={classes.sectionDot} aria-hidden="true" />
           New, one kind at a time
         </p>
@@ -96,7 +86,7 @@ export function SortingTable() {
       </div>
 
       <div className={classes.side} data-side="keep">
-        <p className={classes.caption}>Keep under a label</p>
+        <p className={`${card.caption} ${classes.capRow}`}>Keep under a label</p>
         <div className={classes.trays}>
           {keep.map((tray, i) => (
             <TrayView key={tray.title} tray={tray} proposedAtEnd={i === 0} />
@@ -123,27 +113,23 @@ function TrayView({
   lands?: boolean;
   proposedAtEnd?: boolean;
 }) {
-  const Icon = TOOL_ICONS[tray.icon];
   const ring = lands ? classes.ringLeaves : proposedAtEnd ? classes.ringArrives : '';
   return (
-    <div className={`${classes.tray} ${ring} ${lands ? classes.lands : ''}`} data-icon={tray.icon}>
-      <span className={classes.trayIcon}>
-        <Icon size={14} stroke={2} aria-hidden="true" />
-      </span>
-      <span className={classes.trayTitle}>
-        <span className={classes.full}>{tray.title}</span>
-        <span className={classes.short}>{tray.short ?? tray.title}</span>
-      </span>
-      <span className={classes.count}>
-        {lands ? (
+    <TrayFace
+      tray={tray}
+      tile
+      withSub={false}
+      className={[classes.trayInTable, ring, lands && classes.lands].filter(Boolean).join(' ')}
+      count={
+        lands ? (
           <>
             <span className={classes.countWas}>0</span>
             <span className={classes.countNow}>1</span>
           </>
         ) : (
           <span>0</span>
-        )}
-      </span>
-    </div>
+        )
+      }
+    />
   );
 }

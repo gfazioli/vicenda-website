@@ -8,16 +8,6 @@
   color: var(--vic-card-faint);
 }
 
-.caption {
-  margin: 0 0 rem(10px);
-  padding-inline-start: rem(4px);
-  color: var(--vic-ground-caption);
-  font-size: rem(11px);
-  font-weight: 600;
-  letter-spacing: rem(1px);
-  text-transform: uppercase;
-}
-
 .groundNote {
   color: var(--vic-ground-caption);
   font-size: rem(12.5px);
@@ -97,47 +87,6 @@
   gap: rem(10px);
 }
 
-.legendSide .caption {
-  margin-bottom: 0;
-}
-
-/* `TrayFace`: dashed on the ground; lit, solid and a little larger under a card. */
-.tray {
-  display: flex;
-  flex-direction: column;
-  gap: rem(3px);
-  padding: rem(10px) rem(12px);
-  border: 1px dashed var(--vic-hair-16);
-  border-radius: rem(14px);
-  background: rgb(255 255 255 / 5%);
-}
-
-.tray[data-target] {
-  border-style: solid;
-  border-color: var(--vic-hair-24);
-  background: rgb(255 255 255 / 13%);
-  transform: scale(1.04);
-}
-
-.trayHead {
-  display: flex;
-  align-items: center;
-  gap: rem(7px);
-  color: var(--vic-card-ink);
-  font-size: rem(13px);
-  font-weight: 600;
-}
-
-.trayHead svg {
-  flex: none;
-  color: var(--vic-ice);
-}
-
-.traySub {
-  color: var(--vic-ground-caption);
-  font-size: rem(11.5px);
-}
-
 .ghostStage {
   display: flex;
   flex-direction: column;
@@ -162,18 +111,15 @@
   line-height: 1.3;
 }
 
-/* Where it will land, said on the card, as the tray under it is hidden. */
-.landing {
-  display: inline-flex;
-  align-items: center;
+/*
+ * Where it will land, said on the card, as the tray under it is hidden: the
+ * card's primary tool, compact. The class is doubled to outrank `MailCard`'s
+ * `.tool` whichever sheet loads last.
+ */
+.landing.landing {
   align-self: flex-start;
-  gap: rem(4px);
+  height: auto;
   padding: rem(2px) rem(8px);
-  border-radius: 999px;
-  background: var(--vic-royal);
-  color: #fff;
-  font-size: rem(12px);
-  font-weight: 600;
 }
 
 .ghostNote {
@@ -188,7 +134,7 @@
 /* ---- In brief ------------------------------------------------------------ */
 
 /* "Done reading: …" is a sentence: on a narrow card it wraps inside its pill. */
-.wrapTool {
+.wrapTool.wrapTool {
   flex: 0 1 auto;
   min-width: 0;
   height: auto;
@@ -533,13 +479,6 @@
   gap: rem(4px) rem(8px);
   color: var(--vic-card-caption);
   font-size: rem(12px);
-}
-
-.badge {
-  padding: 0 rem(6px);
-  border: 1px solid var(--vic-hair-24);
-  border-radius: rem(5px);
-  font-size: rem(11px);
 }
 
 .accountMail {

@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react';
+import type { Icon } from '@tabler/icons-react';
 import {
   IconArchive,
   IconBellOff,
@@ -36,7 +37,7 @@ export interface Tool {
   primary?: boolean;
 }
 
-export const TOOL_ICONS: Record<ToolIcon, typeof IconTrash> = {
+export const TOOL_ICONS: Record<ToolIcon, Icon> = {
   bin: IconTrash,
   unsubscribe: IconBellOff,
   later: IconMoon,
@@ -76,19 +77,11 @@ export function AccountTile({
  * A card's chrome: the band of its one or two accounts (none draws an even
  * edge), the fill, and whatever goes inside.
  */
-export function CardShell({
-  accounts,
-  className,
-  children,
-}: {
-  accounts: Account[];
-  className?: string;
-  children: ReactNode;
-}) {
+export function CardShell({ accounts, children }: { accounts: Account[]; children: ReactNode }) {
   const [first, second] = accounts;
   return (
     <div
-      className={[classes.card, className].filter(Boolean).join(' ')}
+      className={classes.card}
       style={first ? accountStyle(first, second) : undefined}
       data-split={second ? '' : undefined}
       data-plain={first ? undefined : ''}
@@ -125,30 +118,104 @@ export function CardTitle({
   );
 }
 
-/** A card's tool, as `ToolButtonStyle` draws it. */
-export function ToolChip({ tool, className }: { tool: Tool; className?: string }) {
-  const Icon = TOOL_ICONS[tool.icon];
+/**
+ * A card's tool, as `ToolButtonStyle` draws it: a symbol and a label, the
+ * card's proposal filled in the accent. Every chip on the page is one of
+ * these, so they share one size and one stroke.
+ */
+export function ToolChip({
+  icon: ChipIcon,
+  label,
+  primary = false,
+  className,
+}: {
+  icon: Icon;
+  label: string;
+  primary?: boolean;
+  className?: string;
+}) {
   return (
     <span
       className={[classes.tool, className].filter(Boolean).join(' ')}
-      data-primary={tool.primary ? '' : undefined}
+      data-primary={primary ? '' : undefined}
     >
-      <Icon size={13} stroke={2} aria-hidden="true" />
-      {tool.label}
+      <ChipIcon size={13} stroke={2} aria-hidden="true" />
+      {label}
     </span>
   );
 }
 
 /** "from now on", checked: a New card's yes makes a rule (`FromNowOnControls`). */
-export function FromNowOn({ children }: { children?: ReactNode }) {
+export function FromNowOn() {
   return (
     <span className={classes.fromNow}>
       <span className={classes.check} aria-hidden="true">
         <IconCheck size={9} stroke={3.5} />
       </span>
       from now on
-      {children}
     </span>
+  );
+}
+
+/** A tray, as the app's `TrayFace` draws it. */
+export interface Tray {
+  title: string;
+  /** The title on a phone, where the hero's trays are small tiles. */
+  short?: string;
+  /** What the tray does, under its name, where there is room for it. */
+  sub?: string;
+  icon: ToolIcon;
+}
+
+/**
+ * A tray's face: on the ground, dashed; its symbol, its name, its tally if it
+ * has one, and what it does under them. `target` draws it lit and solid, as a
+ * card held over it does; `tile` folds it into a phone's small tile, the
+ * symbol and the tally on top and the short name under them. The proposal
+ * ring and the lit layer are its `::before` and `::after`, off at rest, for a
+ * table that animates them.
+ */
+export function TrayFace({
+  tray,
+  count,
+  target = false,
+  tile = false,
+  withSub = true,
+  className,
+}: {
+  tray: Tray;
+  count?: ReactNode;
+  target?: boolean;
+  tile?: boolean;
+  /** False where the tray is too small for its sub-line (the hero's table). */
+  withSub?: boolean;
+  className?: string;
+}) {
+  const TrayIcon = TOOL_ICONS[tray.icon];
+  return (
+    <div
+      className={[classes.tray, tile && classes.trayTile, className].filter(Boolean).join(' ')}
+      data-icon={tray.icon}
+      data-target={target ? '' : undefined}
+    >
+      <span className={classes.trayHead}>
+        <span className={classes.trayIcon}>
+          <TrayIcon size={14} stroke={2} aria-hidden="true" />
+        </span>
+        <span className={classes.trayTitle}>
+          {tray.short ? (
+            <>
+              <span className={classes.full}>{tray.title}</span>
+              <span className={classes.short}>{tray.short}</span>
+            </>
+          ) : (
+            tray.title
+          )}
+        </span>
+        {count !== undefined && <span className={classes.count}>{count}</span>}
+      </span>
+      {withSub && tray.sub && <span className={classes.traySub}>{tray.sub}</span>}
+    </div>
   );
 }
 
@@ -179,7 +246,9 @@ export function MailCard({ card, pressClassName }: { card: FaceCard; pressClassN
           {card.tools.map((tool, i) => (
             <ToolChip
               key={tool.label}
-              tool={tool}
+              icon={TOOL_ICONS[tool.icon]}
+              label={tool.label}
+              primary={tool.primary}
               className={i === 0 ? pressClassName : undefined}
             />
           ))}
@@ -190,18 +259,11 @@ export function MailCard({ card, pressClassName }: { card: FaceCard; pressClassN
   );
 }
 
-/** A card in the deck: only its bottom strip shows, a little narrower the deeper. */
-export function Peek({
-  account,
-  sender,
-  subject,
-  depth,
-}: {
-  account: Account;
-  sender: string;
-  subject: string;
-  depth: number;
-}) {
+/** A card in the deck: only its bottom strip shows. */
+export type DeckCard = Pick<FaceCard, 'account' | 'sender' | 'subject'>;
+
+/** A card in the deck as drawn: a little narrower the deeper. */
+export function Peek({ account, sender, subject, depth }: DeckCard & { depth: number }) {
   return (
     <div
       className={classes.peek}
