@@ -111,8 +111,15 @@ export const theme = createTheme({
    * ignores that setting.
    */
   respectReducedMotion: true,
+  /*
+   * Every <Title> in the display face, light, as lancetta.app's theme does:
+   * the hierarchy is carried by size and by the face, not by weight. A title
+   * that wants the text face says `ff="text"`. Nextra's docs headings are its
+   * own markup, not <Title>s, and keep their face.
+   */
   headings: {
-    fontWeight: '600',
+    fontFamily: "var(--font-display), Georgia, 'Times New Roman', serif",
+    fontWeight: '400',
   },
   defaultRadius: 'md',
 });

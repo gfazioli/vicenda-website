@@ -22,7 +22,7 @@ export function DiscordCallToAction() {
         <div className={classes.copy}>
           <div className={classes.heading}>
             <Title order={2} id="discord-cta-title" fz={{ base: 26, sm: 32 }} fw={500}>
-              <span className="display">Join the community on Discord</span>
+              Join the community on Discord
             </Title>
             {justOpened && (
               <Badge size="sm" radius="sm" variant="filled" color={DISCORD_BLURPLE}>

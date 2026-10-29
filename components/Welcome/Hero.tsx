@@ -80,7 +80,7 @@ export function Hero() {
             */}
             <Text className={classes.meta}>{`Free · macOS ${floor} or later · Apple silicon`}</Text>
 
-            <Title order={1} id="hero-title" fz={{ base: 44, sm: 64, xl: 76 }} fw={400} lh={1.02}>
+            <Title order={1} id="hero-title" fz={{ base: 44, sm: 64, xl: 76 }} lh={1.02}>
               <span className="display-hero">
                 <TextAnimate inherit animation="blurUp" by="word" trigger="inView" duration={0.7}>
                   Stop noticing your email.

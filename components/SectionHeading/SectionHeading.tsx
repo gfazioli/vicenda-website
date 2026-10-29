@@ -12,8 +12,8 @@ import classes from './SectionHeading.module.css';
  * baseline. `center` is for the statement bands, where the copy is the whole
  * section and a split would leave the title talking to an empty column.
  *
- * The title is set in the display face (`.display`), as every heading on this
- * page is. Either way, a heading below the fold when the page loads lifts into
+ * The title is set in the display face by the theme, as every <Title> is,
+ * and its size is the stylesheet's (one rule, not a <style> per heading). Either way, a heading below the fold when the page loads lifts into
  * place the first time it scrolls into view (`Reveal`, `rise`); one already on
  * screen lifts the same way from the first paint.
  */
@@ -41,8 +41,8 @@ export function SectionHeading({
       <Reveal variant="rise" style={{ marginBottom: mb }}>
         <Stack align="center" gap="md">
           {eyebrowNode}
-          <Title order={2} ta="center" fz={{ base: 32, sm: 42 }} fw={400}>
-            <span className="display">{title}</span>
+          <Title order={2} ta="center" className={classes.title}>
+            {title}
           </Title>
           {lead && (
             <Text c="dimmed" ta="center" size="lg" maw={620} lh={1.6}>
@@ -58,15 +58,8 @@ export function SectionHeading({
     <Reveal variant="rise" className={classes.split} style={{ marginBottom: mb }}>
       <div>
         {eyebrowNode}
-        <Title
-          order={2}
-          fz={{ base: 32, sm: 42 }}
-          fw={400}
-          lh={1.08}
-          mt={10}
-          className={classes.title}
-        >
-          <span className="display">{title}</span>
+        <Title order={2} lh={1.08} mt={10} className={classes.title}>
+          {title}
         </Title>
       </div>
       {lead && (
