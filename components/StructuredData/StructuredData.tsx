@@ -115,7 +115,7 @@ export const FAQ_ENTRIES: { question: string; answer: string }[] = [
   {
     question: 'Which Mac do I need?',
     answer:
-      'macOS 15 or later, on Apple silicon, which the model needs. On macOS 26 Vicenda can use Apple Intelligence, with nothing to download. Otherwise you download a model once, from Settings: 2.3 GB for a Mac with 16 GB of memory, or 0.9 GB for one with 8 GB.',
+      'macOS 15 or later, on Apple silicon. Vicenda needs one model, and it runs on your Mac: on macOS 26 that is Apple Intelligence, with nothing to download; otherwise you download a model once, from Settings: 2.3 GB for a Mac with 16 GB of memory, or 0.9 GB for one with 8 GB.',
   },
   {
     question: 'What happens to mail I bin?',
