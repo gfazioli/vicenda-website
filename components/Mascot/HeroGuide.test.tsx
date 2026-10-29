@@ -1,6 +1,6 @@
 import { act, fireEvent, render, screen } from '@/test-utils';
 import { dismissGuide, guideMemory } from './guide';
-import { DELAY_MS, HeroGuide, RESIZE_SETTLE_MS, WAKE_MS, WALK_MS } from './HeroGuide';
+import { DELAY_MS, HeroGuide, RESIZE_SETTLE_MS, SNIFF_MS, WALK_MS } from './HeroGuide';
 import { MORNING } from './lines';
 
 describe('HeroGuide', () => {
@@ -81,7 +81,7 @@ describe('HeroGuide', () => {
   const wait = (ms: number) => act(() => jest.advanceTimersByTime(ms));
   const arrived = () => {
     tableInView();
-    wait(DELAY_MS + WALK_MS + WAKE_MS + 50);
+    wait(DELAY_MS + WALK_MS + SNIFF_MS + 50);
   };
 
   it('waits for the table to come into view, walks in, wakes, then says the morning', () => {
@@ -95,10 +95,10 @@ describe('HeroGuide', () => {
     expect(said(first)).toBeNull();
 
     wait(WALK_MS);
-    expect(phase()).toBe('waking');
+    expect(phase()).toBe('sniffing');
     expect(said(first)).toBeNull();
 
-    wait(WAKE_MS);
+    wait(SNIFF_MS);
     expect(phase()).toBe('pointing');
     expect(said(MORNING.label)).toBeInTheDocument();
     expect(said(first)).toBeInTheDocument();
@@ -154,7 +154,7 @@ describe('HeroGuide', () => {
     resizeTo(1440);
     wait(RESIZE_SETTLE_MS + 50);
     expect(phase()).toBe('walking');
-    wait(WALK_MS + WAKE_MS);
+    wait(WALK_MS + SNIFF_MS);
     expect(said(first)).toBeInTheDocument();
   });
 
@@ -171,7 +171,7 @@ describe('HeroGuide', () => {
     // Where the first walk would have ended: this one is still on its way.
     wait(WALK_MS - 1000);
     expect(phase()).toBe('walking');
-    wait(1000 + WAKE_MS);
+    wait(1000 + SNIFF_MS);
     expect(said(first)).toBeInTheDocument();
   });
 
@@ -205,7 +205,7 @@ describe('HeroGuide', () => {
     tableInView();
     wait(DELAY_MS + 50);
     expect(screen.getByRole('button', { name: 'Show the line' })).toBeInTheDocument();
-    wait(WALK_MS + WAKE_MS);
+    wait(WALK_MS + SNIFF_MS);
     expect(screen.getByRole('button', { name: 'Show another line' })).toBeInTheDocument();
   });
 
@@ -247,7 +247,7 @@ describe('HeroGuide', () => {
     expect(phase()).toBe('pointing');
     expect(said(first)).toBeInTheDocument();
     // The walk's own timers, still pending, change nothing when they run out.
-    wait(WALK_MS + WAKE_MS);
+    wait(WALK_MS + SNIFF_MS);
     expect(phase()).toBe('pointing');
   });
 
@@ -299,7 +299,7 @@ describe('HeroGuide', () => {
   it('arrives after the delay where nothing can say the table is in view', () => {
     delete (globalThis as { IntersectionObserver?: unknown }).IntersectionObserver;
     render(<Hero />);
-    wait(DELAY_MS + WALK_MS + WAKE_MS + 50);
+    wait(DELAY_MS + WALK_MS + SNIFF_MS + 50);
     expect(said(first)).toBeInTheDocument();
   });
 

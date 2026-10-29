@@ -9,15 +9,14 @@ import { Mascot, SCALE } from './Mascot';
 import { HEIGHT, PING, WIDTH } from './sprite';
 import classes from './Mascot.module.css';
 
-/** Netfox's `sniffing` phase is `waking` here: the beat between the walk and the wave. */
-type Phase = 'hidden' | 'walking' | 'waking' | 'pointing' | 'leaving';
+type Phase = 'hidden' | 'walking' | 'sniffing' | 'pointing' | 'leaving';
 
 /** After the table comes into view, a beat before it sets out. */
 export const DELAY_MS = 700;
 /** Matches `walk-in` in the stylesheet. */
 export const WALK_MS = 2200;
 /** The hop, the blink and the sun's two rings (`hop`, `blink`, `ping`), before the hand goes up. */
-export const WAKE_MS = 1100;
+export const SNIFF_MS = 1100;
 /** Matches the fade on `.hint`. */
 const LEAVE_MS = 260;
 /** After the last resize event, before it walks in again. */
@@ -178,12 +177,12 @@ export function HeroGuide() {
       if (walk.current !== mine || phaseNow.current !== 'walking') {
         return;
       }
-      move('waking');
+      move('sniffing');
       later(() => {
-        if (walk.current === mine && phaseNow.current === 'waking') {
+        if (walk.current === mine && phaseNow.current === 'sniffing') {
           point();
         }
-      }, WAKE_MS);
+      }, SNIFF_MS);
     }, WALK_MS);
   }, [later, measure, move, point]);
 
@@ -255,7 +254,7 @@ export function HeroGuide() {
   // Reduce Motion switched on mid-way: land where it was going, now.
   useEffect(() => {
     reducedNow.current = reduced;
-    if (reduced && (phaseNow.current === 'walking' || phaseNow.current === 'waking')) {
+    if (reduced && (phaseNow.current === 'walking' || phaseNow.current === 'sniffing')) {
       point();
     }
   }, [reduced, point]);
@@ -316,11 +315,11 @@ export function HeroGuide() {
           >
             {/* Keyed on the ping, so every new line replays the hop and the blink. */}
             <Mascot
-              key={`envelope-${pings}`}
+              key={`fox-${pings}`}
               walking={phase === 'walking'}
               pointing={phase === 'pointing'}
             />
-            {(phase === 'waking' || phase === 'pointing') && (
+            {(phase === 'sniffing' || phase === 'pointing') && (
               <span
                 key={`ping-${pings}`}
                 className={classes.pings}

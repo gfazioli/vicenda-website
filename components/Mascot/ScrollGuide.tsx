@@ -4,9 +4,9 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { IconX } from '@tabler/icons-react';
 import { useReducedMotion } from '@mantine/hooks';
-import { dismissGuide, guideMemory, onGuideDismissed, sayNext } from './guide';
-import { DELAY_MS, MIN_BUBBLE_PX, roomBeside, WAKE_MS } from './HeroGuide';
-import { type GuideSection, linesFor, MORNING, SECTION_ATTRIBUTE, SECTION_LINES } from './lines';
+import { dismissGuide, guideMemory, onGuideDismissed, sayNext, sectionInView } from './guide';
+import { DELAY_MS, MIN_BUBBLE_PX, roomBeside, SNIFF_MS } from './HeroGuide';
+import { type GuideSection, linesFor, MORNING } from './lines';
 import { Mascot } from './Mascot';
 import { PING } from './sprite';
 import classes from './Mascot.module.css';
@@ -38,7 +38,11 @@ export const STILL_MS = 160;
  */
 export const CARD_RATIO = 0.3;
 
-/** What it says on the Support card: the FAQ's own words, so no new claim. */
+/**
+ * What it says on the Support card: the FAQ's answer on price, shortened (it
+ * reads "Vicenda is a personal project. If it is useful to you, sponsoring
+ * the work is welcome and buys you nothing extra."), so no new claim.
+ */
 export const SPONSOR_LINE =
   'Vicenda is free, a personal project. If it is useful to you, sponsoring the work is welcome.';
 
@@ -69,27 +73,6 @@ function placeFor(page: Seen): Place {
     return 'none';
   }
   return 'corner';
-}
-
-/**
- * The section the reader is in: the last one whose top has come up past the
- * middle of the window, read when the reader asks rather than watched, since
- * only a click needs it. None above the first: the hero, whose words are the
- * morning's.
- */
-export function sectionInView(): GuideSection | null {
-  const middle = window.innerHeight / 2;
-  let found: GuideSection | null = null;
-  for (const el of document.querySelectorAll<HTMLElement>(`[${SECTION_ATTRIBUTE}]`)) {
-    if (el.getBoundingClientRect().top > middle) {
-      break;
-    }
-    const name = el.getAttribute(SECTION_ATTRIBUTE);
-    if (name && name in SECTION_LINES) {
-      found = name as GuideSection;
-    }
-  }
-  return found;
 }
 
 /** How long a line stays in the announcer before it is cleared. */
@@ -140,16 +123,11 @@ export function ScrollGuide() {
     setBubbleState(next);
   }, []);
   // Whose line it is saying, and which: the morning's (no section) or a
-  // section's. Read by the next ask, which goes on in the same section.
-  const [said, setSaidState] = useState<{ section: GuideSection | null; index: number }>({
+  // section's. The next ask goes on in the same section.
+  const [said, setSaid] = useState<{ section: GuideSection | null; index: number }>({
     section: null,
     index: 0,
   });
-  const saidNow = useRef(said);
-  const setSaid = useCallback((next: { section: GuideSection | null; index: number }) => {
-    saidNow.current = next;
-    setSaidState(next);
-  }, []);
   // The morning has been said from here, once, on arrival.
   const told = useRef(false);
   // What the announcer says: set only by what the reader asks for, and
@@ -251,10 +229,10 @@ export function ScrollGuide() {
       if (reducedNow.current) {
         open();
       } else {
-        later(open, WAKE_MS);
+        later(open, SNIFF_MS);
       }
     },
-    [later, ping, setBubble, setSaid]
+    [later, ping, setBubble]
   );
 
   /** Moves the envelope to where it belongs: out of where it is first, then in. */
@@ -456,12 +434,11 @@ export function ScrollGuide() {
   const tell = () => {
     const section = sectionInView();
     const { label, lines } = linesFor(section);
-    const last = saidNow.current;
     const index =
       section === null
         ? sayNext(lines.length)
-        : last.section === section
-          ? (last.index + 1) % lines.length
+        : said.section === section
+          ? (said.index + 1) % lines.length
           : 0;
     setSaid({ section, index });
     ping();
@@ -485,7 +462,7 @@ export function ScrollGuide() {
   };
 
   /** The envelope itself: lands it if it is on its way in, then says the next line. */
-  const fromEnvelope = () => {
+  const fromFox = () => {
     const { at: here, phase: doing } = now.current;
     if (here !== 'corner' || doing === 'leaving' || doing === 'hidden') {
       return;
@@ -527,11 +504,11 @@ export function ScrollGuide() {
         type="button"
         className={classes.walker}
         aria-label={bubble === 'closed' ? 'Show a line' : 'Show another line'}
-        onClick={fromEnvelope}
+        onClick={fromFox}
       >
         {/* Keyed on the ping, so every new line replays the hop and the blink. */}
         <Mascot
-          key={`envelope-${pings}`}
+          key={`fox-${pings}`}
           walking={phase === 'arriving' || moving}
           pointing={bubble !== 'closed'}
         />
@@ -566,7 +543,7 @@ export function ScrollGuide() {
     createPortal(
       <div ref={box} className={classes.card} data-phase={phase} inert={phase === 'leaving'}>
         <span className={classes.sitter}>
-          <Mascot key={`envelope-${pings}`} pointing />
+          <Mascot key={`fox-${pings}`} pointing />
           {phase === 'here' && rings}
         </span>
         <div className={classes.cardBubble}>
