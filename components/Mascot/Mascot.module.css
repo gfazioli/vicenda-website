@@ -1,0 +1,618 @@
+/*
+ * The envelope, in every place it stands: under the hero's sorting table, its
+ * feet on the hero's ground below the Bin (`HeroGuide`); in the corner of the
+ * window and on the footer's Support card (`ScrollGuide`); beside a note in
+ * the docs (`MascotNote`, whose styles are in `app/global.css`). Ported from
+ * netfox.app's `Mascot.module.css`; the bubble is the report card's navy,
+ * rimmed in the gold of the envelope's sun, where the fox's is its own navy
+ * and amber.
+ */
+
+.sprite {
+  display: block;
+}
+
+/* Two frames of legs, alternating while it walks. */
+.stepA {
+  animation: step-a 320ms steps(1) infinite;
+}
+
+.stepB {
+  animation: step-b 320ms steps(1) infinite;
+}
+
+@keyframes step-a {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes step-b {
+  0% {
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+/*
+ * The eyes shut (`BLINK` in sprite.ts), hidden at rest: shown for one blink
+ * as it lands and with each new line, and as its legs stop in the corner.
+ * Never on a loop: every motion on this page plays once (`Welcome.tsx`).
+ */
+.blink {
+  opacity: 0;
+}
+
+@keyframes blink {
+  from,
+  to {
+    opacity: 1;
+  }
+}
+
+/*
+ * Laid over the sorting table and the strip of the hero's foot under it,
+ * where the envelope stands: what the arrival watches, and the box whose
+ * bottom is its feet. It takes no clicks, so nothing under it loses one.
+ * The strip is the drop and the sprite (`UNDER_TABLE_PX`: 12px and 18 cells
+ * of 4px), in px like the sprite, so it never scales away from it.
+ *
+ * No lane of its own: the walk starts half a window right of where it ends,
+ * and the hero around the table is `overflow: hidden`, so the page never
+ * widens while the envelope is out there.
+ */
+.anchor {
+  position: absolute;
+  inset: 0 0 -84px;
+  pointer-events: none;
+}
+
+/* The line its feet stand on, which the arrival watches (`HeroGuide`). */
+.feet {
+  position: absolute;
+  bottom: 0;
+  left: 32px;
+  width: 1px;
+  height: 1px;
+}
+
+/*
+ * As big as the envelope and no bigger, so its feet are the anchor's bottom
+ * edge: the bubble hangs off it, out of the flow. Under the Bin, the first of
+ * the trays that let mail go (`STAND_OFF_PX`).
+ */
+.hint {
+  position: absolute;
+  bottom: 0;
+  left: 32px;
+  pointer-events: auto;
+  transition: opacity 240ms ease;
+}
+
+/* Fading out, it takes no pointer: a hover that starts on an envelope about
+   to unmount would never be told the pointer left. */
+.hint[data-phase='leaving'] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* A block, not the button's default inline-block: on a line box it sat on the
+   baseline, 7 px above the row's bottom edge (measured at 1440 on netfox.app). */
+.walker {
+  position: relative;
+  display: block;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  /* The navy outline sits on the hero's night: a glow in the sun's own gold
+     separates it better than a drop shadow could. */
+  filter: drop-shadow(0 0 6px rgb(255 194 74 / 26%)) drop-shadow(0 3px 4px rgb(0 0 0 / 45%));
+}
+
+.walker:focus-visible {
+  outline: 2px solid var(--vic-sun);
+  outline-offset: 4px;
+}
+
+/*
+ * The walk: in from the right, along the table's bottom edge, slowing to a
+ * stop under the Bin. `both` on purpose: this is decoration, and an engine
+ * that never runs it should show nothing rather than an envelope standing
+ * under the table mid-walk.
+ */
+.hint[data-phase='walking'] .walker {
+  animation: walk-in 2200ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+.hint[data-phase='walking'] .sprite {
+  animation: bob 320ms steps(1) infinite;
+}
+
+/* One hop and one blink on arrival, and again with every new line, then
+   still. Every effect here ends. */
+.hint[data-phase='waking'] .sprite,
+.hint[data-phase='pointing'] .sprite {
+  animation: hop 420ms ease-out 1;
+}
+
+.hint[data-phase='waking'] .blink,
+.hint[data-phase='pointing'] .blink {
+  animation: blink 170ms steps(1) 160ms 1;
+}
+
+@keyframes walk-in {
+  from {
+    transform: translateX(50vw);
+  }
+
+  to {
+    transform: none;
+  }
+}
+
+@keyframes bob {
+  50% {
+    transform: translateY(rem(-2px));
+  }
+}
+
+@keyframes hop {
+  40% {
+    transform: translateY(rem(-8px));
+  }
+}
+
+/*
+ * The morning's light: two rings from the sun behind its top edge, as the
+ * fox's radar pings on netfox.app. Placed on the sun by `HeroGuide` (the cell
+ * times the scale); each ring starts as a point there.
+ */
+.pings {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+}
+
+.ring {
+  position: absolute;
+  top: rem(-60px);
+  left: rem(-60px);
+  width: rem(120px);
+  height: rem(120px);
+  border: 2px solid var(--vic-sun);
+  border-radius: 50%;
+  opacity: 0;
+  animation: ping 1000ms ease-out both;
+}
+
+.ring + .ring {
+  animation-delay: 260ms;
+}
+
+/* Held bright past half its growth: fading from the start, a ring on the
+   hero's night was hard to see by the time it was big enough to read as one. */
+@keyframes ping {
+  0% {
+    opacity: 1;
+    transform: scale(0.06);
+  }
+
+  60% {
+    opacity: 0.6;
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+/*
+ * What it says, level with the top of its sun, with its tail towards it: a
+ * report card's navy, rimmed in the sun's gold, so it reads as a bubble over
+ * the hero rather than as one more card of the table. No wider than the room
+ * `HeroGuide` measured right of the envelope.
+ *
+ * Wider than netfox.app's 260px, so every line of the morning takes one row:
+ * the hero's foot ends 12px under the envelope's feet and hides what passes
+ * it, and a line wrapped to two rows brought the bubble to within 6px of that
+ * edge (measured at 1440).
+ */
+.bubble {
+  position: absolute;
+  top: rem(-4px);
+  left: calc(100% + rem(10px));
+  display: flex;
+  align-items: flex-start;
+  gap: rem(4px);
+  width: max-content;
+  max-width: min(rem(320px), var(--vic-guide-room, rem(320px)));
+  padding: rem(8px) rem(6px) rem(9px) rem(12px);
+  border-radius: rem(12px);
+  background: var(--vic-card);
+  box-shadow:
+    0 0 0 1px rgb(255 194 74 / 38%),
+    0 12px 28px -10px rgb(0 0 0 / 55%);
+  animation: pop 220ms ease-out both;
+}
+
+.bubble::before {
+  position: absolute;
+  top: rem(14px);
+  left: rem(-5px);
+  width: rem(10px);
+  height: rem(10px);
+  border-bottom: 1px solid rgb(255 194 74 / 38%);
+  border-left: 1px solid rgb(255 194 74 / 38%);
+  background: var(--vic-card);
+  content: '';
+  transform: rotate(45deg);
+}
+
+@keyframes pop {
+  from {
+    opacity: 0;
+    transform: translateX(rem(-6px)) scale(0.96);
+  }
+}
+
+/* What it says, and Next under it. */
+.say {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: rem(4px);
+  color: var(--mantine-color-white);
+  font-size: rem(13px);
+  line-height: 1.4;
+  text-align: left;
+}
+
+/* Keyed on the line, so each new one fades in rather than swapping. */
+.caption {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: rem(3px);
+  animation: speak 260ms ease-out both;
+}
+
+@keyframes speak {
+  from {
+    opacity: 0;
+    transform: translateY(rem(3px));
+  }
+}
+
+/* Whose line it is: the morning's, or the section's, in the page's eyebrow
+   type. Where netfox.app's fox shows the machine speak it translates. */
+.label {
+  color: var(--vic-sun);
+  font-size: rem(10.5px);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.next {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--vic-sun);
+  font: inherit;
+  font-size: rem(12px);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.next:hover {
+  text-decoration: underline;
+}
+
+.next:focus-visible,
+.dismiss:focus-visible {
+  outline: 2px solid var(--vic-sun);
+  outline-offset: 2px;
+  border-radius: rem(4px);
+}
+
+/*
+ * The close button of every bubble, under the table (HeroGuide) and in the
+ * corner and on the card (ScrollGuide). 24px, the smallest target WCAG 2.2
+ * allows, in the 20px it always took: the negative margin gives the 4px back,
+ * so the bubble's text keeps its width and its lines.
+ */
+.dismiss {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: rem(24px);
+  height: rem(24px);
+  margin: rem(-2px);
+  padding: 0;
+  border: 0;
+  border-radius: rem(6px);
+  background: none;
+  color: rgb(255 255 255 / 60%);
+  cursor: pointer;
+}
+
+.dismiss:hover {
+  background: rgb(255 255 255 / 8%);
+  color: var(--mantine-color-white);
+}
+
+/*
+ * The envelope that follows the scroll (`ScrollGuide`): in the corner of the
+ * window, and standing on the footer's Support card. It shares the hero's
+ * button, rings and bubble text above.
+ */
+
+/* Pixels per cell: four, as under the table; three on a phone, still whole
+   pixels, so every edge stays on the grid. */
+.corner,
+.card {
+  --cell: 4px;
+
+  @media (max-width: $mantine-breakpoint-sm) {
+    --cell: 3px;
+  }
+}
+
+.corner .sprite,
+.card .sprite {
+  width: calc(var(--cell) * 22);
+  height: auto;
+}
+
+/*
+ * In the corner of the window. Above the page's sections and below anything
+ * that opens over them: Nextra's menu on a phone and Mantine's overlays.
+ */
+.corner {
+  position: fixed;
+  right: max(rem(16px), env(safe-area-inset-right));
+  bottom: max(rem(16px), env(safe-area-inset-bottom));
+  z-index: 10;
+  transition:
+    opacity 240ms ease,
+    transform 240ms ease;
+}
+
+.corner[data-phase='leaving'] {
+  opacity: 0;
+  transform: translateX(rem(24px));
+  pointer-events: none;
+}
+
+/* In from the right edge of the window, slowing to a stop. `both`, as under
+   the table: an engine that never runs it shows nothing mid-walk. */
+.corner[data-phase='arriving'] .walker {
+  animation: corner-in 900ms cubic-bezier(0.22, 0.61, 0.36, 1) both;
+}
+
+/* While the page scrolls it walks: the legs are `Mascot`'s, the bob is here,
+   on the button, so the drawing's own hop is not restarted when it stops. */
+.corner[data-moving] .walker {
+  animation: bob 320ms steps(1) infinite;
+}
+
+/* One hop as it arrives and one on every new line, then still. */
+.corner[data-phase='here'] .sprite,
+.card[data-phase='here'] .sprite {
+  animation: hop 420ms ease-out 1;
+}
+
+/* A blink as it lands, with every new line, and whenever its legs stop:
+   matched anew each time the scroll ends, so it plays once each time. */
+.corner[data-phase='here']:not([data-moving]) .blink,
+.card[data-phase='here'] .blink {
+  animation: blink 170ms steps(1) 160ms 1;
+}
+
+@keyframes corner-in {
+  from {
+    transform: translateX(calc(100% + rem(40px)));
+  }
+
+  to {
+    transform: none;
+  }
+}
+
+/* The rings sized by the cell, from the same sun. */
+.corner .ring,
+.card .ring {
+  top: calc(var(--cell) * -15);
+  left: calc(var(--cell) * -15);
+  width: calc(var(--cell) * 30);
+  height: calc(var(--cell) * 30);
+}
+
+/* What the reader asked for, said to a screen reader and to no one else. */
+.announcer {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* The bubble in the corner, above the envelope and flush with its right edge,
+   its tail down at the envelope's middle. No wider than the window leaves. */
+.cornerBubble {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + rem(10px));
+  display: flex;
+  align-items: flex-start;
+  gap: rem(4px);
+  width: max-content;
+  max-width: min(rem(260px), calc(100vw - rem(32px)));
+  padding: rem(8px) rem(6px) rem(9px) rem(12px);
+  border-radius: rem(12px);
+  background: var(--vic-card);
+  box-shadow:
+    0 0 0 1px rgb(255 194 74 / 38%),
+    0 12px 28px -10px rgb(0 0 0 / 55%);
+  animation: pop-up 220ms ease-out both;
+  transform-origin: bottom right;
+}
+
+.cornerBubble::before {
+  position: absolute;
+  right: calc(var(--cell) * 10);
+  bottom: rem(-5px);
+  width: rem(10px);
+  height: rem(10px);
+  border-right: 1px solid rgb(255 194 74 / 38%);
+  border-bottom: 1px solid rgb(255 194 74 / 38%);
+  background: var(--vic-card);
+  content: '';
+  transform: rotate(45deg);
+}
+
+@keyframes pop-up {
+  from {
+    opacity: 0;
+    transform: translateY(rem(6px)) scale(0.96);
+  }
+}
+
+/*
+ * On the Support card: standing on its top edge near the right, its bubble to
+ * its left with the tail at its face, the raised hand reaching up toward it.
+ * `MantineFooter.module.css` makes the card the box this is placed in.
+ */
+.card {
+  position: absolute;
+  right: rem(28px);
+  bottom: 100%;
+  transition: opacity 240ms ease;
+}
+
+.card[data-phase='leaving'] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sitter {
+  position: relative;
+  display: block;
+  filter: drop-shadow(0 0 6px rgb(255 194 74 / 26%)) drop-shadow(0 3px 4px rgb(0 0 0 / 45%));
+}
+
+.card[data-phase='arriving'] .sitter {
+  animation: card-in 420ms cubic-bezier(0.3, 0.7, 0.3, 1) both;
+}
+
+@keyframes card-in {
+  from {
+    opacity: 0;
+    transform: translateY(rem(14px));
+  }
+}
+
+.cardBubble {
+  position: absolute;
+  top: rem(-4px);
+  right: calc(100% + rem(10px));
+  display: flex;
+  align-items: flex-start;
+  gap: rem(4px);
+  width: max-content;
+  max-width: min(rem(300px), calc(100vw - rem(150px)));
+  padding: rem(8px) rem(6px) rem(9px) rem(12px);
+  border-radius: rem(12px);
+  background: var(--vic-card);
+  box-shadow:
+    0 0 0 1px rgb(255 194 74 / 38%),
+    0 12px 28px -10px rgb(0 0 0 / 55%);
+  animation: pop-up 220ms ease-out both;
+  transform-origin: top right;
+}
+
+.cardBubble::before {
+  position: absolute;
+  top: rem(14px);
+  right: rem(-5px);
+  width: rem(10px);
+  height: rem(10px);
+  border-top: 1px solid rgb(255 194 74 / 38%);
+  border-right: 1px solid rgb(255 194 74 / 38%);
+  background: var(--vic-card);
+  content: '';
+  transform: rotate(45deg);
+}
+
+/*
+ * On a phone the line wraps to three to five rows, and a bubble hung from the
+ * top of the mascot reached down over the card's title: by 69px at 320 and
+ * 51px at 360 on findergit.app, 51px at 320 on netfox.app (measured
+ * 2026-10-08). There it hangs from its bottom instead, 4px above the card's
+ * edge, and grows up into the room above the card; the tail stays at the
+ * face, 18 cells up from the feet. It may also reach nearer the left edge,
+ * 8px short of it, so it takes fewer rows.
+ */
+@media (max-width: $mantine-breakpoint-sm) {
+  .cardBubble {
+    top: auto;
+    bottom: rem(4px);
+    max-width: min(rem(300px), calc(100vw - rem(62px) - var(--cell) * 22));
+    transform-origin: bottom right;
+  }
+
+  .cardBubble::before {
+    top: auto;
+    bottom: calc(var(--cell) * 18 - rem(24px));
+  }
+}
+
+.cardLine {
+  margin: 0;
+  color: var(--mantine-color-white);
+  font-size: rem(13px);
+  line-height: 1.4;
+  text-align: left;
+}
+
+/* As specific as the rules they undo, and after them. */
+@media (prefers-reduced-motion: reduce) {
+  .hint,
+  .bubble,
+  .caption,
+  .ring,
+  .hint[data-phase] .walker,
+  .hint[data-phase] .sprite,
+  .hint[data-phase] .blink,
+  .stepA,
+  .stepB,
+  .corner,
+  .card,
+  .cornerBubble,
+  .cardBubble,
+  .corner[data-phase] .walker,
+  .corner[data-moving] .walker,
+  .card[data-phase] .sitter,
+  .corner[data-phase] .sprite,
+  .card[data-phase] .sprite,
+  .corner[data-phase]:not([data-moving]) .blink,
+  .card[data-phase] .blink {
+    transition: none;
+    animation: none;
+  }
+}
+
+@media print {
+  .corner,
+  .card {
+    display: none;
+  }
+}
