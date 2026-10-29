@@ -10,42 +10,80 @@ html {
   color-scheme: dark;
 }
 
-* {
-  --marquee-fade-edge-color: var(--mantine-color-gray-1);
+:root {
+  /*
+   * -- Vicenda design tokens --
+   *
+   * The app's own colours (`theme.ts` says where each comes from in
+   * `Palette.swift`), by night, since the site is dark only. On `:root`, not
+   * on every element: custom properties inherit, so one declaration reaches
+   * the whole page.
+   *
+   * The LOGO: `--vic-ground` is the window's night ground at its first stop,
+   * the page's colour; `--vic-ground-mid` and `--vic-ground-deep` are the
+   * other two, for the places that draw the whole diagonal. `--vic-cobalt` is
+   * the light over it. `--vic-sky` is the accent by night and `--vic-royal`
+   * a filled control's ground; `--vic-sky-ink` is the sky lightened for TYPE
+   * (8:1 on the ground, against the sky's own 5.1:1). `--vic-ice` is the
+   * envelope's pearl.
+   */
+  --vic-ground: #09112f;
+  --vic-ground-mid: #061340;
+  --vic-ground-deep: #04164e;
+  --vic-cobalt: #0047b0;
+  --vic-royal: #0067e1;
+  --vic-sky: #0086fb;
+  --vic-sky-ink: #6ab2ff;
+  --vic-ice: #ccd9ec;
 
   /*
-   * ── FinderGit homepage design tokens ──
-   * Git-state semantic colours are the only saturated colours on the page
-   * besides the brand accent, so colour carries meaning at a glance:
-   * clean / changes / ahead — plus the brand accent and the "needs attention"
-   * signal. Referenced everywhere (hero dashboard mock, repo list, feature
-   * grid) instead of ad-hoc per-spot colours. Dark overrides below keep
-   * contrast in both schemes.
+   * A mail card (`Palette.cardFill`, `Glass` in the app): one opaque fill
+   * for every account, its ink, and the hairlines the app draws at 10, 16 and
+   * 24% white. The card's corners are 3px on the left, where the account's
+   * band runs, and 22px on the right (`CardCorner`, `DashboardCard.radius`).
    */
-  --fg-accent: var(--mantine-color-findergit-6);
-  --fg-clean: var(--mantine-color-teal-7);
-  --fg-changes: var(--mantine-color-orange-6);
-  --fg-ahead: var(--mantine-color-blue-6);
-  --fg-attention: var(--mantine-color-orange-7);
+  --vic-card: #10275f;
+  --vic-card-ink: #e6ecf6;
+  --vic-card-caption: rgb(230 236 246 / 72%);
+  --vic-card-faint: rgb(230 236 246 / 50%);
+  --vic-hair-10: rgb(255 255 255 / 10%);
+  --vic-hair-16: rgb(255 255 255 / 16%);
+  --vic-hair-24: rgb(255 255 255 / 24%);
+  --vic-line: rgb(204 217 236 / 10%);
+  --vic-line-strong: rgb(204 217 236 / 18%);
+  /* Captions straight on the ground: white at `Palette.groundCaptionAlpha`. */
+  --vic-ground-caption: rgb(255 255 255 / 66%);
+
+  /*
+   * The report's SECTIONS (`Palette.Section`): the vivid fill, and the ink a
+   * section's mark is drawn in on the ground. Never an account's colour: at
+   * L 0.58, C 0.18 they clear every slot of the ring by 0.32 or more.
+   */
+  --vic-todo: #4472e3;
+  --vic-todo-ink: #b2caff;
+  --vic-brief: #008d82;
+  --vic-brief-ink: #77e0d3;
+  --vic-new: #309210;
+  --vic-new-ink: #a8db9d;
+  --vic-decided: #8c5ad3;
+  --vic-decided-ink: #d4bdff;
+  --vic-accounts: #0087ab;
+  --vic-accounts-ink: #7dd9fc;
+  --vic-rules: #b747a4;
+  --vic-rules-ink: #f4b2e5;
+}
+
+* {
+  --marquee-fade-edge-color: var(--vic-ground);
 
   @mixin dark {
-    --marquee-fade-edge-color: var(--mantine-color-dark-9);
-    --mantine-color-body: var(--mantine-color-dark-9);
-
-    --fg-accent: var(--mantine-color-findergit-4);
-    --fg-clean: var(--mantine-color-teal-4);
-    --fg-changes: var(--mantine-color-orange-4);
-    --fg-ahead: var(--mantine-color-blue-4);
-    --fg-attention: var(--mantine-color-orange-5);
+    --marquee-fade-edge-color: var(--vic-ground);
+    --mantine-color-body: var(--vic-ground);
   }
 }
 
 body {
-  background-color: var(--mantine-color-gray-1);
-
-  @mixin dark {
-    background-color: var(--mantine-color-dark-9);
-  }
+  background-color: var(--vic-ground);
 }
 
 .mantine-Button-root {
