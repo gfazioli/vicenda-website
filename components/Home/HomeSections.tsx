@@ -7,6 +7,7 @@ import {
   type Icon,
 } from '@tabler/icons-react';
 import { Container, SimpleGrid, Stack, Text, Title } from '@mantine/core';
+import { type GuideSection, SECTION_ATTRIBUTE } from '../Mascot/lines';
 import { Reveal } from '../Motion/Reveal';
 import { SectionHeading } from '../SectionHeading/SectionHeading';
 import { SectionRule } from '../SectionRule/SectionRule';
@@ -31,6 +32,8 @@ import classes from './HomeSections.module.css';
 interface Section {
   /** The anchor the bar links to, where it has one. */
   id?: string;
+  /** Which of the envelope's lines it says here (`Mascot/lines.ts`). */
+  guide: GuideSection;
   eyebrow: string;
   title: string;
   lead: string;
@@ -47,6 +50,7 @@ const SECTIONS: Section[] = [
     // the local store: about 97% bulk, about one a day needing a reply), said
     // as the owner's, not as a statistic about everyone's.
     id: 'how-it-works',
+    guide: 'problem',
     eyebrow: 'The problem',
     title: 'Mail is messages, not conversations.',
     lead: 'Vicenda began with one person’s seven mailboxes, where about 97 messages in 100 come from machines and fewer than one a day needs a reply. Reading each as a conversation is the work it takes away.',
@@ -56,6 +60,7 @@ const SECTIONS: Section[] = [
   {
     // `SortingTable.swift`: drag, buttons or a tray click record one
     // decision; Later until 08:00 the next day (`ReportDecision.swift`).
+    guide: 'today',
     eyebrow: 'Today',
     title: 'Sort it the way you sort the post.',
     lead: 'To do and New arrive as a hand of cards: two face up, the rest stacked beneath. Drag a card into a tray or answer with its buttons, and the next one rises. Later puts a mail back in the hand at eight the next morning.',
@@ -64,6 +69,7 @@ const SECTIONS: Section[] = [
   },
   {
     // `BriefRow`, `MorningReportModel`: the line, and the mail's fate.
+    guide: 'brief',
     eyebrow: 'In brief',
     title: 'One line, and the mail can go.',
     lead: 'The news, a rate, a post’s numbers, an alert: each informational mail becomes one line in the report, and the mail itself goes to the Bin, or waits until tomorrow when it is the day’s news.',
@@ -72,6 +78,7 @@ const SECTIONS: Section[] = [
   },
   {
     // `NewCard`, `FromNowOnControls`, `RuleCoverage.line` in `KindRule.swift`.
+    guide: 'new',
     eyebrow: 'New',
     title: 'One kind at a time. Then, from now on.',
     lead: 'A kind is a sender plus what it sends: a shop’s newsletters and its receipts are two kinds. Vicenda proposes an answer, and with “from now on” checked your yes becomes a rule. The card says what that rule will cover: widen it to everything from the sender, and keep it to this account or give it to every account.',
@@ -80,6 +87,7 @@ const SECTIONS: Section[] = [
   },
   {
     // `DecidedSection`, `BatchCard`; the starred guard is the report's.
+    guide: 'decided',
     eyebrow: 'Already decided',
     title: 'One confirmation for what you already know.',
     lead: 'Mail your rules already cover is gathered into batches, each handled the way its rule says. Leave a sender out with a click, open the list to check, then confirm them all at once. A starred message never goes into a batch.',
@@ -88,6 +96,7 @@ const SECTIONS: Section[] = [
   },
   {
     // `OverviewModel.swift`: the six figures and their captions.
+    guide: 'overview',
     eyebrow: 'Overview',
     title: 'The whole morning, in six cards.',
     lead: 'What needs you, what is left to read, what is new, what is already decided, and beside them your accounts and the rules you have taught. Each in its own colour, as in the app.',
@@ -98,6 +107,7 @@ const SECTIONS: Section[] = [
   {
     // The account wizard, `AccountFacts.transport`, the Together / By
     // account switch.
+    guide: 'accounts',
     eyebrow: 'Every account',
     title: 'Every account, one report.',
     lead: 'Any mailbox that speaks IMAP, Gmail included: Gmail through an app password, which Google lets you make once 2-Step Verification is on. Each account wears its own hue and monogram, and By account splits the report when you want them apart.',
@@ -105,6 +115,7 @@ const SECTIONS: Section[] = [
     Diagram: AccountList,
   },
   {
+    guide: 'mac',
     eyebrow: 'On your Mac',
     title: 'It all happens here.',
     lead: 'Vicenda keeps your mail, your rules and your decisions on your Mac, and runs no server of its own.',
@@ -114,7 +125,7 @@ const SECTIONS: Section[] = [
 ];
 
 export function HomeSections() {
-  return SECTIONS.map(({ id, eyebrow, title, lead, width, Diagram, ownReveal }) => {
+  return SECTIONS.map(({ id, guide, eyebrow, title, lead, width, Diagram, ownReveal }) => {
     const diagram = ownReveal ? (
       <Diagram />
     ) : (
@@ -125,7 +136,7 @@ export function HomeSections() {
     return (
       <Fragment key={eyebrow}>
         <SectionRule />
-        <Band id={id}>
+        <Band id={id} guide={guide}>
           <SectionHeading eyebrow={eyebrow} title={title} lead={lead} />
           {width ? <Stage width={width}>{diagram}</Stage> : diagram}
         </Band>
@@ -134,10 +145,26 @@ export function HomeSections() {
   });
 }
 
-/** A section of the page: its anchor, its air, and the column it reads in. */
-export function Band({ id, children }: { id?: string; children: ReactNode }) {
+/**
+ * A section of the page: its anchor, its air, and the column it reads in; and
+ * which of its lines the envelope in the corner says while the reader is in it.
+ */
+export function Band({
+  id,
+  guide,
+  children,
+}: {
+  id?: string;
+  guide?: GuideSection;
+  children: ReactNode;
+}) {
   return (
-    <Container id={id} size="lg" className={classes.band}>
+    <Container
+      id={id}
+      size="lg"
+      className={classes.band}
+      {...(guide ? { [SECTION_ATTRIBUTE]: guide } : {})}
+    >
       {children}
     </Container>
   );

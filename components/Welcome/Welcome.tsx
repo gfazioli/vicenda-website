@@ -2,6 +2,7 @@ import { TextAnimate } from '@gfazioli/mantine-text-animate';
 import { Box, Container, Stack, Title } from '@mantine/core';
 import { DiscordCallToAction } from '../Discord/DiscordCallToAction';
 import { FAQ } from '../FAQ/FAQ';
+import { ScrollGuide } from '../Mascot/ScrollGuide';
 import { Band, HomeSections } from '../Home/HomeSections';
 import { SectionRule } from '../SectionRule/SectionRule';
 import { Hero } from './Hero';
@@ -35,7 +36,7 @@ export function Welcome() {
         alone, where Google expects one. Before the closing line, so the page
         still ends on it.
       */}
-      <Band id="faq">
+      <Band id="faq" guide="faq">
         <Stack gap="lg" maw={760}>
           <Title order={2} fz={{ base: 32, sm: 42 }}>
             Frequently asked questions
@@ -58,6 +59,11 @@ export function Welcome() {
           </TextAnimate>
         </Title>
       </Container>
+
+      {/* The envelope past the hero: in the window's corner, then on the
+          footer's Support card. After the page's content, so a keyboard
+          meets it last. */}
+      <ScrollGuide />
     </Box>
   );
 }

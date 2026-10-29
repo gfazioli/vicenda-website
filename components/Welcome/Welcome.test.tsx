@@ -1,3 +1,4 @@
+import { SECTION_ATTRIBUTE, SECTION_LINES } from '../Mascot/lines';
 import { productSections } from '../MenuBarHeader/sections';
 import { render, screen } from '@/test-utils';
 import { Welcome } from './Welcome';
@@ -20,6 +21,17 @@ describe('Welcome component', () => {
     for (const section of productSections) {
       expect(container.querySelector(`#${section.id}`)).not.toBeNull();
     }
+  });
+
+  it('marks, in page order, every section the envelope has lines for', () => {
+    // The envelope in the corner speaks for the section the reader is in
+    // (`Mascot/ScrollGuide`): a mark with no lines would say nothing, and
+    // lines with no mark would never be said.
+    const { container } = render(<Welcome />);
+    const marked = [...container.querySelectorAll(`[${SECTION_ATTRIBUTE}]`)].map((el) =>
+      el.getAttribute(SECTION_ATTRIBUTE)
+    );
+    expect(marked).toEqual(Object.keys(SECTION_LINES));
   });
 
   it('sends "See how it works" to the section under the hero', () => {
