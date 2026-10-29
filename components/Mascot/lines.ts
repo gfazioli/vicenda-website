@@ -93,7 +93,7 @@ export const SECTION_LINES = {
     label: 'On your Mac',
     lines: [
       'Your mail, your rules, your decisions: all on this Mac.',
-      'The model runs here too, and no server ever holds a message.',
+      'The model runs here too, and no server of ours sees your mail.',
     ],
   },
   faq: {
