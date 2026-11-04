@@ -14,7 +14,7 @@
   <a href="https://vicenda.app"><img src="https://img.shields.io/badge/site-vicenda.app-2B6CB0" alt="vicenda.app" /></a>
   <a href="https://www.apple.com/macos/"><img src="https://img.shields.io/badge/macOS-15%2B-1A181E" alt="macOS 15+" /></a>
   <img src="https://img.shields.io/badge/download-free-4CBD88" alt="Free download" />
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License" /></a>
+  <a href="NOTICE.md"><img src="https://img.shields.io/badge/website%20code-MIT-green" alt="Website code: MIT License" /></a>
 </p>
 
 ---
@@ -92,4 +92,4 @@ Built with [Next.js](https://nextjs.org/), [Mantine](https://mantine.dev/) and
 
 ## License
 
-MIT
+The website's source code is released under the [MIT License](LICENSE). The Vicenda app published in [Releases](https://github.com/gfazioli/vicenda-website/releases) is not open source: it is free to use under its [Terms of Use](https://vicenda.app/docs/terms). What the licence covers, brand assets and third-party notices: [NOTICE.md](NOTICE.md).
